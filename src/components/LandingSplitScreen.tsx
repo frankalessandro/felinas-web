@@ -15,7 +15,15 @@ const LandingSplitScreen = () => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+
+    // Reset tapped when page is restored from bfcache (browser back button)
+    const handlePageShow = (e: PageTransitionEvent) => { if (e.persisted) setTapped(null); };
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("pageshow", handlePageShow);
+    };
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -34,9 +42,9 @@ const LandingSplitScreen = () => {
 
   const active = isMobile ? tapped : hovered;
 
-  const tx = transitionsReady ? "transition-all duration-700 ease-in-out" : "";
+  const tx = transitionsReady ? "transition-[flex-basis,opacity,transform,left] duration-700 ease-in-out" : "";
   const txOp = transitionsReady ? "transition-opacity duration-700" : "";
-  const tx5 = transitionsReady ? "transition-all duration-500" : "";
+  const tx5 = transitionsReady ? "transition-[max-height,opacity] duration-500" : "";
   const txOp5 = transitionsReady ? "transition-opacity duration-500" : "";
 
   const handleAcademiaClick = (e: React.MouseEvent) => {
@@ -66,10 +74,14 @@ const LandingSplitScreen = () => {
       <div
         className={`absolute z-30 pointer-events-none ${tx}`}
         style={isMobile ? {
-          top: active === "academia" ? "62%" : active === "show" ? "38%" : "50%",
+          top: "50%",
           left: "50%",
-          transform: "translateX(-50%) translateY(-50%)",
-          willChange: "top",
+          transform: active === "academia"
+            ? "translateX(-50%) translateY(calc(-50% + 12vh))"
+            : active === "show"
+            ? "translateX(-50%) translateY(calc(-50% - 12vh))"
+            : "translateX(-50%) translateY(-50%)",
+          willChange: active !== null ? "transform" : "auto",
         } : {
           top: "3rem",
           left: "50%",
@@ -77,7 +89,7 @@ const LandingSplitScreen = () => {
             hovered === "academia" ? "translateX(calc(-50% - 7vw))"
             : hovered === "show" ? "translateX(calc(-50% + 7vw))"
             : "translateX(-50%)",
-          willChange: "transform",
+          willChange: hovered !== null ? "transform" : "auto",
         }}
       >
         <img
@@ -93,7 +105,9 @@ const LandingSplitScreen = () => {
         className={`relative overflow-hidden flex-shrink-0 cursor-pointer ${tx}`}
         onClick={handleAcademiaClick}
         style={{
-          flex: active === "academia" ? "0 0 62%" : active === "show" ? "0 0 38%" : "0 0 50%",
+          flexGrow: 0,
+          flexShrink: 0,
+          flexBasis: active === "academia" ? "62%" : active === "show" ? "38%" : "50%",
           ...(isMobile && { width: "100%" }),
           backgroundColor: "#AA145D",
         }}
@@ -102,7 +116,7 @@ const LandingSplitScreen = () => {
           className="absolute inset-0 z-[3] pointer-events-none"
           style={{ background: isMobile ? "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 45%)" : "linear-gradient(to right, rgba(0,0,0,0.15) 0%, transparent 40%)" }}
         />
-        <div className={`absolute inset-0 bg-black z-[4] ${txOp} pointer-events-none`} style={{ opacity: active === "show" ? 0.36 : 0, willChange: "opacity" }} />
+        <div className={`absolute inset-0 bg-black z-[4] ${txOp} pointer-events-none`} style={{ opacity: active === "show" ? 0.36 : 0, willChange: active !== null ? "opacity" : "auto" }} />
 
         {/* Text */}
         <div className={`absolute z-[1] pointer-events-none ${isMobile ? "top-1/2 -translate-y-1/2 left-6" : "top-1/2 -translate-y-1/2 left-5 md:left-9 xl:left-14"}`}>
@@ -113,7 +127,7 @@ const LandingSplitScreen = () => {
             Visita la
           </p>
           <h2
-            className={`font-display font-black uppercase leading-none ${tx}`}
+            className={`font-display font-black uppercase leading-none ${txOp5}`}
             style={{
               fontSize: isMobile ? "clamp(2.8rem, 13vw, 4.5rem)" : "clamp(2.5rem, 5.5vw, 7rem)",
               color: "white",
@@ -151,7 +165,7 @@ const LandingSplitScreen = () => {
                 </button>
               </div>
             ) : (
-              <span className={`animate-pulse text-white/55 text-[10px] tracking-[0.4em] uppercase font-semibold ${txOp5}`} style={{ opacity: active === "show" ? 0.2 : 1 }}>
+              <span className={` text-white/55 text-[10px] tracking-[0.4em] uppercase font-semibold ${txOp5}`} style={{ opacity: active === "show" ? 0.2 : 1 }}>
                 Toca para explorar
               </span>
             )}
@@ -165,12 +179,12 @@ const LandingSplitScreen = () => {
             right: "-4%", bottom: 0, width: "74%", height: "95%",
             opacity: active === "academia" ? 1 : active === "show" ? 0.04 : 0.22,
             transform: active === "academia" ? "translateY(0)" : "translateY(8%)",
-            willChange: "opacity, transform",
+            willChange: active !== null ? "opacity, transform" : "auto",
           } : {
             right: 0, bottom: "4rem", width: "65%", height: "105vh",
             opacity: active === "academia" ? 1 : 0.001,
             transform: active === "academia" ? "translateY(0)" : "translateY(16%)",
-            willChange: "opacity, transform",
+            willChange: active !== null ? "opacity, transform" : "auto",
           }}
         >
           <img src="/assets/Andrea_NoBg_11zon.webp" alt="Andrea — Academia" className="w-full h-full object-contain object-bottom" style={{ filter: "drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04)", transform: "scaleX(-1)" }} />
@@ -183,8 +197,10 @@ const LandingSplitScreen = () => {
         className={`relative overflow-hidden cursor-pointer ${tx}`}
         onClick={handleShowClick}
         style={{
-          flex: active === "show" ? "0 0 62%" : active === "academia" ? "0 0 38%" : "0 0 50%",
-          ...(isMobile && { width: "100%", flexShrink: 0 }),
+          flexGrow: 0,
+          flexShrink: 0,
+          flexBasis: active === "show" ? "62%" : active === "academia" ? "38%" : "50%",
+          ...(isMobile && { width: "100%" }),
           backgroundColor: "#7C0475",
         }}
       >
@@ -192,7 +208,7 @@ const LandingSplitScreen = () => {
           className="absolute inset-0 z-[3] pointer-events-none"
           style={{ background: isMobile ? "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 45%)" : "linear-gradient(to left, rgba(0,0,0,0.15) 0%, transparent 40%)" }}
         />
-        <div className={`absolute inset-0 bg-black z-[4] ${txOp} pointer-events-none`} style={{ opacity: active === "academia" ? 0.36 : 0, willChange: "opacity" }} />
+        <div className={`absolute inset-0 bg-black z-[4] ${txOp} pointer-events-none`} style={{ opacity: active === "academia" ? 0.36 : 0, willChange: active !== null ? "opacity" : "auto" }} />
 
         {/* Text */}
         <div className={`absolute z-[1] pointer-events-none ${isMobile ? "top-1/2 -translate-y-1/2 left-6" : "top-1/2 -translate-y-1/2 right-5 md:right-9 xl:right-14 text-right"}`}>
@@ -203,7 +219,7 @@ const LandingSplitScreen = () => {
             Conoce el
           </p>
           <h2
-            className={`font-display font-black uppercase leading-[0.88] ${tx}`}
+            className={`font-display font-black uppercase leading-[0.88] ${txOp5}`}
             style={{
               fontSize: isMobile ? "clamp(1.8rem, 8.5vw, 3rem)" : "clamp(2.5rem, 5.5vw, 7rem)",
               color: "white",
@@ -241,7 +257,7 @@ const LandingSplitScreen = () => {
                 </button>
               </div>
             ) : (
-              <span className={`animate-pulse text-white/55 text-[10px] tracking-[0.4em] uppercase font-semibold ${txOp5}`} style={{ opacity: active === "academia" ? 0.2 : 1 }}>
+              <span className={` text-white/55 text-[10px] tracking-[0.4em] uppercase font-semibold ${txOp5}`} style={{ opacity: active === "academia" ? 0.2 : 1 }}>
                 Toca para explorar
               </span>
             )}
@@ -255,12 +271,12 @@ const LandingSplitScreen = () => {
             right: "-4%", bottom: 0, width: "74%", height: "95%",
             opacity: active === "show" ? 1 : active === "academia" ? 0.04 : 0.22,
             transform: active === "show" ? "translateY(0)" : "translateY(8%)",
-            willChange: "opacity, transform",
+            willChange: active !== null ? "opacity, transform" : "auto",
           } : {
             bottom: 0, left: 0, width: "68%", height: "92vh",
             opacity: active === "show" ? 1 : 0.001,
             transform: active === "show" ? "translateY(0)" : "translateY(16%)",
-            willChange: "opacity, transform",
+            willChange: active !== null ? "opacity, transform" : "auto",
           }}
         >
           <img src="/assets/Mae_NoBg_11zon.webp" alt="Mae — Show Group" className="w-full h-full object-contain object-bottom" style={{ filter: "drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04)", transform: isMobile ? "scaleX(1)" : "scaleX(-1)" }} />
@@ -283,12 +299,14 @@ const LandingSplitScreen = () => {
         </>
       )}
 
-      {/* Elige tu lado */}
-      <div className={`absolute bottom-5 left-1/2 -translate-x-1/2 z-30 pointer-events-none ${txOp5}`} style={{ opacity: active ? 0 : 1 }}>
-        <p className="text-white/70 text-[11px] md:text-[12px] sm:hidden tracking-[0.5em] uppercase font-semibold" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
-          Elige tu lado
-        </p>
-      </div>
+      {/* Elige tu lado (hidden on mobile) */}
+      {!isMobile && (
+        <div className={`absolute bottom-5 left-1/2 -translate-x-1/2 z-30 pointer-events-none ${txOp5}`} style={{ opacity: active ? 0 : 1 }}>
+          <p className="text-white/70 lg:text-[11px] md:text-[12px] sm:text-xs tracking-[0.5em] uppercase font-semibold" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
+            Elige tu lado
+          </p>
+        </div>
+      )}
     </div>
   );
 };
