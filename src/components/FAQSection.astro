@@ -1,0 +1,51 @@
+---
+const faqs = [
+  {
+    q: "¿Necesito experiencia previa para tomar clases?",
+    a: "¡Para nada! Tenemos clases para todos los niveles. El twerk recreativo y las clases de hip hop son perfectas para principiantes. Nuestras instructoras te guían paso a paso.",
+  },
+  {
+    q: "¿Qué debo llevar a clase?",
+    a: "Ropa cómoda y deportiva que te permita moverte libremente, zapatos deportivos (para hip hop) o calcetines antideslizantes (para twerk). ¡Y mucha actitud!",
+  },
+  {
+    q: "¿Cómo reservo mi clase?",
+    a: "Puedes agendar tu clase directamente por WhatsApp al +57 302 7451752. Te responderemos con los horarios disponibles y toda la información que necesites.",
+  },
+  {
+    q: "¿Tienen clases virtuales?",
+    a: "Sí. Por ahora, nuestras clases virtuales están disponibles solo para Twerk. El resto de las disciplinas se dictan de manera presencial. Escríbenos para más información sobre horarios y sedes.",
+  },
+  {
+    q: "¿Cuál es el proceso de inscripción?",
+    a: "Es súper sencillo: escríbenos por WhatsApp, elige tu plan, y agenda tu primera clase. ¡Tu primera clase de prueba es gratis!",
+  },
+  {
+    q: "¿Cuántas personas hay por clase?",
+    a: "Nuestras clases grupales tienen capacidad máxima de 6 felinas, lo que garantiza atención personalizada y un ambiente íntimo.",
+  },
+];
+---
+
+<section id="comunidad" class="py-20 md:py-28 bg-background">
+  <div class="container px-4 max-w-3xl mx-auto">
+    <div class="text-center mb-14">
+      <p class="font-display font-semibold text-primary text-sm tracking-[0.2em] uppercase mb-3">FAQ</p>
+      <h2 class="font-display font-black text-3xl md:text-4xl text-secondary">PREGUNTAS FRECUENTES</h2>
+    </div>
+
+    <div class="space-y-3">
+      {faqs.map((faq) => (
+        <details class="border border-border rounded-xl px-6 group open:bg-muted/50 transition-colors">
+          <summary class="flex justify-between items-center font-display font-semibold text-secondary text-sm md:text-base cursor-pointer py-5 list-none [&::-webkit-details-marker]:hidden">
+            {faq.q}
+            <span class="ml-4 shrink-0 text-primary font-bold text-xl leading-none transition-transform duration-200 group-open:rotate-45 select-none">+</span>
+          </summary>
+          <div class="text-muted-foreground text-sm md:text-base leading-relaxed pb-5">
+            {faq.a}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

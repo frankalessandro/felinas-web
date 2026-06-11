@@ -1,0 +1,25 @@
+---
+import "../styles/global.css";
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "Felinas",
+  description = "Empoderamiento femenino a través de la danza. Twerk, hip hop, breaking y más.",
+} = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/assets/PanteraFelinasLogo.svg" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

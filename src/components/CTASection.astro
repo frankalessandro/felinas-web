@@ -1,0 +1,36 @@
+---
+const WHATSAPP_URL = "https://wa.me/573027451752?text=%C2%A1Hola!%20Quiero%20agendar%20mi%20clase%20gratis%20en%20Felinas";
+---
+
+<section class="relative py-24 md:py-32 overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-dark"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,hsl(340_82%_52%/0.3),transparent_60%)]"></div>
+
+  <div class="container relative z-10 px-4 text-center">
+    <h2 class="font-display font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-tight mb-6">
+      ¿LISTA PARA DESCUBRIR<br />
+      TU <span class="text-felina-dorado">FELINA</span> INTERIOR?
+    </h2>
+    <p class="text-white/70 text-lg mb-10 max-w-md mx-auto">
+      Únete a la comunidad y agenda tu primera clase gratis
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-block bg-primary hover:bg-felina-rosa-glow text-white font-display font-bold rounded-full px-10 py-4 text-base animate-pulse-glow transition-colors"
+      >
+        AGENDA TU CLASE GRATIS
+      </a>
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-block border border-white/30 text-white hover:bg-white/10 font-display font-semibold rounded-full px-10 py-4 text-base transition-colors"
+      >
+        Escríbenos por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
