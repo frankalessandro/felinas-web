@@ -190,12 +190,12 @@ const LandingSplitScreen = () => {
       >
         <div
           className="absolute inset-0 z-[3] pointer-events-none"
-          style={{ background: isMobile ? "linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 45%)" : "linear-gradient(to left, rgba(0,0,0,0.15) 0%, transparent 40%)" }}
+          style={{ background: isMobile ? "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 45%)" : "linear-gradient(to left, rgba(0,0,0,0.15) 0%, transparent 40%)" }}
         />
         <div className={`absolute inset-0 bg-black z-[4] ${txOp} pointer-events-none`} style={{ opacity: active === "academia" ? 0.36 : 0, willChange: "opacity" }} />
 
         {/* Text */}
-        <div className={`absolute z-[1] pointer-events-none ${isMobile ? "top-1/2 -translate-y-1/2 right-6 text-right" : "top-1/2 -translate-y-1/2 right-5 md:right-9 xl:right-14 text-right"}`}>
+        <div className={`absolute z-[1] pointer-events-none ${isMobile ? "top-1/2 -translate-y-1/2 left-6" : "top-1/2 -translate-y-1/2 right-5 md:right-9 xl:right-14 text-right"}`}>
           <p
             className={`text-white tracking-[0.45em] uppercase font-semibold ${txOp5} ${isMobile ? "text-[10px] mb-1" : "text-[11px] md:text-[13px] mb-1 md:mb-2"}`}
             style={{ opacity: active === "academia" ? 0.2 : 0.85, textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
@@ -205,7 +205,7 @@ const LandingSplitScreen = () => {
           <h2
             className={`font-display font-black uppercase leading-[0.88] ${tx}`}
             style={{
-              fontSize: isMobile ? "clamp(2.8rem, 13vw, 4.5rem)" : "clamp(2.5rem, 5.5vw, 7rem)",
+              fontSize: isMobile ? "clamp(1.8rem, 8.5vw, 3rem)" : "clamp(2.5rem, 5.5vw, 7rem)",
               color: "white",
               opacity: active === "academia" ? 0.28 : 1,
               textShadow: "3px 3px 0 rgba(0,0,0,0.18), 0 8px 40px rgba(0,0,0,0.4)",
@@ -228,7 +228,7 @@ const LandingSplitScreen = () => {
 
         {/* Mobile bottom area */}
         {isMobile && (
-          <div className={`absolute bottom-5 right-6 text-right z-[20] ${tx5}`}>
+          <div className={`absolute bottom-5 left-6 z-[20] ${tx5}`}>
             {active === "show" ? (
               <div style={{ opacity: 1 }}>
                 <p className="text-white/90 text-sm font-medium mb-2" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}>Shows en vivo · Contrataciones VIP</p>
@@ -252,7 +252,7 @@ const LandingSplitScreen = () => {
         <div
           className={`absolute z-[2] pointer-events-none ${tx}`}
           style={isMobile ? {
-            left: "-4%", bottom: 0, width: "74%", height: "95%",
+            right: "-4%", bottom: 0, width: "74%", height: "95%",
             opacity: active === "show" ? 1 : active === "academia" ? 0.04 : 0.22,
             transform: active === "show" ? "translateY(0)" : "translateY(8%)",
             willChange: "opacity, transform",
@@ -263,7 +263,7 @@ const LandingSplitScreen = () => {
             willChange: "opacity, transform",
           }}
         >
-          <img src="/assets/Mae_NoBg_11zon.webp" alt="Mae — Show Group" className="w-full h-full object-contain object-bottom" style={{ filter: "drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04)", transform: "scaleX(-1)" }} />
+          <img src="/assets/Mae_NoBg_11zon.webp" alt="Mae — Show Group" className="w-full h-full object-contain object-bottom" style={{ filter: "drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04)", transform: isMobile ? "scaleX(1)" : "scaleX(-1)" }} />
         </div>
       </a>
 
@@ -285,7 +285,7 @@ const LandingSplitScreen = () => {
 
       {/* Elige tu lado */}
       <div className={`absolute bottom-5 left-1/2 -translate-x-1/2 z-30 pointer-events-none ${txOp5}`} style={{ opacity: active ? 0 : 1 }}>
-        <p className="text-white/70 text-[11px] md:text-[12px] tracking-[0.5em] uppercase font-semibold" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
+        <p className="text-white/70 text-[11px] md:text-[12px] sm:hidden tracking-[0.5em] uppercase font-semibold" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
           Elige tu lado
         </p>
       </div>
