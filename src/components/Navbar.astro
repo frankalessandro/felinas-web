@@ -9,7 +9,7 @@ const navLinks = [
 ];
 ---
 
-<header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-black">
   <nav class="container flex items-center justify-between h-16 md:h-20">
     <a href="#inicio" class="flex items-center gap-2 group nav-link">
       <img src="/assets/PanteraFelinasLogo.svg" alt="Felinas Logo" class="h-8 md:h-10 object-contain transition-all" />
@@ -86,11 +86,9 @@ const navLinks = [
 
   window.addEventListener("scroll", () => {
     if (window.scrollY > 50) {
-      navbar.style.background = "rgba(10,10,10,0.95)";
       navbar.style.backdropFilter = "blur(12px)";
       navbar.style.boxShadow = "0 4px 20px rgba(0,0,0,0.3)";
     } else {
-      navbar.style.background = "";
       navbar.style.backdropFilter = "";
       navbar.style.boxShadow = "";
     }
