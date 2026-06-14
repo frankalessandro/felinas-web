@@ -1,8 +1,28 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import LandingSplitScreen from "../components/LandingSplitScreen";
+import LoadingScreen from "../components/LoadingScreen.astro";
 ---
 
 <Layout title="Felinas — Elige tu lado">
+  <LoadingScreen />
   <LandingSplitScreen client:load />
 </Layout>
+
+<style is:global>
+  html, body {
+    overflow: hidden !important;
+    height: 100%;
+    background: #000;
+  }
+</style>
+
+<script>
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("loading-screen");
+    if (!loader) return;
+    loader.style.transition = "opacity 0.4s ease";
+    loader.style.opacity = "0";
+    setTimeout(() => loader.remove(), 400);
+  });
+</script>

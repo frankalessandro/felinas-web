@@ -121,9 +121,9 @@ const LandingSplitScreen = () => {
         {!isMobile && (
           <div
             className={`absolute left-5 md:left-9 xl:left-14 z-[20] pointer-events-none overflow-hidden ${tx5}`}
-            style={{ bottom: "clamp(1.5rem, 5vh, 3.5rem)", maxHeight: active === "academia" ? "80px" : "0px", opacity: active === "academia" ? 1 : 0 }}
+            style={{ bottom: "clamp(1.5rem, 5vh, 3.5rem)", maxHeight: "80px", opacity: active === "show" ? 0.2 : 1 }}
           >
-            <p className="text-white/90 text-xs md:text-sm font-medium" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}>Twerk · Hip Hop · Breaking</p>
+            <p className={`text-white/90 text-xs md:text-sm font-medium ${txOp5}`} style={{ textShadow: "0 2px 10px rgba(0,0,0,0.7)", opacity: active === "academia" ? 1 : 0.6 }}>Twerk · Hip Hop · Breaking</p>
             <span className="inline-block mt-2 text-[10px] md:text-xs text-white font-bold tracking-[0.35em] uppercase border-b border-white/60 pb-0.5" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}>Entrar →</span>
           </div>
         )}
@@ -204,9 +204,9 @@ const LandingSplitScreen = () => {
         {!isMobile && (
           <div
             className={`absolute right-5 md:right-9 xl:right-14 text-right z-[20] pointer-events-none overflow-hidden ${tx5}`}
-            style={{ bottom: "clamp(1.5rem, 5vh, 3.5rem)", maxHeight: active === "show" ? "80px" : "0px", opacity: active === "show" ? 1 : 0 }}
+            style={{ bottom: "clamp(1.5rem, 5vh, 3.5rem)", maxHeight: "80px", opacity: active === "academia" ? 0.2 : 1 }}
           >
-            <p className="text-white/90 text-xs md:text-sm font-medium" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}>Shows en vivo · Contrataciones VIP</p>
+            <p className={`text-white/90 text-xs md:text-sm font-medium ${txOp5}`} style={{ textShadow: "0 2px 10px rgba(0,0,0,0.7)", opacity: active === "show" ? 1 : 0.6 }}>Shows en vivo · Contrataciones VIP</p>
             <span className="inline-block mt-2 text-[10px] md:text-xs text-white font-bold tracking-[0.35em] uppercase border-b border-white/60 pb-0.5" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}>Entrar →</span>
           </div>
         )}
@@ -225,7 +225,7 @@ const LandingSplitScreen = () => {
         <div
           className={`absolute z-[2] pointer-events-none ${!isMobile ? tx : ""}`}
           style={isMobile ? {
-            right: "-4%", bottom: 0, width: "74%", height: "95%",
+            right: "-4%", bottom: 0, top: "12%", width: "74%", height: "95%",
             opacity: 1,
           } : {
             bottom: 0, left: 0, width: "68%", height: "92vh",

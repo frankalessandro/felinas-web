@@ -1,0 +1,41 @@
+---
+interface Props {
+  id?: string;
+}
+const { id = "loading-screen" } = Astro.props;
+---
+
+<div
+  id={id}
+  class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black gap-6"
+>
+  <div class="flex items-center gap-3">
+    <img
+      src="/assets/PanteraFelinasLogo.svg"
+      alt="Felinas"
+      class="h-12 object-contain"
+    />
+    <span class="font-display font-black text-4xl tracking-tight text-white">
+      FELINAS
+    </span>
+  </div>
+
+  <svg
+    class="w-48"
+    fill="hsl(228, 97%, 42%)"
+    viewBox="0 0 40 4"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <style>
+      .felinas-bar {
+        animation: felinas-load 1s ease-in-out infinite;
+      }
+      @keyframes felinas-load {
+        0%   { width: 0%; }
+        50%  { width: 100%; transform: translate(0%, 0); }
+        100% { width: 0; transform: translate(100%, 0); }
+      }
+    </style>
+    <rect class="felinas-bar" width="40" height="4" fill="currentColor" />
+  </svg>
+</div>
