@@ -17,6 +17,9 @@ export default function HeroSpotlight() {
   const smooth = useRef({ x: OFFSCREEN, y: OFFSCREEN });
   const gridOff = useRef({ x: 0, y: 0 });
   const [grid, setGrid] = useState({ x: 0, y: 0 });
+  const isTouch = useRef(
+    typeof window !== "undefined" && window.matchMedia("(hover: none)").matches
+  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     mouse.current = { x: e.clientX, y: e.clientY };
@@ -39,49 +42,68 @@ export default function HeroSpotlight() {
     };
 
     const tick = () => {
-      const s = smooth.current,
-        m = mouse.current;
-      s.x += (m.x - s.x) * 0.2;
-      s.y += (m.y - s.y) * 0.2;
-
-      // Grid parallax relative to section
-      if (sectionRef.current) {
-        const r = sectionRef.current.getBoundingClientRect();
-        const cx = (s.x - r.left) / r.width - 0.5;
-        const cy = (s.y - r.top) / r.height - 0.5;
-        gridOff.current.x += (cx * 14 - gridOff.current.x) * 0.07;
-        gridOff.current.y += (cy * 14 - gridOff.current.y) * 0.07;
-        setGrid({ x: gridOff.current.x, y: gridOff.current.y });
-      }
-
-      // Spotlight coords relative to image area
-      const canvas = canvasRef.current;
+      const touch = isTouch.current;
       const reveal = revealRef.current;
       const area = imageAreaRef.current;
-      if (canvas && reveal && area) {
-        const areaRect = area.getBoundingClientRect();
-        const lx = s.x - areaRect.left;
-        const ly = s.y - areaRect.top;
 
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, SPOTLIGHT_R);
-          g.addColorStop(0, "rgba(255,255,255,1)");
-          g.addColorStop(0.4, "rgba(255,255,255,1)");
-          g.addColorStop(0.6, "rgba(255,255,255,0.75)");
-          g.addColorStop(0.75, "rgba(255,255,255,0.4)");
-          g.addColorStop(0.88, "rgba(255,255,255,0.12)");
-          g.addColorStop(1, "rgba(255,255,255,0)");
-          ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.arc(lx, ly, SPOTLIGHT_R, 0, 2 * Math.PI);
-          ctx.fill();
-          const url = canvas.toDataURL();
-          reveal.style.webkitMaskImage = `url(${url})`;
-          reveal.style.maskImage = `url(${url})`;
-          reveal.style.webkitMaskSize = "100% 100%";
-          reveal.style.maskSize = "100% 100%";
+      if (touch) {
+        // Mobile: spotlight position driven by scroll progress through section
+        if (reveal && area && sectionRef.current) {
+          const rect = sectionRef.current.getBoundingClientRect();
+          // 0 = section top at viewport top, 1 = section has fully scrolled off
+          const progress = Math.max(0, Math.min(1, -rect.top / rect.height));
+          const w = area.offsetWidth;
+          const h = area.offsetHeight;
+          // 1.6x compresses the sweep so Pantera peaks at ~30% scroll instead of 50%
+          const p = Math.min(progress * 1.6, 1);
+          const spotX = -SPOTLIGHT_R + p * (w + SPOTLIGHT_R * 2);
+          const spotY = h * 0.38;
+          const mask = `radial-gradient(circle ${SPOTLIGHT_R}px at ${spotX}px ${spotY}px, white 35%, rgba(255,255,255,0.5) 60%, transparent 100%)`;
+          reveal.style.webkitMaskImage = mask;
+          reveal.style.maskImage = mask;
+        }
+      } else {
+        // Desktop: cursor-driven smooth spotlight via canvas
+        const s = smooth.current;
+        const m = mouse.current;
+        s.x += (m.x - s.x) * 0.2;
+        s.y += (m.y - s.y) * 0.2;
+
+        // Grid parallax relative to section
+        if (sectionRef.current) {
+          const r = sectionRef.current.getBoundingClientRect();
+          const cx = (s.x - r.left) / r.width - 0.5;
+          const cy = (s.y - r.top) / r.height - 0.5;
+          gridOff.current.x += (cx * 14 - gridOff.current.x) * 0.07;
+          gridOff.current.y += (cy * 14 - gridOff.current.y) * 0.07;
+          setGrid({ x: gridOff.current.x, y: gridOff.current.y });
+        }
+
+        const canvas = canvasRef.current;
+        if (canvas && reveal && area) {
+          const areaRect = area.getBoundingClientRect();
+          const lx = s.x - areaRect.left;
+          const ly = s.y - areaRect.top;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, SPOTLIGHT_R);
+            g.addColorStop(0, "rgba(255,255,255,1)");
+            g.addColorStop(0.4, "rgba(255,255,255,1)");
+            g.addColorStop(0.6, "rgba(255,255,255,0.75)");
+            g.addColorStop(0.75, "rgba(255,255,255,0.4)");
+            g.addColorStop(0.88, "rgba(255,255,255,0.12)");
+            g.addColorStop(1, "rgba(255,255,255,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(lx, ly, SPOTLIGHT_R, 0, 2 * Math.PI);
+            ctx.fill();
+            const url = canvas.toDataURL();
+            reveal.style.webkitMaskImage = `url(${url})`;
+            reveal.style.maskImage = `url(${url})`;
+            reveal.style.webkitMaskSize = "100% 100%";
+            reveal.style.maskSize = "100% 100%";
+          }
         }
       }
 
