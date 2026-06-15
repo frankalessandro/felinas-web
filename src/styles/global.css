@@ -33,10 +33,14 @@
 
 @layer base {
   * { @apply border-border; }
+  html {
+    background: #0a0a0a;
+  }
   body {
     @apply bg-background text-foreground font-sans;
     font-family: 'Inter', sans-serif;
     scroll-behavior: smooth;
+    overscroll-behavior: none;
   }
   h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
 }

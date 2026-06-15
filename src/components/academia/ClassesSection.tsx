@@ -71,7 +71,7 @@ const ClassesSection = () => {
           <div className="mb-20 md:mb-32">
             <p className="font-display font-semibold text-primary text-sm tracking-[0.4em] uppercase mb-4 border-l-2 border-primary pl-4">Nuestros estilos</p>
             <h2 className="font-display font-black text-5xl md:text-7xl text-foreground">
-              OUR <span className="text-transparent text-stroke-secondary text-stroke-2">CLASS</span>
+              NUESTRAS <span className="text-transparent text-stroke-secondary text-stroke-2">CLASES</span>
             </h2>
           </div>
 
