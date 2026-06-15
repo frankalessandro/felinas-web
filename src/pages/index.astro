@@ -1,12 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import LandingSplitScreen from "../components/LandingSplitScreen";
-import LoadingScreen from "../components/LoadingScreen.astro";
+import LandingSplitScreen from "../components/shared/LandingSplitScreen";
+import LoadingScreen from "../components/shared/LoadingScreen.astro";
+import andreaImg from "../assets/academia/Andrea_NoBg_11zon.webp";
+import maeImg from "../assets/fproductions/Mae_NoBg_11zon.webp";
 ---
 
 <Layout title="Felinas — Elige tu lado">
   <LoadingScreen />
-  <LandingSplitScreen client:load />
+  <LandingSplitScreen client:load andreaSrc={andreaImg.src} maeSrc={maeImg.src} />
 </Layout>
 
 <style is:global>
