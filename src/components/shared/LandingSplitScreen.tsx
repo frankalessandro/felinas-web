@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
 
-const LandingSplitScreen = () => {
+interface Props {
+  andreaSrc: string;
+  maeSrc: string;
+}
+
+const LandingSplitScreen = ({ andreaSrc, maeSrc }: Props) => {
   const [hovered, setHovered] = useState<"academia" | "show" | null>(null);
   const [transitionsReady, setTransitionsReady] = useState(false);
   const [ready, setReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const srcs = ["/assets/Andrea_NoBg_11zon.webp", "/assets/Mae_NoBg_11zon.webp", "/assets/PanteraFelinasLogo.svg"];
+    const srcs = [andreaSrc, maeSrc, "/assets/PanteraFelinasLogo.svg"];
     Promise.all(srcs.map(src => { const img = new Image(); img.src = src; return img.decode().catch(() => {}); }))
       .then(() => requestAnimationFrame(() => requestAnimationFrame(() => { setTransitionsReady(true); setReady(true); })));
 
@@ -151,7 +156,7 @@ const LandingSplitScreen = () => {
             willChange: active !== null ? "opacity, transform" : "auto",
           }}
         >
-          <img src="/assets/Andrea_NoBg_11zon.webp" alt="Andrea — Academia" className="w-full h-full object-contain object-bottom" style={{ filter: "drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04)", transform: "scaleX(-1)" }} />
+          <img src={andreaSrc} alt="Andrea — Academia" className="w-full h-full object-contain object-bottom" style={{ filter: "drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04)", transform: "scaleX(-1)" }} />
         </div>
       </a>
 
@@ -234,7 +239,7 @@ const LandingSplitScreen = () => {
             willChange: active !== null ? "opacity, transform" : "auto",
           }}
         >
-          <img src="/assets/Mae_NoBg_11zon.webp" alt="Mae — Show Group" className="w-full h-full object-contain object-bottom" style={{ filter: "drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04)", transform: isMobile ? "scaleX(1)" : "scaleX(-1)" }} />
+          <img src={maeSrc} alt="Mae — Show Group" className="w-full h-full object-contain object-bottom" style={{ filter: "drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04)", transform: isMobile ? "scaleX(1)" : "scaleX(-1)" }} />
         </div>
       </a>
 

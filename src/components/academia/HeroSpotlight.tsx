@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 
-const BG_1 = "/assets/MaeHero_birefnet.webp";
-const BG_2 = "/assets/PanterHero_inspyrenet.webp";
 const SPOTLIGHT_R = 260;
 const CELL = 48;
 const WA =
   "https://wa.me/573027451752?text=%C2%A1Hola!%20Quiero%20agendar%20mi%20clase%20gratis%20en%20Felinas";
 const OFFSCREEN = -SPOTLIGHT_R * 4;
 
-export default function HeroSpotlight() {
+interface Props {
+  bg1: string;
+  bg2: string;
+}
+
+export default function HeroSpotlight({ bg1, bg2 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const imageAreaRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -293,7 +296,7 @@ export default function HeroSpotlight() {
               }}
             >
               {/* Base image (MaeHero) */}
-              <img src={BG_1} alt="" style={imgStyle} />
+              <img src={bg1} alt="" style={imgStyle} />
 
               {/* Spotlight reveal (PanterHero) */}
               <canvas ref={canvasRef} className="hidden" />
@@ -301,7 +304,7 @@ export default function HeroSpotlight() {
                 ref={revealRef}
                 className="absolute inset-0 pointer-events-none"
               >
-                <img src={BG_2} alt="" style={imgStyle} />
+                <img src={bg2} alt="" style={imgStyle} />
               </div>
             </div>
           </div>
