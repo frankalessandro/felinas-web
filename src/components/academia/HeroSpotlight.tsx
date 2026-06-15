@@ -211,7 +211,7 @@ export default function HeroSpotlight({ bg1, bg2 }: Props) {
       <div className="container relative z-[10] px-4 py-20 lg:py-0 w-full">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8">
           {/* Left column — text content */}
-          <div className="w-full lg:w-1/2 pt-10 lg:pt-0">
+          <div className="w-full lg:w-1/2">
             <p className="font-display font-semibold text-primary text-sm md:text-base tracking-[0.4em] uppercase mb-6 animate-fade-up border-l-2 border-primary pl-4">
               Academia de Danza Urbana
             </p>

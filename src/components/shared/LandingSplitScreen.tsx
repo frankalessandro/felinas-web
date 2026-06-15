@@ -91,7 +91,7 @@ const LandingSplitScreen = ({ andreaSrc, maeSrc }: Props) => {
       >
         <div
           className="absolute inset-0 z-[3] pointer-events-none"
-          style={{ background: isMobile ? "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 45%)" : "linear-gradient(to right, rgba(0,0,0,0.15) 0%, transparent 40%)" }}
+          style={{ background: isMobile ? "linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 45%)" : "linear-gradient(to right, rgba(0,0,0,0.15) 0%, transparent 40%)" }}
         />
         <div className={`absolute inset-0 bg-black z-[4] ${txOp} pointer-events-none`} style={{ opacity: active === "show" ? 0.36 : 0, willChange: active !== null ? "opacity" : "auto" }} />
 
@@ -147,7 +147,7 @@ const LandingSplitScreen = ({ andreaSrc, maeSrc }: Props) => {
         <div
           className={`absolute z-[2] pointer-events-none ${!isMobile ? tx : ""}`}
           style={isMobile ? {
-            right: "-4%", bottom: 0, width: "74%", height: "95%",
+            right: "-4%", bottom: 0, width: "70%", height: "90%",
             opacity: 1,
           } : {
             right: 0, bottom: "4rem", width: "65%", height: "105vh",
@@ -184,7 +184,7 @@ const LandingSplitScreen = ({ andreaSrc, maeSrc }: Props) => {
             className={`text-white tracking-[0.45em] uppercase font-semibold ${txOp5} ${isMobile ? "text-[10px] mb-1" : "text-[11px] md:text-[13px] mb-1 md:mb-2"}`}
             style={{ opacity: active === "academia" ? 0.2 : 0.85, textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}
           >
-            Conoce el
+            Conoce
           </p>
           <h2
             className="font-display font-black uppercase leading-[0.88]"
@@ -230,7 +230,7 @@ const LandingSplitScreen = ({ andreaSrc, maeSrc }: Props) => {
         <div
           className={`absolute z-[2] pointer-events-none ${!isMobile ? tx : ""}`}
           style={isMobile ? {
-            right: "-4%", bottom: 0, top: "12%", width: "74%", height: "95%",
+            right: "-4%", bottom: 0, top: "15%", width: "74%", height: "95%",
             opacity: 1,
           } : {
             bottom: 0, left: 0, width: "68%", height: "92vh",
