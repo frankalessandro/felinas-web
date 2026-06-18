@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 const SPOTLIGHT_R = 260;
 const CELL = 48;
 const WA =
-  "https://wa.me/573027451752?text=%C2%A1Hola!%20Quiero%20agendar%20mi%20clase%20gratis%20en%20Felinas";
+  "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20agendar%20mi%20clase%20gratis%20en%20Felinas";
 const OFFSCREEN = -SPOTLIGHT_R * 4;
 
 interface Props {
@@ -213,7 +213,7 @@ export default function HeroSpotlight({ bg1, bg2 }: Props) {
           {/* Left column — text content */}
           <div className="w-full lg:w-1/2">
             <p className="font-display font-semibold text-primary text-sm md:text-base tracking-[0.4em] uppercase mb-6 animate-fade-up border-l-2 border-primary pl-4">
-              Academia de Danza Urbana
+              COMUNIDAD DE DANZA Y MOVIMIENTO 
             </p>
 
             <h1
@@ -223,14 +223,14 @@ export default function HeroSpotlight({ bg1, bg2 }: Props) {
                 animationDelay: "0.1s",
               }}
             >
-              <span className="uppercase text-foreground">Libera</span>
+              <span className="uppercase text-foreground">Descubre</span>
               <span
                 className="uppercase text-transparent"
                 style={{ WebkitTextStroke: "2px hsl(0 0% 4%)" }}
               >
-                TU LADO
+                TU FELINA
               </span>
-              <span className="text-gradient-pink italic pr-4">FELINA</span>
+              <span className="text-gradient-pink italic pr-4">INTERIOR</span>
             </h1>
 
             <p
@@ -240,8 +240,8 @@ export default function HeroSpotlight({ bg1, bg2 }: Props) {
                 animationDelay: "0.2s",
               }}
             >
-              Encuentra tu empoderamiento a través de la danza. Twerk, hip hop,
-              breaking y mucho más.
+              Felinas es una comunidad donde la danza se convierte en una herramienta para aprender, expresarse, conectar y crecer. 
+              Un espacio para descubrir tu movimiento, desarrollar tu confianza y crear conexiones auténticas.
             </p>
 
             <div
