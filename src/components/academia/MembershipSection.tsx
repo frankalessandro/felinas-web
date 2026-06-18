@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 import { cn } from "../../lib/utils";
 
-const WHATSAPP_URL = "https://wa.me/573027451752?text=%C2%A1Hola!%20Quiero%20información%20sobre%20las%20membresías%20de%20Felinas";
+const WHATSAPP_URL = "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20información%20sobre%20las%20membresías%20de%20Felinas";
 
 type Tab = "combo" | "twerk" | "urbano";
 
