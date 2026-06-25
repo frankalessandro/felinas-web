@@ -1,165 +1,59 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import WhatsAppButton from "../components/shared/WhatsAppButton.astro";
-
-const CAROUSEL_IMAGES = [
-  "https://images.unsplash.com/photo-1542282811-943ef1a6770f?q=80&w=2072&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1504506894056-b8db25345719?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1543807535-eceef0bc6599?q=80&w=2070&auto=format&fit=crop",
-];
-
-const BENTO_IMAGES = [
-  "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1504506894056-b8db25345719?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1543807535-eceef0bc6599?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1542282811-943ef1a6770f?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=800&auto=format&fit=crop",
-];
+import ShowNavbar from "../components/fproductions/ShowNavbar.astro";
+import ShowHero from "../components/fproductions/ShowHero.astro";
+import ManifestoSection from "../components/fproductions/ManifestoSection.astro";
+import ServicesSection from "../components/fproductions/ServicesSection.astro";
+import WhyUsSection from "../components/fproductions/WhyUsSection.astro";
+import GallerySection from "../components/fproductions/GallerySection.astro";
+import ProcessSection from "../components/fproductions/ProcessSection.astro";
+import BookingCTA from "../components/fproductions/BookingCTA.astro";
+import ShowFooter from "../components/fproductions/ShowFooter.astro";
 ---
 
-<Layout title="Felinas F Productions — Show Group" description="Shows en vivo y contrataciones VIP de Felinas F Productions.">
-  <div class="min-h-screen bg-[#07030b] text-[#f8f5fa] font-sans" style="selection-background: rgba(124,4,117,0.4);">
-
-    <!-- Navbar luxury -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-[#07030b]/70 backdrop-blur-2xl border-b border-white/5">
-      <nav class="container flex items-center justify-between h-20 px-4 md:px-8">
-        <a href="/" class="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-xs tracking-widest uppercase font-display font-medium group">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform">
-            <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
-          </svg>
-          Volver
-        </a>
-        <div class="flex items-center gap-3">
-          <img src="/assets/PanteraFelinasLogo.svg" alt="Felinas Logo" class="h-8 md:h-10 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" />
-          <span class="font-display font-black text-2xl tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-felina-morado to-purple-400 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-            SHOW
-          </span>
-        </div>
-        <div class="w-24 hidden md:block"></div>
-      </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-      <div class="absolute inset-0 bg-[#07030b]"></div>
-      <div class="absolute top-[10%] left-[20%] w-[600px] h-[600px] rounded-full bg-felina-morado/20 blur-[130px] mix-blend-screen animate-float-light" style="animation-duration:10s"></div>
-      <div class="absolute bottom-[20%] right-[10%] w-[700px] h-[700px] rounded-full bg-purple-900/30 blur-[150px] mix-blend-screen animate-float-light" style="animation-direction:reverse;animation-duration:14s"></div>
-      <div class="absolute top-[40%] left-[60%] w-[400px] h-[400px] rounded-full bg-blue-900/20 blur-[120px] mix-blend-screen animate-float-light" style="animation-duration:12s"></div>
-
-      <div class="relative z-10 w-full">
-        <div class="text-center px-4 max-w-5xl mx-auto flex flex-col items-center mb-16 pt-10">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/80 text-xs font-medium tracking-widest uppercase mb-8 backdrop-blur-md">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400">
-              <polygon points="6 3 20 12 6 21 6 3"/>
-            </svg>
-            <span>Portafolio Oficial</span>
-          </div>
-          <h1 class="font-display font-black text-6xl md:text-8xl lg:text-[10rem] mb-6 leading-[0.9] tracking-tighter">
-            VISUAL<br />
-            <span class="text-transparent bg-clip-text bg-gradient-to-br from-white via-purple-200 to-felina-morado">IMPACT</span>
-          </h1>
-        </div>
-
-        <!-- CSS Infinite Auto-Scrolling Carousel -->
-        <div class="w-full relative overflow-hidden h-[40vh] md:h-[50vh] flex items-center mt-8 mask-image-fade">
-          <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#07030b] to-transparent z-10"></div>
-          <div class="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#07030b] to-transparent z-10"></div>
-          <div class="flex w-[200%] animate-infinite-scroll hover:[animation-play-state:paused] group">
-            <div class="flex w-1/2 justify-around gap-4 px-2">
-              {CAROUSEL_IMAGES.map((src, i) => (
-                <div class="w-[60vw] md:w-[30vw] h-[35vh] md:h-[45vh] shrink-0 rounded-2xl overflow-hidden relative opacity-60 hover:opacity-100 transition-all duration-500 hover:scale-[1.02] cursor-pointer">
-                  <img src={src} alt="Show snippet" class="w-full h-full object-cover filter grayscale-[50%] hover:grayscale-0 transition-all duration-700" loading="lazy" />
-                </div>
-              ))}
-            </div>
-            <div class="flex w-1/2 justify-around gap-4 px-2">
-              {CAROUSEL_IMAGES.map((src, i) => (
-                <div class="w-[60vw] md:w-[30vw] h-[35vh] md:h-[45vh] shrink-0 rounded-2xl overflow-hidden relative opacity-60 hover:opacity-100 transition-all duration-500 hover:scale-[1.02] cursor-pointer">
-                  <img src={src} alt="Show snippet" class="w-full h-full object-cover filter grayscale-[50%] hover:grayscale-0 transition-all duration-700" loading="lazy" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Bento Grid -->
-    <section class="py-32 relative z-10 bg-[#07030b]">
-      <div class="container px-4 md:px-8 max-w-7xl">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
-          <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
-            MOMENTOS<br /><span class="text-felina-morado">INOLVIDABLES</span>
-          </h2>
-          <p class="text-white/40 max-w-sm text-sm uppercase tracking-widest font-medium">
-            Explora nuestra galería de eventos exclusivos, shows en vivo y presentaciones estelares.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[250px]">
-          <div class="md:col-span-2 md:row-span-2 group rounded-3xl overflow-hidden relative bg-[#11081a]">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 z-10"></div>
-            <img src={BENTO_IMAGES[0]} alt="Gallery" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 group-hover:rotate-1" />
-            <div class="absolute bottom-6 left-6 z-20">
-              <p class="text-xs uppercase tracking-[0.2em] text-purple-400 font-bold mb-1">Highlight</p>
-              <p class="text-xl font-display font-bold text-white">Main Stage Impact</p>
-            </div>
-          </div>
-          <div class="md:col-span-1 md:row-span-2 group rounded-3xl overflow-hidden relative bg-[#11081a]">
-            <div class="absolute inset-0 bg-felina-morado/40 mix-blend-color z-10 group-hover:opacity-0 transition-opacity duration-700"></div>
-            <img src={BENTO_IMAGES[1]} alt="Gallery" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-          </div>
-          <div class="md:col-span-1 md:row-span-1 group rounded-3xl overflow-hidden relative bg-[#11081a]">
-            <img src={BENTO_IMAGES[2]} alt="Gallery" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" />
-          </div>
-          <div class="md:col-span-1 md:row-span-1 group rounded-3xl overflow-hidden relative bg-[#11081a] border border-white/5">
-            <div class="absolute inset-0 bg-gradient-to-br from-purple-900/50 to-felina-morado/20 z-10 flex items-center justify-center p-6 text-center backdrop-blur-sm group-hover:backdrop-blur-none transition-all duration-500">
-              <span class="font-display font-black text-2xl tracking-widest text-white/90 group-hover:opacity-0 transition-opacity">VIBE</span>
-            </div>
-            <img src={BENTO_IMAGES[3]} alt="Gallery" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-          </div>
-          <div class="md:col-span-3 md:row-span-1 group rounded-3xl overflow-hidden relative bg-[#11081a]">
-            <div class="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/10 transition-colors duration-500"></div>
-            <img src={BENTO_IMAGES[4]} alt="Gallery" class="w-full h-full object-cover object-center transition-transform duration-[2000ms] group-hover:scale-[1.03]" />
-          </div>
-          <div class="md:col-span-1 md:row-span-1 group rounded-3xl overflow-hidden relative bg-[#11081a]">
-            <img src={BENTO_IMAGES[5]} alt="Gallery" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" style="filter:sepia(0.3) hue-rotate(240deg)" />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Booking CTA -->
-    <section id="booking" class="py-40 relative overflow-hidden">
-      <div class="absolute inset-0 bg-[#07030b]"></div>
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[2px] bg-gradient-to-r from-transparent via-felina-morado to-transparent opacity-50 blur-sm"></div>
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-felina-morado/10 rounded-[100%] blur-[100px] animate-pulse-glow"></div>
-
-      <div class="container px-4 relative z-20 text-center">
-        <p class="text-purple-400 uppercase tracking-[0.4em] text-sm font-bold mb-6">Hazlo Realidad</p>
-        <h2 class="font-display font-black text-5xl md:text-7xl mb-12 text-white tracking-tighter">
-          RESERVA <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-felina-morado">LA NOCHE</span>
-        </h2>
-        <a
-          href="https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20contratar%20un%20show%20de%20Felinas"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="group relative inline-flex items-center justify-center px-10 py-5 font-display font-bold text-sm tracking-widest uppercase text-[#07030b] transition-all overflow-hidden rounded-full bg-white hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(168,85,247,0.4)]"
-        >
-          <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white to-purple-100"></span>
-          <span class="relative z-10 flex items-center gap-3">
-            Contratar Show
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </span>
-        </a>
-      </div>
-    </section>
-
+<Layout
+  title="Felinas F Productions — Shows en vivo y eventos"
+  description="F Productions es el grupo de shows en vivo de Felinas. Contrata shows, animación y acompañamiento profesional para discotecas, eventos privados y activaciones de marca."
+>
+  <div class="min-h-screen bg-[#07030b] text-[#f8f5fa] font-sans antialiased selection:bg-felina-morado/40">
+    <ShowNavbar />
+    <main>
+      <ShowHero />
+      <ManifestoSection />
+      <ServicesSection />
+      <WhyUsSection />
+      <GallerySection />
+      <ProcessSection />
+      <BookingCTA />
+    </main>
+    <ShowFooter />
     <WhatsAppButton />
   </div>
 </Layout>
+
+<script>
+  // Scroll reveal for all [data-reveal] elements, with light stagger per section
+  const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
+  els.forEach((el) => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(28px)";
+    el.style.transition = "opacity 0.7s ease-out, transform 0.7s ease-out";
+  });
+
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target as HTMLElement;
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+          obs.unobserve(el);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+
+  els.forEach((el) => obs.observe(el));
+</script>

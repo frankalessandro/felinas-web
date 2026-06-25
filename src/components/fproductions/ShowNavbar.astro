@@ -1,0 +1,123 @@
+---
+const WHATSAPP_URL =
+  "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20contratar%20un%20show%20de%20Felinas";
+const navLinks = [
+  { label: "Nosotras", href: "#nosotras" },
+  { label: "Servicios", href: "#servicios" },
+  { label: "Por qué", href: "#por-que" },
+  { label: "Galería", href: "#galeria" },
+  { label: "Proceso", href: "#proceso" },
+];
+---
+
+<header
+  id="show-navbar"
+  class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#07030b]/80 backdrop-blur-2xl border-b border-white/5"
+>
+  <div class="container px-4 md:px-8">
+    <!-- Fila 1: Volver | F·PRODUCTIONS | Cotizar -->
+    <div class="grid grid-cols-[1fr_auto_1fr] items-center h-12 md:h-14">
+      <!-- Izquierda -->
+      <a
+        href="/"
+        class="flex items-center gap-2 text-white/60 hover:text-white transition-colors text-[11px] tracking-[0.2em] uppercase font-display font-semibold group w-fit"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:-translate-x-1 transition-transform">
+          <path d="m12 19-7-7 7-7" /><path d="M19 12H5" />
+        </svg>
+        <span class="hidden sm:inline">Volver</span>
+      </a>
+
+      <!-- Centro: brand -->
+      <a href="#inicio" class="flex items-center gap-2.5 nav-link">
+        <img src="/assets/PanteraFelinasLogo.svg" alt="Felinas" class="h-6 md:h-7 object-contain drop-shadow-[0_0_15px_rgba(192,132,252,0.35)]" />
+        <span class="font-display font-black text-base md:text-xl tracking-[0.14em] text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-felina-morado whitespace-nowrap">
+          F·PRODUCTIONS
+        </span>
+      </a>
+
+      <!-- Derecha -->
+      <div class="flex items-center justify-end gap-3">
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden md:inline-flex items-center bg-white text-[#07030b] font-display font-bold rounded-full px-5 py-2 text-[11px] tracking-wider uppercase transition-all hover:scale-105 hover:shadow-[0_0_24px_rgba(192,132,252,0.5)]"
+        >
+          Cotizar
+        </a>
+        <button id="show-menu-toggle" class="lg:hidden text-white p-1.5 shrink-0" aria-label="Menú">
+          <svg id="show-icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+          <svg id="show-icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Fila 2: nav links centrados (solo desktop) -->
+    <nav class="hidden lg:flex items-center justify-center gap-8 pb-2.5 border-t border-white/5 pt-2">
+      {navLinks.map((l) => (
+        <a href={l.href} class="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/65 hover:text-white transition-colors nav-link whitespace-nowrap">
+          {l.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+
+  <div id="show-mobile-menu" class="hidden lg:hidden border-t border-white/5" style="background: rgba(7,3,11,0.98);">
+    <ul class="flex flex-col items-center gap-5 py-8">
+      {navLinks.map((l) => (
+        <li>
+          <a href={l.href} class="text-base font-display font-semibold uppercase tracking-widest text-white/90 hover:text-felina-morado transition-colors nav-link">
+            {l.label}
+          </a>
+        </li>
+      ))}
+      <li>
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block bg-white text-[#07030b] font-display font-bold rounded-full px-8 py-3 text-sm uppercase tracking-wider transition-colors mt-2"
+        >
+          Cotizar show
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  const navbar = document.getElementById("show-navbar")!;
+  const mobileMenu = document.getElementById("show-mobile-menu")!;
+  const menuToggle = document.getElementById("show-menu-toggle")!;
+  const iconMenu = document.getElementById("show-icon-menu")!;
+  const iconClose = document.getElementById("show-icon-close")!;
+
+  window.addEventListener("scroll", () => {
+    navbar.style.boxShadow = window.scrollY > 40 ? "0 8px 30px rgba(0,0,0,0.4)" : "";
+  });
+
+  menuToggle.addEventListener("click", () => {
+    const isOpen = !mobileMenu.classList.contains("hidden");
+    mobileMenu.classList.toggle("hidden");
+    iconMenu.classList.toggle("hidden", !isOpen);
+    iconClose.classList.toggle("hidden", isOpen);
+  });
+
+  document.querySelectorAll("#show-navbar .nav-link").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const href = (link as HTMLAnchorElement).getAttribute("href");
+      if (href?.startsWith("#")) {
+        e.preventDefault();
+        mobileMenu.classList.add("hidden");
+        iconMenu.classList.remove("hidden");
+        iconClose.classList.add("hidden");
+        document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  });
+</script>

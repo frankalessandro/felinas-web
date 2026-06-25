@@ -1,0 +1,61 @@
+---
+const reasons = [
+  {
+    n: "01",
+    t: "Energía que se contagia",
+    d: "El público no nos mira: nos siente. Subimos la temperatura del evento y lo dejamos marcado.",
+  },
+  {
+    n: "02",
+    t: "Profesionalismo escénico",
+    d: "Puntualidad, ensayos, vestuario impecable y coordinación con tu equipo. Cero improvisación.",
+  },
+  {
+    n: "03",
+    t: "Todo a tu medida",
+    d: "Adaptamos el show a tu marca, tu música y tu espacio. No reciclamos: diseñamos para ti.",
+  },
+  {
+    n: "04",
+    t: "Impacto que se vuelve contenido",
+    d: "Momentos pensados para verse increíbles en cámara. Tu evento se sigue contando en redes.",
+  },
+];
+---
+
+<section id="por-que" class="relative py-24 md:py-36 bg-gradient-to-b from-[#07030b] via-[#0c0512] to-[#07030b] border-t border-white/5 overflow-hidden">
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-felina-morado/12 blur-[140px] pointer-events-none"></div>
+  <div class="absolute top-0 right-0 w-[350px] h-[350px] rounded-full bg-[#ff006a]/10 blur-[100px] pointer-events-none"></div>
+
+  <div class="container px-4 md:px-8 relative z-10">
+    <div data-reveal class="mb-16 md:mb-20">
+      <p class="font-display font-semibold text-[#ff006a] text-xs tracking-[0.35em] uppercase mb-5 flex items-center gap-3">
+        <span class="w-10 h-px bg-[#ff006a]"></span> Por qué elegirnos
+      </p>
+      <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-[0.95]">
+        CONTRÁTANOS Y<br />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff006a] to-felina-morado">NO LO OLVIDAS</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-x-16 md:gap-x-24 gap-y-0">
+      {reasons.map((r) => (
+        <div
+          data-reveal
+          class="group relative flex items-start gap-6 py-10 border-t border-white/8 hover:border-[#ff006a]/50 transition-colors duration-300"
+        >
+          <span
+            class="font-display font-black text-6xl md:text-8xl leading-none select-none shrink-0 tabular-nums transition-all duration-500 group-hover:scale-110 group-hover:[color:transparent] group-hover:[-webkit-text-stroke:2px_#ff006a]"
+            style="-webkit-text-stroke: 2px rgba(255,255,255,0.30); color: transparent;"
+          >
+            {r.n}
+          </span>
+          <div class="pt-2">
+            <h3 class="font-display font-bold text-xl md:text-2xl text-white mb-3 group-hover:text-[#ff006a] transition-colors duration-300">{r.t}</h3>
+            <p class="text-sm md:text-base text-white/60 leading-relaxed group-hover:text-white/80 transition-colors duration-300">{r.d}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

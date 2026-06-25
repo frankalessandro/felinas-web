@@ -1,0 +1,128 @@
+---
+import maeImg from "../../assets/fproductions/Mae_NoBg_11zon.webp";
+
+const WHATSAPP_URL =
+  "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20contratar%20un%20show%20de%20Felinas";
+
+const marquee = [
+  "Shows en vivo",
+  "Eventos privados",
+  "Activaciones de marca",
+  "Discotecas",
+  "Producción escénica",
+  "Coreografías a medida",
+];
+---
+
+<section
+  id="inicio"
+  class="relative min-h-screen flex items-center overflow-hidden pt-16 md:pt-24"
+>
+  <!-- Base -->
+  <div class="absolute inset-0 bg-[#07030b]"></div>
+
+  <!-- Glows: morado izquierda + magenta derecha — más directivos, más crudos -->
+  <div class="absolute top-[5%] left-[8%] w-[480px] h-[480px] rounded-full bg-felina-morado/30 blur-[110px] mix-blend-screen animate-float-light" style="animation-duration:11s"></div>
+  <div class="absolute bottom-[10%] right-[4%] w-[500px] h-[500px] rounded-full bg-[#ff006a]/18 blur-[100px] mix-blend-screen animate-float-light" style="animation-direction:reverse;animation-duration:9s"></div>
+  <div class="absolute top-[30%] right-[20%] w-[250px] h-[250px] rounded-full bg-[#ff006a]/10 blur-[70px] mix-blend-screen animate-float-light" style="animation-duration:7s"></div>
+
+  <!-- Líneas diagonales decorativas -->
+  <div class="absolute inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute top-[18%] -left-10 w-[110%] h-px bg-gradient-to-r from-transparent via-[#ff006a]/15 to-transparent" style="transform: rotate(-6deg)"></div>
+    <div class="absolute top-[22%] -left-10 w-[110%] h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" style="transform: rotate(-6deg)"></div>
+  </div>
+
+  <!-- Ghost word — más impactante, stroke magenta -->
+  <div class="absolute top-1/2 -translate-y-1/2 -left-4 md:left-2 opacity-[0.07] pointer-events-none select-none z-[1] overflow-hidden">
+    <h2 class="font-display font-black leading-[0.8]" style="font-size: clamp(10rem, 24vw, 28rem); color: transparent; -webkit-text-stroke: 2px #ff006a;">
+      LIVE
+    </h2>
+  </div>
+  <!-- Ghost word sombra chromática — offset morado -->
+  <div class="absolute top-1/2 -translate-y-1/2 -left-4 md:left-2 opacity-[0.035] pointer-events-none select-none z-[1] overflow-hidden" style="transform: translateY(-50%) translateX(6px) translateY(-4px);">
+    <h2 class="font-display font-black leading-[0.8]" style="font-size: clamp(10rem, 24vw, 28rem); color: transparent; -webkit-text-stroke: 2px #c084fc;">
+      LIVE
+    </h2>
+  </div>
+
+  <div class="container relative z-10 px-4 md:px-8 w-full">
+    <div class="grid lg:grid-cols-12 items-center gap-8 lg:gap-4">
+      <!-- Text column -->
+      <div class="lg:col-span-7 text-center lg:text-left">
+        <!-- Badge — indicador magenta -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-[#ff006a]/30 bg-[#ff006a]/8 text-white/80 text-[10px] md:text-xs font-semibold tracking-[0.2em] uppercase mb-7 backdrop-blur-md animate-fade-up">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#ff006a] animate-pulse"></span>
+          Show Group · Felinas
+        </div>
+
+        <h1
+          class="font-display font-black tracking-tighter leading-[0.85] mb-7 animate-fade-up"
+          style="font-size: clamp(3.2rem, 8vw, 8rem); animation-delay: 0.08s;"
+        >
+          <span class="block text-white">ENCENDEMOS</span>
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white via-[#ff006a] to-felina-morado">CADA ESCENA</span>
+        </h1>
+
+        <p
+          class="text-base md:text-xl text-white/70 leading-relaxed mb-9 font-light max-w-xl mx-auto lg:mx-0 animate-fade-up"
+          style="animation-delay: 0.16s;"
+        >
+          Somos <span class="text-white font-medium">F Productions</span>, el grupo de shows en vivo de Felinas.
+          Llevamos energía, baile y puesta en escena profesional a tu evento — desde discotecas
+          hasta activaciones de marca.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-up" style="animation-delay: 0.24s;">
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-sm bg-white text-[#07030b] font-display font-bold text-sm tracking-wider uppercase transition-all hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_55px_rgba(255,0,106,0.55)]"
+          >
+            Contratar show
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a
+            href="#servicios"
+            class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-sm border border-white/15 text-white font-display font-semibold text-sm tracking-wider uppercase transition-all hover:bg-[#ff006a]/10 hover:border-[#ff006a]/40"
+          >
+            Ver qué hacemos
+          </a>
+        </div>
+      </div>
+
+      <!-- Image column -->
+      <div class="lg:col-span-5 relative h-[42vh] sm:h-[50vh] lg:h-[78vh] animate-fade-in" style="animation-delay: 0.3s;">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="absolute w-[80%] aspect-square rounded-full bg-felina-morado/30 blur-[90px]"></div>
+          <div class="absolute w-[60%] aspect-square rounded-full bg-[#ff006a]/15 blur-[70px]" style="transform: translate(20%, 10%)"></div>
+          <div class="absolute bottom-[6%] w-[70%] max-w-[340px] aspect-[2/1] rounded-[50%] bg-black/60 blur-2xl"></div>
+        </div>
+        <img
+          src={maeImg.src}
+          alt="Mae — F Productions"
+          class="relative z-10 w-full h-full object-contain object-bottom drop-shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
+          style="filter: drop-shadow(0 0 50px rgba(124,4,117,0.35)) drop-shadow(0 0 30px rgba(255,0,106,0.15)) brightness(1.03);"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom marquee — más agresivo -->
+  <div class="absolute bottom-0 left-0 right-0 z-20 border-t border-[#ff006a]/10 bg-[#07030b]/70 backdrop-blur-md overflow-hidden">
+    <div class="flex w-[200%] animate-infinite-scroll py-3 md:py-4">
+      {[0, 1].map(() => (
+        <div class="flex w-1/2 shrink-0 items-center justify-around">
+          {marquee.map((m) => (
+            <span class="flex items-center gap-4 px-4 text-white/55 font-display font-black uppercase tracking-[0.3em] text-xs md:text-sm whitespace-nowrap">
+              {m}
+              <span class="text-[#ff006a]">◆</span>
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
