@@ -1,0 +1,56 @@
+---
+const reasons = [
+  {
+    n: "01",
+    t: "Energía que se contagia",
+    d: "El público no nos mira: nos siente. Subimos la temperatura del evento y lo dejamos marcado.",
+  },
+  {
+    n: "02",
+    t: "Profesionalismo escénico",
+    d: "Puntualidad, ensayos, vestuario impecable y coordinación con tu equipo. Cero improvisación.",
+  },
+  {
+    n: "03",
+    t: "Todo a tu medida",
+    d: "Adaptamos el show a tu marca, tu música y tu espacio. No reciclamos: diseñamos para ti.",
+  },
+  {
+    n: "04",
+    t: "Impacto que se vuelve contenido",
+    d: "Momentos pensados para verse increíbles en cámara. Tu evento se sigue contando en redes.",
+  },
+];
+---
+
+<section id="por-que" class="relative py-24 md:py-36 bg-gradient-to-b from-[#07030b] via-[#0c0512] to-[#07030b] border-t border-white/5 overflow-hidden">
+  <!-- Glows cross-fade: morado centro + magenta esquina -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-felina-morado/12 blur-[140px]"></div>
+  <div class="absolute top-0 right-0 w-[350px] h-[350px] rounded-full bg-[#ff006a]/10 blur-[100px]"></div>
+  <div class="absolute bottom-0 left-0 w-[280px] h-[280px] rounded-full bg-[#ff006a]/8 blur-[90px]"></div>
+
+  <div class="container px-4 md:px-8 relative z-10">
+    <div data-reveal class="text-center max-w-2xl mx-auto mb-16 md:mb-20">
+      <p class="font-display font-semibold text-[#ff006a] text-xs tracking-[0.35em] uppercase mb-5">Por qué Felinas F Productions</p>
+      <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-[0.95]">
+        CONTRÁTANOS Y <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff006a] to-felina-morado">NO LO OLVIDAS</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 md:gap-5 max-w-5xl mx-auto">
+      {reasons.map((r) => (
+        <div data-reveal class="group relative border-l-2 border-white/8 bg-white/[0.02] p-8 md:p-10 transition-all duration-500 hover:border-l-[#ff006a] hover:bg-[#ff006a]/[0.04] hover:-translate-y-1">
+          <div class="flex items-start gap-6">
+            <span class="font-display font-black text-5xl md:text-6xl text-transparent shrink-0 transition-all duration-300 group-hover:[-webkit-text-stroke:1.5px_#ff006a]" style="-webkit-text-stroke: 1.5px rgba(255,255,255,0.12);">
+              {r.n}
+            </span>
+            <div class="pt-1">
+              <h3 class="font-display font-bold text-xl md:text-2xl text-white mb-3">{r.t}</h3>
+              <p class="text-sm md:text-base text-white/50 leading-relaxed">{r.d}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

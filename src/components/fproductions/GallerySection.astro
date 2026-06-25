@@ -1,0 +1,67 @@
+---
+const BENTO = [
+  { src: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop", tag: "Main stage", title: "Energía en vivo" },
+  { src: "https://images.unsplash.com/photo-1504506894056-b8db25345719?q=80&w=900&auto=format&fit=crop", tag: null, title: null },
+  { src: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=900&auto=format&fit=crop", tag: "Eventos", title: "Hora loca" },
+  { src: "https://images.unsplash.com/photo-1543807535-eceef0bc6599?q=80&w=1000&auto=format&fit=crop", tag: null, title: null },
+  { src: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop", tag: "Discotecas", title: "Noches que se cuentan" },
+  { src: "https://images.unsplash.com/photo-1542282811-943ef1a6770f?q=80&w=900&auto=format&fit=crop", tag: null, title: null },
+];
+---
+
+<section id="galeria" class="relative py-24 md:py-36 bg-[#07030b] overflow-hidden">
+  <div class="container px-4 md:px-8 relative z-10">
+    <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-16">
+      <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
+        MOMENTOS<br /><span class="text-felina-morado">INOLVIDABLES</span>
+      </h2>
+      <p class="text-white/40 max-w-sm text-sm uppercase tracking-[0.15em] font-medium">
+        Una mirada a shows en vivo, eventos exclusivos y presentaciones estelares.
+      </p>
+    </div>
+
+    <div data-reveal class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[150px] md:auto-rows-[230px]">
+      <!-- Big feature -->
+      <div class="col-span-2 row-span-2 group rounded-3xl overflow-hidden relative bg-[#11081a]">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent z-10"></div>
+        <img src={BENTO[0].src} alt="Galería F Productions" loading="lazy" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+        <div class="absolute bottom-5 left-5 z-20">
+          <p class="text-[10px] uppercase tracking-[0.25em] text-purple-300 font-bold mb-1">{BENTO[0].tag}</p>
+          <p class="text-lg md:text-2xl font-display font-bold text-white">{BENTO[0].title}</p>
+        </div>
+      </div>
+
+      <div class="group rounded-3xl overflow-hidden relative bg-[#11081a]">
+        <div class="absolute inset-0 bg-felina-morado/40 mix-blend-color z-10 group-hover:opacity-0 transition-opacity duration-700"></div>
+        <img src={BENTO[1].src} alt="Galería F Productions" loading="lazy" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+      </div>
+
+      <div class="group rounded-3xl overflow-hidden relative bg-[#11081a]">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+        <img src={BENTO[2].src} alt="Galería F Productions" loading="lazy" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+        <div class="absolute bottom-4 left-4 z-20">
+          <p class="text-[9px] uppercase tracking-[0.2em] text-purple-300 font-bold">{BENTO[2].tag}</p>
+          <p class="text-sm font-display font-bold text-white">{BENTO[2].title}</p>
+        </div>
+      </div>
+
+      <div class="group rounded-3xl overflow-hidden relative bg-[#11081a]">
+        <img src={BENTO[3].src} alt="Galería F Productions" loading="lazy" class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" />
+      </div>
+
+      <!-- Wide -->
+      <div class="col-span-2 md:col-span-3 group rounded-3xl overflow-hidden relative bg-[#11081a]">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent z-10"></div>
+        <img src={BENTO[4].src} alt="Galería F Productions" loading="lazy" class="w-full h-full object-cover object-center transition-transform [transition-duration:2000ms] group-hover:scale-[1.05]" />
+        <div class="absolute bottom-5 left-5 z-20">
+          <p class="text-[10px] uppercase tracking-[0.25em] text-purple-300 font-bold mb-1">{BENTO[4].tag}</p>
+          <p class="text-lg md:text-2xl font-display font-bold text-white">{BENTO[4].title}</p>
+        </div>
+      </div>
+
+      <div class="group rounded-3xl overflow-hidden relative bg-[#11081a]">
+        <img src={BENTO[5].src} alt="Galería F Productions" loading="lazy" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" style="filter: sepia(0.25) hue-rotate(240deg);" />
+      </div>
+    </div>
+  </div>
+</section>

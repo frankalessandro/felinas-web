@@ -1,0 +1,103 @@
+---
+const services = [
+  {
+    icon: "play",
+    tag: "Lo más pedido",
+    title: "Shows en vivo",
+    desc: "Presentaciones de alto impacto para discotecas, bares y eventos. Coreografías originales, vestuario y energía que prende la pista.",
+    points: ["Discotecas & bares", "Aperturas y cierres", "Coreografías temáticas"],
+    featured: true,
+  },
+  {
+    icon: "calendar",
+    tag: null,
+    title: "Acompañamiento de eventos",
+    desc: "Estamos contigo de principio a fin: animación, ambientación y presencia escénica durante todo tu evento.",
+    points: ["Animación", "Recibimiento", "Hora loca"],
+    featured: false,
+  },
+  {
+    icon: "sparkles",
+    tag: null,
+    title: "Activaciones de marca",
+    desc: "Llevamos tu marca al escenario con experiencias que conectan con tu público y se vuelven contenido.",
+    points: ["Lanzamientos", "Ferias & expos", "Contenido viral"],
+    featured: false,
+  },
+  {
+    icon: "wand",
+    tag: null,
+    title: "Producción a medida",
+    desc: "Concepto, música, vestuario y puesta en escena diseñados desde cero para tu ocasión especial.",
+    points: ["Concepto único", "Dirección escénica", "Eventos privados"],
+    featured: false,
+  },
+];
+---
+
+<section id="servicios" class="relative py-24 md:py-36 bg-[#07030b] border-t border-white/5 overflow-hidden">
+  <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#ff006a]/10 blur-[130px]"></div>
+  <div class="absolute top-0 left-1/3 w-[300px] h-[300px] rounded-full bg-felina-morado/15 blur-[100px]"></div>
+
+  <div class="container px-4 md:px-8 relative z-10">
+    <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-20">
+      <div>
+        <p class="font-display font-semibold text-[#ff006a] text-xs tracking-[0.35em] uppercase mb-5 flex items-center gap-3">
+          <span class="w-10 h-px bg-[#ff006a]"></span> Qué hacemos
+        </p>
+        <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
+          NUESTROS<br /><span class="text-transparent" style="-webkit-text-stroke: 1.5px #ff006a;">SERVICIOS</span>
+        </h2>
+      </div>
+      <p class="text-white/40 max-w-sm text-sm md:text-base leading-relaxed">
+        Cada formato se adapta a tu espacio, presupuesto y público. Dinos qué imaginas y lo hacemos realidad.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+      {services.map((s) => (
+        <div
+          data-reveal
+          class:list={[
+            "group relative rounded-none border p-7 md:p-8 flex flex-col transition-all duration-500 overflow-hidden",
+            s.featured
+              ? "border-[#ff006a]/40 bg-gradient-to-b from-[#ff006a]/12 via-felina-morado/15 to-white/[0.02] sm:row-span-2 lg:row-span-1"
+              : "border-white/8 bg-white/[0.02] hover:border-[#ff006a]/30 hover:bg-[#ff006a]/[0.03]",
+          ]}
+        >
+          <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-[#ff006a]/0 group-hover:bg-[#ff006a]/15 blur-2xl transition-all duration-500"></div>
+
+          {s.tag && (
+            <span class="absolute top-6 right-6 text-[9px] font-bold uppercase tracking-[0.2em] text-[#ff006a] bg-[#ff006a]/15 border border-[#ff006a]/30 rounded-none px-3 py-1">
+              {s.tag}
+            </span>
+          )}
+
+          <div class="w-12 h-12 rounded-none bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-[#ff006a] group-hover:bg-[#ff006a] group-hover:text-white group-hover:border-[#ff006a] transition-all duration-300">
+            {s.icon === "play" && (
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3" /></svg>
+            )}
+            {s.icon === "calendar" && (
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+            )}
+            {s.icon === "sparkles" && (
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /></svg>
+            )}
+            {s.icon === "wand" && (
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2" /><path d="M15 16v-2" /><path d="M8 9h2" /><path d="M20 9h2" /><path d="M17.8 11.8 19 13" /><path d="M15 9h.01" /><path d="M17.8 6.2 19 5" /><path d="m3 21 9-9" /><path d="M12.2 6.2 11 5" /></svg>
+            )}
+          </div>
+
+          <h3 class="font-display font-bold text-xl text-white mb-3">{s.title}</h3>
+          <p class="text-sm text-white/50 leading-relaxed mb-6 flex-grow">{s.desc}</p>
+
+          <ul class="flex flex-wrap gap-2 mt-auto">
+            {s.points.map((pt) => (
+              <li class="text-[11px] font-medium text-white/60 bg-white/5 border border-white/8 rounded-none px-3 py-1">{pt}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
