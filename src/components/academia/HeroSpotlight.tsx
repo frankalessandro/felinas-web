@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 const SPOTLIGHT_R = 260;
 const CELL = 48;
 const WA =
-  "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20agendar%20mi%20clase%20gratis%20en%20Felinas";
+  "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20agendar%20mi%20clase%20en%20Felinas";
 const OFFSCREEN = -SPOTLIGHT_R * 4;
 
 interface Props {
@@ -254,7 +254,7 @@ export default function HeroSpotlight({ bg1, bg2 }: Props) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-felina-rosa-glow text-white font-display font-bold rounded-full px-8 py-4 text-base transition-all hover:scale-105 hover:shadow-[0_0_28px_hsl(340_82%_52%/0.5)] group"
               >
-                AGENDA CLASE GRATIS
+                AGENDA TU CLASE
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"

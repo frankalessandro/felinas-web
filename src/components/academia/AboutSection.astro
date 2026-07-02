@@ -1,10 +1,17 @@
 ---
+import { Image } from "astro:assets";
+import comunidad1 from "../../assets/academia/Comunidad1.webp";
+import comunidad2 from "../../assets/academia/Comunidad2.webp";
+import comunidad3 from "../../assets/academia/Comunidad3.jpeg.webp";
+
 const values = [
   { label: "Empoderamiento femenino", icon: "sparkles" },
   { label: "Autoconfianza sin límites", icon: "heart" },
   { label: "Conexión con tu cuerpo", icon: "music" },
   { label: "Comunidad auténtica", icon: "users" },
 ];
+
+const communityImages = [comunidad1, comunidad2, comunidad3];
 ---
 
 <section id="comunidad-section" class="py-24 md:py-32 bg-background relative overflow-hidden">
@@ -16,21 +23,62 @@ const values = [
   <div data-reveal class="container px-4 relative z-10">
     <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
 
-      <div class="w-full lg:w-1/2 relative min-h-[500px] md:min-h-[600px] flex items-center justify-center">
+      <div class="w-full lg:w-1/2 relative min-h-[420px] sm:min-h-[500px] md:min-h-[600px] flex items-center justify-center pt-6 pb-4">
         <div class="absolute inset-0 bg-secondary/5 rounded-full blur-3xl"></div>
-        <div class="w-[85%] aspect-[3/4] md:aspect-square bg-secondary rounded-[3rem] md:rounded-[5rem] rounded-tr-[10rem] md:rounded-tr-[15rem] overflow-hidden border border-border/50 relative z-20 shadow-2xl">
-          <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay"></div>
-          <div class="w-full h-full bg-secondary/80 flex items-center justify-center p-8 text-center text-muted-foreground">
-            <div class="border border-dashed border-primary/20 p-8 rounded-[2rem] rounded-tr-[5rem] w-full h-full flex items-center justify-center">
-              <span class="font-display uppercase tracking-widest text-sm">Fotografía de<br />Comunidad</span>
+        <div id="comunidad-carousel" class="w-[92%] sm:w-[85%] aspect-[4/5] md:aspect-square relative z-20">
+          <div class="absolute inset-0 bg-secondary rounded-[2rem] sm:rounded-[3rem] md:rounded-[5rem] rounded-tr-[4rem] sm:rounded-tr-[6rem] md:rounded-tr-[15rem] overflow-hidden border border-border/50 shadow-2xl">
+            <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay pointer-events-none z-10"></div>
+
+            <div class="relative w-full h-full">
+              {communityImages.map((img, i) => (
+                <div
+                  data-slide
+                  class:list={["absolute inset-0 transition-opacity duration-700 ease-in-out", i === 0 ? "opacity-100" : "opacity-0"]}
+                >
+                  <Image
+                    src={img}
+                    alt={`Comunidad Felinas ${i + 1}`}
+                    class="w-full h-full object-cover"
+                    widths={[400, 800]}
+                    sizes="(max-width: 768px) 85vw, 40vw"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+              {communityImages.map((_, i) => (
+                <span
+                  data-dot
+                  class:list={["w-1.5 h-1.5 rounded-full transition-all duration-300", i === 0 ? "bg-primary w-4" : "bg-background/70"]}
+                ></span>
+              ))}
             </div>
           </div>
+
+          <button
+            type="button"
+            data-carousel-prev
+            aria-label="Imagen anterior"
+            class="absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 z-30 w-7 h-7 rounded-full bg-background/70 backdrop-blur-sm border border-border/40 flex items-center justify-center text-foreground/50 opacity-70 hover:opacity-100 hover:text-primary hover:bg-background/95 transition-all duration-300"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button
+            type="button"
+            data-carousel-next
+            aria-label="Siguiente imagen"
+            class="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 z-30 w-7 h-7 rounded-full bg-background/70 backdrop-blur-sm border border-border/40 flex items-center justify-center text-foreground/50 opacity-70 hover:opacity-100 hover:text-primary hover:bg-background/95 transition-all duration-300"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
         </div>
-        <div class="absolute bottom-4 -left-4 md:left-4 bg-background border border-border p-4 md:p-6 rounded-2xl shadow-xl z-30 animate-bounce-subtle">
-          <p class="font-display font-black text-4xl md:text-5xl text-foreground">
+        <div class="absolute bottom-0 left-0 sm:-bottom-2 sm:-left-4 md:bottom-4 md:left-4 bg-background border border-border p-3 sm:p-4 md:p-6 rounded-2xl shadow-xl z-30 animate-bounce-subtle">
+          <p class="font-display font-black text-2xl sm:text-4xl md:text-5xl text-foreground">
             100<span class="text-primary">%</span>
           </p>
-          <p class="text-xs uppercase tracking-widest text-muted-foreground mt-1 font-bold">Actitud Felina</p>
+          <p class="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground mt-1 font-bold">Actitud Felina</p>
         </div>
         <div class="absolute top-0 right-10 w-32 h-32 rounded-full border border-primary/30 pointer-events-none scale-150 -z-10"></div>
       </div>
@@ -100,5 +148,56 @@ const values = [
       }
     }, { threshold: 0.15 });
     obs.observe(el);
+  }
+
+  const carousel = document.querySelector("#comunidad-carousel");
+  if (carousel) {
+    const slides = Array.from(carousel.querySelectorAll<HTMLElement>("[data-slide]"));
+    const dots = Array.from(carousel.querySelectorAll<HTMLElement>("[data-dot]"));
+    let current = 0;
+    let timer: ReturnType<typeof setInterval>;
+
+    const goTo = (index: number) => {
+      slides[current].classList.replace("opacity-100", "opacity-0");
+      dots[current].classList.replace("bg-primary", "bg-background/70");
+      dots[current].classList.replace("w-4", "w-1.5");
+
+      current = (index + slides.length) % slides.length;
+
+      slides[current].classList.replace("opacity-0", "opacity-100");
+      dots[current].classList.replace("bg-background/70", "bg-primary");
+      dots[current].classList.replace("w-1.5", "w-4");
+    };
+
+    const next = () => goTo(current + 1);
+    const prev = () => goTo(current - 1);
+
+    const startAutoplay = () => {
+      timer = setInterval(next, 5000);
+    };
+    const stopAutoplay = () => clearInterval(timer);
+
+    carousel.querySelector("[data-carousel-next]")?.addEventListener("click", () => {
+      next();
+      stopAutoplay();
+      startAutoplay();
+    });
+    carousel.querySelector("[data-carousel-prev]")?.addEventListener("click", () => {
+      prev();
+      stopAutoplay();
+      startAutoplay();
+    });
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => {
+        goTo(i);
+        stopAutoplay();
+        startAutoplay();
+      });
+    });
+
+    carousel.addEventListener("mouseenter", stopAutoplay);
+    carousel.addEventListener("mouseleave", startAutoplay);
+
+    if (slides.length > 1) startAutoplay();
   }
 </script>

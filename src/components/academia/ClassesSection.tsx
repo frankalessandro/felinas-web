@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { X, PlayCircle, ExternalLink } from "lucide-react";
+import { X, PlayCircle, ExternalLink, MessageCircle, Sparkles } from "lucide-react";
 import twerkRecreativoPortada from "../../assets/academia/TwerkRecreativoPortada.webp";
 import hipHopPortada from "../../assets/academia/HipHopPortada.webp";
 import breakingPortada from "../../assets/academia/BreakingPortada.webp";
 import flexPortada from "../../assets/academia/FlexPortada.webp";
 import twerkAvanzadoPortada from "../../assets/academia/TwerkAvanzadoPortada.webp";
+
+const WHATSAPP_NUMBER = "573203426558";
+const classBookingUrl = (title: string) =>
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`¡Hola! Quiero agendar la clase de ${title} en Felinas`)}`;
 
 type ClassInfo = {
   title: string;
@@ -21,58 +25,58 @@ type ClassInfo = {
 const classes: ClassInfo[] = [
   {
     title: "Twerk Recreativo",
-    description: "En estas clases vivirás la experiencia de aprendizaje desde diferentes dinámicas, ejercicios, coreografías y conexión con tu cuerpo.",
-    modalDescription: "Clases pensadas para quienes se inician en el twerk. Trabajarás aislamientos, ritmo y control de cadera a través de ejercicios progresivos y coreografías grupales, en un ambiente relajado donde lo importante es disfrutar el proceso y ganar confianza con tu cuerpo.",
-    level: "Todos los niveles",
+    description: "Una clase grupal para todos los niveles, pensada para venir a disfrutar, soltar el cuerpo y divertirte sin una formación estructurada.",
+    modalDescription: "Clase grupal abierta a todos los niveles, para quienes quieren disfrutar del twerk sin comprometerse con una formación técnica. Trabajamos ritmo, control de cadera y coreografías en un ambiente relajado, donde lo importante es pasarla bien y ganar confianza con tu cuerpo. Si buscas aprender twerk desde cero de forma estructurada, tenemos clases personalizadas 1 a 1.",
+    level: "Grupal · Todos los niveles",
     gradient: "from-pink-500 to-rose-600",
     number: "01",
     trailerUrl: "https://www.youtube.com/embed/p-4LGl15AIk",
     portada: twerkRecreativoPortada.src,
-    teacher: { name: "Mae", role: "Instructora de Twerk Recreativo", social: "#", image: "https://images.unsplash.com/photo-1543807535-eceef0bc6599?auto=format&fit=crop&q=80&w=200&h=200" },
+    teacher: { name: "Mae", role: "Instructora de Twerk Recreativo", social: "https://www.instagram.com/mae.aleja", image: twerkRecreativoPortada.src },
   },
   {
     title: "Hip Hop",
     description: "En estas clases descubre tu identidad, desarrolla tu estilo y prueba nuevas formas de expresarte a través de una de las danzas urbanas más influyentes del mundo.",
     modalDescription: "Un espacio para conectar con la esencia del hip hop: groove, musicalidad y actitud. Aprenderás pasos base, footwork y combinaciones que te ayudarán a construir tu propio estilo dentro de esta cultura urbana.",
-    level: "Todos los niveles",
+    level: "Grupal · Sin experiencia",
     gradient: "from-amber-500 to-yellow-500",
     number: "02",
     trailerUrl: "https://www.youtube.com/embed/HiPuniltcn4",
     portada: hipHopPortada.src,
-    teacher: { name: "Angélica", role: "Instructora de Hip Hop", social: "#", image: "https://images.unsplash.com/photo-1504506894056-b8db25345719?auto=format&fit=crop&q=80&w=200&h=200" },
+    teacher: { name: "Angélica", role: "Instructora de Hip Hop", social: "https://www.instagram.com/angee.ortizg", image: hipHopPortada.src },
   },
   {
     title: "Breaking",
     description: "En estas clases desafía tus límites, fortalece tu cuerpo y explora el movimiento desde la creatividad, la disciplina y la cultura urbana.",
     modalDescription: "Clases enfocadas en los fundamentos del breaking: toprock, footwork, freezes y power moves. Un trabajo físico y mental que combina fuerza, equilibrio y creatividad, respetando siempre la base cultural del breaking.",
-    level: "Todos los niveles",
+    level: "Grupal · Sin experiencia",
     gradient: "from-gray-800 to-amber-600",
     number: "03",
     trailerUrl: "https://www.youtube.com/embed/HpC0wH0wZog",
     portada: breakingPortada.src,
-    teacher: { name: "Jahn Evels", role: "Instructor de Breaking", social: "#", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=200&h=200" },
+    teacher: { name: "Jahn Evels", role: "Instructor de Breaking", social: "https://www.instagram.com/bboyevelss", image: breakingPortada.src },
   },
   {
     title: "Flex, Yoga y Gimnasia",
     description: "En estas clases desarrolla fuerza, flexibilidad, movilidad y conciencia corporal a través de prácticas que complementan tu formación en danza, mejorando el control del movimiento, el equilibrio y el bienestar físico.",
     modalDescription: "Una clase complementaria para fortalecer el cuerpo desde otra perspectiva. Combina estiramientos, posturas de yoga y ejercicios de gimnasia para mejorar tu flexibilidad, movilidad articular y conciencia corporal, base esencial para cualquier bailarín.",
-    level: "Todos los niveles",
+    level: "Grupal · Sin experiencia",
     gradient: "from-purple-700 to-fuchsia-600",
     number: "04",
     trailerUrl: "https://www.youtube.com/embed/i2OxxlCMFiI",
     portada: flexPortada.src,
-    teacher: { name: "Andrea Altamirano", role: "Instructora de Flex, Yoga y Gimnasia", social: "#", image: "https://images.unsplash.com/photo-1542282811-943ef1a6770f?auto=format&fit=crop&q=80&w=200&h=200" },
+    teacher: { name: "Andrea Altamirano", role: "Instructora de Flex, Yoga y Gimnasia", social: "https://www.instagram.com/andrealtamirano_", image: flexPortada.src },
   },
   {
     title: "Twerk Avanzado",
     description: "En estas clases encontrarás enfoque en técnica, exploración, musicalidad, acrobacias, control corporal y freestyle. Ideal para llevar tu experiencia a otro nivel.",
     modalDescription: "Para quienes ya tienen bases en twerk y buscan llevar su nivel más allá. Se trabaja técnica avanzada, musicalidad, control corporal, acrobacias y freestyle, con retos que pulen tu ejecución y expresividad sobre la pista.",
-    level: "Intermedio / Avanzado",
+    level: "Grupal · Con experiencia",
     gradient: "from-rose-600 to-fuchsia-700",
     number: "05",
     trailerUrl: "https://www.youtube.com/embed/PWJwZYkTZmw",
     portada: twerkAvanzadoPortada.src,
-    teacher: { name: "Mae", role: "Instructora de Twerk Avanzado", social: "#", image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=200&h=200" },
+    teacher: { name: "Mae", role: "Instructora de Twerk Avanzado", social: "https://www.instagram.com/mae.aleja", image: twerkAvanzadoPortada.src },
   },
 ];
 
@@ -112,15 +116,26 @@ const ClassesSection = () => {
                     </div>
                     <h3 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 uppercase relative z-10 drop-shadow-md">{c.title}</h3>
                     <p className="text-muted-foreground text-lg leading-relaxed max-w-md relative z-10 bg-background/50 backdrop-blur-sm rounded-lg py-2">{c.description}</p>
-                    <button
-                      onClick={() => setSelected(c)}
-                      className="mt-8 font-display font-bold text-sm uppercase tracking-widest text-white flex items-center gap-3 group relative z-10 bg-primary hover:bg-felina-rosa-glow pl-6 pr-2 py-2 rounded-full shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all duration-300"
-                    >
-                      {c.trailerUrl ? "Ver trailer" : "Saber más"}
-                      <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                        {c.trailerUrl ? <PlayCircle size={18} /> : <ExternalLink size={16} />}
-                      </span>
-                    </button>
+                    <div className={`mt-8 flex flex-wrap items-center gap-3 relative z-10 ${isEven ? "md:justify-end" : "md:justify-start"}`}>
+                      <button
+                        onClick={() => setSelected(c)}
+                        className="font-display font-bold text-sm uppercase tracking-widest text-white flex items-center gap-3 group bg-primary hover:bg-felina-rosa-glow pl-6 pr-2 py-2 rounded-full shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all duration-300"
+                      >
+                        {c.trailerUrl ? "Ver trailer" : "Saber más"}
+                        <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                          {c.trailerUrl ? <PlayCircle size={18} /> : <ExternalLink size={16} />}
+                        </span>
+                      </button>
+                      <a
+                        href={classBookingUrl(c.title)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-display font-bold text-sm uppercase tracking-widest text-primary flex items-center gap-2 group border border-primary/40 hover:bg-primary hover:text-white pl-5 pr-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+                      >
+                        <MessageCircle size={16} className="group-hover:scale-110 transition-transform" />
+                        Reserva tu cupo
+                      </a>
+                    </div>
                   </div>
 
                   <div className="w-full md:w-1/2 relative h-[400px] md:h-[500px] z-20">
@@ -129,7 +144,7 @@ const ClassesSection = () => {
                       aria-label={`Ver clase de ${c.title}`}
                       className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-[4/5] bg-secondary rounded-3xl border border-border shadow-2xl overflow-hidden ${isEven ? "rotate-6" : "-rotate-6"} hover:rotate-0 hover:scale-[1.03] transition-all duration-500 cursor-pointer text-left`}
                     >
-                      <img src={c.portada} alt={c.title} className="absolute inset-0 w-full h-full object-cover" />
+                      <img src={c.portada} alt={c.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
                       <div className={`absolute inset-0 bg-gradient-to-br ${c.gradient} opacity-20 mix-blend-overlay`} />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
                     </button>
@@ -138,6 +153,30 @@ const ClassesSection = () => {
                 </div>
               );
             })}
+          </div>
+
+          {/* Mención sutil: twerk personalizado desde cero (no es una clase más) */}
+          <div className="mt-16 md:mt-52 max-w-3xl mx-auto">
+            <div className="relative flex flex-col sm:flex-row items-center gap-5 sm:gap-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.07] to-transparent px-6 py-6 sm:px-8 sm:py-7 text-center sm:text-left">
+              <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                <Sparkles size={22} className="text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="font-display font-bold text-lg md:text-xl text-foreground">¿Prefieres aprender a tu ritmo?</p>
+                <p className="text-muted-foreground text-sm md:text-base mt-1">
+                  También ofrecemos clases <span className="text-foreground font-semibold">personalizadas de Twerk desde cero</span>, 1 a 1 y adaptadas por completo a ti.
+                </p>
+              </div>
+              <a
+                href={classBookingUrl("Twerk personalizado desde cero")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 font-display font-bold text-sm uppercase tracking-widest text-primary flex items-center gap-2 group border border-primary/40 hover:bg-primary hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <MessageCircle size={16} className="group-hover:scale-110 transition-transform" />
+                Consultar
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -202,6 +241,18 @@ const ClassesSection = () => {
                   </p>
                   <p className="text-sm md:text-base text-muted-foreground leading-relaxed">{selected.modalDescription}</p>
                 </div>
+
+                <a
+                  href={classBookingUrl(selected.title)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 md:mt-8 inline-flex items-center gap-3 font-display font-bold text-sm uppercase tracking-widest text-white bg-primary hover:bg-felina-rosa-glow pl-6 pr-2 py-2 rounded-full shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all duration-300 group"
+                >
+                  Agendar esta clase
+                  <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <MessageCircle size={16} />
+                  </span>
+                </a>
               </div>
 
               {/* Instructor — fixed at bottom */}
@@ -212,7 +263,7 @@ const ClassesSection = () => {
                 className="shrink-0 border-t border-border px-6 md:px-8 py-4 flex items-center gap-4 hover:bg-muted/40 transition-colors group"
               >
                 <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden shrink-0 bg-muted ring-2 ring-transparent group-hover:ring-primary/40 transition`}>
-                  <img src={selected.teacher.image} alt={selected.teacher.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={selected.teacher.image} alt={selected.teacher.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold mb-1">Tu Profesor</p>
