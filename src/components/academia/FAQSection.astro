@@ -1,31 +1,62 @@
 ---
 const faqs = [
   {
+    q: "¿Dónde queda Academia Felinas?",
+    a: "Academia Felinas es una academia de baile y danza urbana ubicada en el barrio La Italia, en Palmira, Valle del Cauca, Colombia. Recibimos estudiantes de Palmira y de zonas cercanas como Cali y Candelaria, que están a pocos minutos de distancia. Escríbenos por WhatsApp para conocer la ubicación de la sede y los horarios disponibles.",
+  },
+  {
     q: "¿Necesito experiencia previa para tomar clases?",
-    a: "¡Para nada! Tenemos clases para todos los niveles. El twerk recreativo y las clases de hip hop son perfectas para principiantes. Nuestras instructoras te guían paso a paso.",
+    a: "No necesitas experiencia previa. Nuestras clases de Hip Hop, Breaking y Flex, Yoga y Gimnasia son grupales y están abiertas a principiantes, sin experiencia previa. En twerk puedes empezar en Twerk Recreativo (grupal, todos los niveles) o, si quieres aprender desde cero de forma estructurada, en clases personalizadas 1 a 1. Solo Twerk Avanzado requiere experiencia previa.",
   },
   {
-    q: "¿Qué debo llevar a clase?",
-    a: "Ropa cómoda y deportiva que te permita moverte libremente, zapatos deportivos (para hip hop) o calcetines antideslizantes (para twerk). ¡Y mucha actitud!",
+    q: "¿Qué clases de baile ofrece Academia Felinas?",
+    a: "Ofrecemos clases grupales de Twerk Recreativo (todos los niveles), Twerk Avanzado (con experiencia previa), Hip Hop, Breaking y Flex, Yoga y Gimnasia (estas tres para principiantes, sin experiencia previa). Además damos clases personalizadas de Twerk desde cero, 1 a 1. Todas las clases grupales son de máximo 6 personas.",
   },
   {
-    q: "¿Cómo reservo mi clase?",
-    a: "Puedes agendar tu clase directamente por WhatsApp al +57 302 7451752. Te responderemos con los horarios disponibles y toda la información que necesites.",
+    q: "¿Se puede aprender twerk sin experiencia?",
+    a: "Sí. Puedes empezar en Twerk Recreativo, una clase grupal para todos los niveles pensada para disfrutar sin una formación estructurada. Y si quieres aprender twerk desde cero de forma técnica y a tu ritmo, ofrecemos clases personalizadas 1 a 1.",
   },
   {
-    q: "¿Tienen clases virtuales?",
-    a: "Sí. Por ahora, nuestras clases virtuales están disponibles solo para Twerk. El resto de las disciplinas se dictan de manera presencial. Escríbenos para más información sobre horarios y sedes.",
+    q: "¿Qué días y horarios tiene Academia Felinas?",
+    a: "Tenemos clases la mayoría de los días de la semana, de lunes a viernes. Los horarios varían cada mes según la disponibilidad y el flujo de cada clase, así que escríbenos por WhatsApp para conocer los horarios vigentes del mes y agendar el que mejor te acomode.",
   },
   {
-    q: "¿Cuál es el proceso de inscripción?",
-    a: "Es súper sencillo: escríbenos por WhatsApp, elige tu plan, y agenda tu primera clase. ¡Tu primera clase de prueba es gratis!",
+    q: "¿Academia Felinas da clases virtuales?",
+    a: "Sí, parcialmente. La clase de Twerk está disponible en modalidad virtual para quienes prefieren no desplazarse. El resto de las clases (Hip Hop, Breaking, Flex/Yoga/Gimnasia y Twerk Avanzado) se dictan de forma presencial en nuestra sede de Palmira.",
   },
   {
     q: "¿Cuántas personas hay por clase?",
-    a: "Nuestras clases grupales tienen capacidad máxima de 6 felinas, lo que garantiza atención personalizada y un ambiente íntimo.",
+    a: "Nuestras clases grupales tienen capacidad máxima de 6 felinas, un formato reducido que garantiza atención personalizada y un ambiente íntimo. Por eso los cupos son limitados: te recomendamos escribirnos con anticipación por WhatsApp para reservar el tuyo.",
+  },
+  {
+    q: "¿Qué debo llevar a clase?",
+    a: "Ropa cómoda y deportiva que te permita moverte libremente. Para hip hop y breaking, usa zapatos deportivos (tenis); para twerk, calcetines antideslizantes. Y lo más importante: mucha actitud.",
+  },
+  {
+    q: "¿Cómo me inscribo o reservo mi cupo?",
+    a: "La inscripción es muy sencilla: escríbenos por WhatsApp al +57 320 342 6558, elige tu clase y membresía, y reserva tu cupo. Como los cupos son limitados y los horarios varían cada mes, te confirmamos disponibilidad y coordinamos contigo el mejor horario.",
+  },
+  {
+    q: "¿Qué diferencia a Academia Felinas de otras academias de baile?",
+    a: "Academia Felinas se diferencia por tres cosas: grupos reducidos de máximo 6 personas, una comunidad auténtica que va más allá de lo técnico, y la especialización en danza urbana con clases como twerk (recreativo y avanzado), hip hop y breaking. Es lo que llamamos '100% Actitud Felina'.",
   },
 ];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.a,
+    },
+  })),
+};
 ---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
 
 <section id="comunidad" class="py-20 md:py-28 bg-background">
   <div class="container px-4 max-w-3xl mx-auto">
@@ -34,18 +65,55 @@ const faqs = [
       <h2 class="font-display font-black text-3xl md:text-4xl text-secondary">PREGUNTAS FRECUENTES</h2>
     </div>
 
-    <div class="space-y-3">
+    <div class="space-y-3" data-faq-accordion>
       {faqs.map((faq) => (
-        <details class="border border-border rounded-xl px-6 group open:bg-muted/50 transition-colors">
-          <summary class="flex justify-between items-center font-display font-semibold text-secondary text-sm md:text-base cursor-pointer py-5 list-none [&::-webkit-details-marker]:hidden">
+        <div class="border border-border rounded-xl px-6 data-[open=true]:bg-muted/50 transition-colors" data-faq-item>
+          <button
+            type="button"
+            aria-expanded="false"
+            class="w-full flex justify-between items-center gap-4 text-left font-display font-semibold text-secondary text-sm md:text-base cursor-pointer py-5"
+          >
             {faq.q}
-            <span class="ml-4 shrink-0 text-primary font-bold text-xl leading-none transition-transform duration-200 group-open:rotate-45 select-none">+</span>
-          </summary>
-          <div class="text-muted-foreground text-sm md:text-base leading-relaxed pb-5">
-            {faq.a}
+            <span class="ml-4 shrink-0 text-primary font-bold text-xl leading-none transition-transform duration-300 select-none" data-faq-icon>+</span>
+          </button>
+          <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out" data-faq-panel>
+            <div class="overflow-hidden">
+              <p class="text-muted-foreground text-sm md:text-base leading-relaxed pb-5">
+                {faq.a}
+              </p>
+            </div>
           </div>
-        </details>
+        </div>
       ))}
     </div>
   </div>
 </section>
+
+<script>
+  const accordion = document.querySelector("[data-faq-accordion]");
+  if (accordion) {
+    const items = Array.from(accordion.querySelectorAll<HTMLElement>("[data-faq-item]"));
+
+    const close = (item: HTMLElement) => {
+      item.dataset.open = "false";
+      item.querySelector("button")?.setAttribute("aria-expanded", "false");
+      item.querySelector<HTMLElement>("[data-faq-panel]")!.style.gridTemplateRows = "0fr";
+      item.querySelector<HTMLElement>("[data-faq-icon]")!.style.transform = "rotate(0deg)";
+    };
+
+    const open = (item: HTMLElement) => {
+      item.dataset.open = "true";
+      item.querySelector("button")?.setAttribute("aria-expanded", "true");
+      item.querySelector<HTMLElement>("[data-faq-panel]")!.style.gridTemplateRows = "1fr";
+      item.querySelector<HTMLElement>("[data-faq-icon]")!.style.transform = "rotate(45deg)";
+    };
+
+    items.forEach((item) => {
+      item.querySelector("button")?.addEventListener("click", () => {
+        const isOpen = item.dataset.open === "true";
+        items.forEach((other) => other !== item && close(other));
+        isOpen ? close(item) : open(item);
+      });
+    });
+  }
+</script>
