@@ -63,7 +63,7 @@ const classes: ClassInfo[] = [
     level: "Grupal · Sin experiencia",
     gradient: "from-purple-700 to-fuchsia-600",
     number: "04",
-    trailerUrl: "https://www.youtube.com/embed/i2OxxlCMFiI",
+    trailerUrl: "https://www.youtube.com/embed/8PsQwdEasdM",
     portada: flexPortada.src,
     teacher: { name: "Andrea Altamirano", role: "Instructora de Flex, Yoga y Gimnasia", social: "https://www.instagram.com/andrealtamirano_", image: flexPortada.src },
   },
