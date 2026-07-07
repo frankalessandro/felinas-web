@@ -1,26 +1,36 @@
 ---
 const WHATSAPP_URL = "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20información%20sobre%20las%20membresías%20de%20Felinas";
 
+type AccentId = "combo" | "twerk" | "urbano";
+
 interface Plan {
   name: string;
   price: string;
   period?: string;
   features: string[];
+  breakdown?: { twerk: number; urbano: number };
   popular?: boolean;
 }
 
-const tabs: { id: string; label: string }[] = [
+const tabs: { id: AccentId; label: string }[] = [
   { id: "combo", label: "TWERK + URBANO" },
   { id: "twerk", label: "TWERK" },
   { id: "urbano", label: "URBANO" },
 ];
 
-const plans: Record<string, { cards: Plan[]; note?: string; cols: string }> = {
+/** Estilos por categoría — mantienen la paleta de marca (rosa / morado / gradiente) pero diferencian cada pestaña. */
+const accentStyles: Record<AccentId, { tabActive: string; check: string; topBar: string }> = {
+  combo: { tabActive: "bg-gradient-felinas text-white", check: "text-primary", topBar: "bg-gradient-felinas" },
+  twerk: { tabActive: "bg-primary text-white", check: "text-primary", topBar: "bg-primary" },
+  urbano: { tabActive: "bg-felina-morado text-white", check: "text-felina-morado", topBar: "bg-felina-morado" },
+};
+
+const plans: Record<AccentId, { cards: Plan[]; note?: string; cols: string }> = {
   combo: {
     cols: "grid sm:grid-cols-2 lg:grid-cols-4 gap-6",
     cards: [
-      { name: "Despierta", price: "$120.000", features: ["4 clases al mes", "Twerk + Urbano", "Acceso a eventos"] },
-      { name: "Instinto", price: "$165.000", features: ["6 clases al mes", "Twerk + Urbano", "Acceso a eventos"] },
+      { name: "Despierta", price: "$120.000", features: ["4 clases al mes", "Acceso a eventos"], breakdown: { twerk: 3, urbano: 1 } },
+      { name: "Instinto", price: "$165.000", features: ["6 clases al mes", "Acceso a eventos"], breakdown: { twerk: 3, urbano: 3 } },
       { name: "Alfa", price: "$210.000", features: ["8 clases al mes", "Twerk + Urbano", "Acceso a eventos", "Mejor relación calidad-precio"], popular: true },
       { name: "Ruge y Fluye", price: "$260.000", features: ["12 clases al mes", "Twerk + Urbano", "Acceso a eventos", "Máxima frecuencia"] },
     ],
@@ -46,9 +56,12 @@ const plans: Record<string, { cards: Plan[]; note?: string; cols: string }> = {
 };
 ---
 
-<section id="membresias" class="py-20 md:py-28 bg-muted">
-  <div class="container px-4">
-    <div class="text-center mb-14">
+<section id="membresias" class="py-20 md:py-28 bg-muted relative overflow-hidden">
+  <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[110px] -translate-y-1/2 pointer-events-none"></div>
+  <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-felina-dorado/10 rounded-full blur-[100px] translate-y-1/3 pointer-events-none"></div>
+
+  <div class="container px-4 relative z-10">
+    <div data-reveal class="text-center mb-14">
       <p class="font-display font-semibold text-primary text-sm tracking-[0.2em] uppercase mb-3">Membresías</p>
       <h2 class="font-display font-black text-3xl md:text-4xl lg:text-5xl text-secondary mb-4">
         ELIGE TU PLAN Y <span class="text-gradient-pink">EMPIEZA A RUGIR</span>
@@ -64,9 +77,10 @@ const plans: Record<string, { cards: Plan[]; note?: string; cols: string }> = {
           <button
             type="button"
             data-tab={tab.id}
+            data-active-classes={accentStyles[tab.id].tabActive}
             class:list={[
               "flex-1 rounded-full font-display font-semibold text-xs sm:text-sm py-2.5 transition-colors",
-              i === 0 ? "bg-primary text-white" : "text-secondary/70 hover:text-secondary",
+              i === 0 ? accentStyles[tab.id].tabActive : "text-secondary/70 hover:text-secondary",
             ]}
           >
             {tab.label}
@@ -79,27 +93,43 @@ const plans: Record<string, { cards: Plan[]; note?: string; cols: string }> = {
           <div class={group.cols}>
             {group.cards.map((p) => (
               <div
+                data-reveal
                 class:list={[
                   "relative rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-1",
                   p.popular
-                    ? "bg-gradient-felinas text-white shadow-2xl scale-[1.02] border-2 border-felina-dorado"
-                    : "bg-card border border-border hover:shadow-xl",
+                    ? "bg-gradient-felinas text-white shadow-2xl scale-[1.02] md:-translate-y-3 border-2 border-felina-dorado"
+                    : "bg-card border border-border hover:shadow-xl overflow-hidden",
                 ]}
               >
+                {!p.popular && (
+                  <span class:list={["absolute top-0 left-6 right-6 h-1 rounded-full", accentStyles[id as AccentId].topBar]}></span>
+                )}
                 {p.popular && (
-                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-felina-dorado text-secondary font-display font-bold px-4 py-1 rounded-full text-xs">
+                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white text-secondary font-display font-bold px-4 py-1 rounded-full text-xs shadow-md">
                     MÁS POPULAR
                   </span>
                 )}
                 <h3 class:list={["font-display font-bold text-lg mb-1", p.popular ? "text-white" : "text-secondary"]}>{p.name}</h3>
-                <div class="mb-6">
+                <div class="mb-5">
                   <span class:list={["font-display font-black text-3xl md:text-4xl", p.popular ? "text-white" : "text-secondary"]}>{p.price}</span>
                   <span class:list={["text-sm", p.popular ? "text-white/70" : "text-muted-foreground"]}>{p.period ?? "/mes"}</span>
                 </div>
+                {p.breakdown && (
+                  <div class="flex flex-wrap gap-2 mb-5">
+                    <span class:list={["inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full", p.popular ? "bg-white/15 text-white" : "bg-primary/10 text-secondary"]}>
+                      <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+                      {p.breakdown.twerk} Twerk
+                    </span>
+                    <span class:list={["inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full", p.popular ? "bg-white/15 text-white" : "bg-felina-morado/10 text-secondary"]}>
+                      <span class="w-1.5 h-1.5 rounded-full bg-felina-morado shrink-0"></span>
+                      {p.breakdown.urbano} Urbano
+                    </span>
+                  </div>
+                )}
                 <ul class="space-y-3 mb-8">
                   {p.features.map((f) => (
                     <li class="flex items-start gap-2 text-sm">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class:list={["mt-0.5 shrink-0", p.popular ? "text-felina-dorado" : "text-primary"]}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class:list={["mt-0.5 shrink-0", p.popular ? "text-felina-dorado" : accentStyles[id as AccentId].check]}>
                         <path d="M20 6 9 17l-5-5" />
                       </svg>
                       <span class={p.popular ? "text-white/90" : "text-muted-foreground"}>{f}</span>
@@ -146,10 +176,11 @@ const plans: Record<string, { cards: Plan[]; note?: string; cols: string }> = {
 
         buttons.forEach((b) => {
           const on = b.dataset.tab === id;
-          b.classList.toggle("bg-primary", on);
-          b.classList.toggle("text-white", on);
+          const activeClasses = (b.dataset.activeClasses ?? "").split(" ").filter(Boolean);
+          b.classList.remove(...activeClasses);
           b.classList.toggle("text-secondary/70", !on);
           b.classList.toggle("hover:text-secondary", !on);
+          if (on) b.classList.add(...activeClasses);
         });
 
         panels.forEach((panel) => {

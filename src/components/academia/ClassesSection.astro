@@ -15,7 +15,6 @@ type ClassInfo = {
   modalDescription: string;
   level: string;
   gradient: string;
-  number: string;
   trailerUrl?: string;
   portada: string;
   teacher: { name: string; role: string; social: string; image: string };
@@ -28,7 +27,6 @@ const classes: ClassInfo[] = [
     modalDescription: "Clase grupal abierta a todos los niveles, para quienes quieren disfrutar del twerk sin comprometerse con una formación técnica. Trabajamos ritmo, control de cadera y coreografías en un ambiente relajado, donde lo importante es pasarla bien y ganar confianza con tu cuerpo. Si buscas aprender twerk desde cero de forma estructurada, tenemos clases personalizadas 1 a 1.",
     level: "Grupal · Todos los niveles",
     gradient: "from-pink-500 to-rose-600",
-    number: "01",
     trailerUrl: "https://www.youtube.com/embed/p-4LGl15AIk",
     portada: twerkRecreativoPortada.src,
     teacher: { name: "Mae", role: "Instructora de Twerk Recreativo", social: "https://www.instagram.com/mae.aleja", image: twerkRecreativoPortada.src },
@@ -39,7 +37,6 @@ const classes: ClassInfo[] = [
     modalDescription: "Un espacio para conectar con la esencia del hip hop: groove, musicalidad y actitud. Aprenderás pasos base, footwork y combinaciones que te ayudarán a construir tu propio estilo dentro de esta cultura urbana.",
     level: "Grupal · Sin experiencia",
     gradient: "from-amber-500 to-yellow-500",
-    number: "02",
     trailerUrl: "https://www.youtube.com/embed/HiPuniltcn4",
     portada: hipHopPortada.src,
     teacher: { name: "Angélica", role: "Instructora de Hip Hop", social: "https://www.instagram.com/angee.ortizg", image: hipHopPortada.src },
@@ -50,7 +47,6 @@ const classes: ClassInfo[] = [
     modalDescription: "Clases enfocadas en los fundamentos del breaking: toprock, footwork, freezes y power moves. Un trabajo físico y mental que combina fuerza, equilibrio y creatividad, respetando siempre la base cultural del breaking.",
     level: "Grupal · Sin experiencia",
     gradient: "from-gray-800 to-amber-600",
-    number: "03",
     trailerUrl: "https://www.youtube.com/embed/HpC0wH0wZog",
     portada: breakingPortada.src,
     teacher: { name: "Jahn Evels", role: "Instructor de Breaking", social: "https://www.instagram.com/bboyevelss", image: breakingPortada.src },
@@ -61,7 +57,6 @@ const classes: ClassInfo[] = [
     modalDescription: "Una clase complementaria para fortalecer el cuerpo desde otra perspectiva. Combina estiramientos, posturas de yoga y ejercicios de gimnasia para mejorar tu flexibilidad, movilidad articular y conciencia corporal, base esencial para cualquier bailarín.",
     level: "Grupal · Sin experiencia",
     gradient: "from-purple-700 to-fuchsia-600",
-    number: "04",
     trailerUrl: "https://www.youtube.com/embed/8PsQwdEasdM",
     portada: flexPortada.src,
     teacher: { name: "Andrea Altamirano", role: "Instructora de Flex, Yoga y Gimnasia", social: "https://www.instagram.com/andrealtamirano_", image: flexPortada.src },
@@ -72,7 +67,6 @@ const classes: ClassInfo[] = [
     modalDescription: "Para quienes ya tienen bases en twerk y buscan llevar su nivel más allá. Se trabaja técnica avanzada, musicalidad, control corporal, acrobacias y freestyle, con retos que pulen tu ejecución y expresividad sobre la pista.",
     level: "Grupal · Con experiencia",
     gradient: "from-rose-600 to-fuchsia-700",
-    number: "05",
     trailerUrl: "https://www.youtube.com/embed/PWJwZYkTZmw",
     portada: twerkAvanzadoPortada.src,
     teacher: { name: "Mae", role: "Instructora de Twerk Avanzado", social: "https://www.instagram.com/mae.aleja", image: twerkAvanzadoPortada.src },
@@ -108,11 +102,8 @@ const modalData = classes.map((c) => ({
         const isEven = i % 2 !== 0;
         return (
           <div class:list={["flex flex-col md:flex-row items-center gap-8 md:gap-16 lg:gap-24 relative", isEven && "md:flex-row-reverse"]}>
-            <div class:list={["w-full md:w-1/2 flex flex-col z-10 relative", isEven ? "md:items-end md:text-right" : "md:items-start md:text-left"]}>
-              <div class:list={["absolute top-0 -translate-y-1/2 -z-10 opacity-20 pointer-events-none", isEven ? "right-0 lg:-right-4" : "left-0 lg:-left-4"]}>
-                <span class="font-display font-black text-[8rem] sm:text-[10rem] md:text-[12rem] text-transparent text-stroke-primary text-stroke-2 select-none">{c.number}</span>
-              </div>
-              <div class="inline-block border border-primary/30 text-primary text-xs font-bold tracking-widest px-4 py-1 rounded-full mb-6 mt-8 md:mt-12 bg-background/50 backdrop-blur-sm">
+            <div data-reveal class:list={["w-full md:w-1/2 flex flex-col z-10 relative", isEven ? "md:items-end md:text-right" : "md:items-start md:text-left"]}>
+              <div class="inline-block border border-primary/30 text-primary text-xs font-bold tracking-widest px-4 py-1 rounded-full mb-6 bg-background/50 backdrop-blur-sm">
                 {c.level}
               </div>
               <h3 class="font-display font-black text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 uppercase relative z-10 drop-shadow-md">{c.title}</h3>
@@ -144,7 +135,7 @@ const modalData = classes.map((c) => ({
               </div>
             </div>
 
-            <div class="w-full md:w-1/2 relative h-[400px] md:h-[500px] z-20">
+            <div data-reveal-x={isEven ? "right" : "left"} class="w-full md:w-1/2 relative h-[400px] md:h-[500px] z-20">
               <button
                 type="button"
                 data-class-open={i}
@@ -163,7 +154,7 @@ const modalData = classes.map((c) => ({
     </div>
 
     <!-- Mención sutil: twerk personalizado desde cero (no es una clase más) -->
-    <div class="mt-16 md:mt-52 max-w-3xl mx-auto">
+    <div data-reveal class="mt-16 md:mt-52 max-w-3xl mx-auto">
       <div class="relative flex flex-col sm:flex-row items-center gap-5 sm:gap-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.07] to-transparent px-6 py-6 sm:px-8 sm:py-7 text-center sm:text-left">
         <div class="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /></svg>

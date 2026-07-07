@@ -60,14 +60,14 @@ const faqSchema = {
 
 <section id="comunidad" class="py-20 md:py-28 bg-background">
   <div class="container px-4 max-w-3xl mx-auto">
-    <div class="text-center mb-14">
+    <div data-reveal class="text-center mb-14">
       <p class="font-display font-semibold text-primary text-sm tracking-[0.2em] uppercase mb-3">FAQ</p>
       <h2 class="font-display font-black text-3xl md:text-4xl text-secondary">PREGUNTAS FRECUENTES</h2>
     </div>
 
     <div class="space-y-3" data-faq-accordion>
       {faqs.map((faq) => (
-        <div class="border border-border rounded-xl px-6 data-[open=true]:bg-muted/50 transition-colors" data-faq-item>
+        <div data-reveal class="border border-border rounded-xl px-6 data-[open=true]:bg-muted/50 transition-colors" data-faq-item>
           <button
             type="button"
             aria-expanded="false"

@@ -41,6 +41,24 @@ export function initCounters(selector = "[data-counter]") {
   });
 }
 
+/** Entrada lateral para [data-reveal-x="left|right"] (imágenes/paneles que entran desde un costado). */
+export function initSlideReveals(selector = "[data-reveal-x]") {
+  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
+    const dir = el.dataset.revealX === "right" ? 1 : -1;
+    gsap.fromTo(
+      el,
+      { autoAlpha: 0, x: 60 * dir },
+      {
+        autoAlpha: 1,
+        x: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+      }
+    );
+  });
+}
+
 /** Entrada escalonada tipo hero para los [data-hero-fade] (reemplaza animate-fade-up con animation-delay). */
 export function initHeroIntro(scope?: HTMLElement | null) {
   const root = scope ?? document;

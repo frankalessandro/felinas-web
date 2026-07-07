@@ -12,7 +12,7 @@ const stats = [
   <div class="container px-4">
     <div class="flex flex-col md:flex-row flex-wrap justify-between items-center gap-16 md:gap-8">
       {stats.map((s) => (
-        <div class="flex flex-col items-center md:items-start relative group">
+        <div data-reveal class="flex flex-col items-center md:items-start relative group">
           <div class="relative inline-block">
             <p
               data-counter={s.value}
