@@ -44,6 +44,7 @@ lerna-debug.log*
 
 # Claude Code: settings.local.json es config personal, no se comparte
 .claude/settings.local.json
+CLAUDE.md
 
 # Archivos temporales de Vim
 *.swp

@@ -2,14 +2,14 @@
 import Layout from "../layouts/Layout.astro";
 import Navbar from "../components/shared/Navbar.astro";
 import AboutSection from "../components/academia/AboutSection.astro";
-import StatsSection from "../components/academia/StatsSection";
-import ClassesSection from "../components/academia/ClassesSection";
-import MembershipSection from "../components/academia/MembershipSection";
+import StatsSection from "../components/academia/StatsSection.astro";
+import ClassesSection from "../components/academia/ClassesSection.astro";
+import MembershipSection from "../components/academia/MembershipSection.astro";
 import FAQSection from "../components/academia/FAQSection.astro";
 import CTASection from "../components/academia/CTASection.astro";
 import Footer from "../components/shared/Footer.astro";
 import WhatsAppButton from "../components/shared/WhatsAppButton.astro";
-import HeroSpotlight from "../components/academia/HeroSpotlight";
+import HeroSpotlight from "../components/academia/HeroSpotlight.astro";
 import LoadingScreen from "../components/shared/LoadingScreen.astro";
 import maeHeroImg from "../assets/academia/MaeHero_birefnet.webp";
 import panterHeroImg from "../assets/academia/PanterHero_inspyrenet.webp";
@@ -20,11 +20,11 @@ import panterHeroImg from "../assets/academia/PanterHero_inspyrenet.webp";
   <div class="min-h-screen bg-black">
     <Navbar />
     <main>
-      <HeroSpotlight client:only="react" bg1={maeHeroImg.src} bg2={panterHeroImg.src} />
+      <HeroSpotlight bg1={maeHeroImg.src} bg2={panterHeroImg.src} />
       <AboutSection />
-      <StatsSection client:visible />
-      <ClassesSection client:visible />
-      <MembershipSection client:visible />
+      <StatsSection />
+      <ClassesSection />
+      <MembershipSection />
       <FAQSection />
       <CTASection />
     </main>
@@ -34,16 +34,14 @@ import panterHeroImg from "../assets/academia/PanterHero_inspyrenet.webp";
 </Layout>
 
 <script>
+  import { initReveals, initCounters, hideLoader } from "../scripts/animations";
+
+  initReveals();
+  initCounters();
+
   window.addEventListener("load", () => {
-    // Doble rAF para que React tenga al menos un frame de pintura antes de quitar el loader
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const loader = document.getElementById("loading-screen");
-        if (!loader) return;
-        loader.style.transition = "opacity 0.9s ease";
-        loader.style.opacity = "0";
-        setTimeout(() => loader.remove(), 500);
-      });
+      requestAnimationFrame(() => hideLoader("loading-screen", 0.9));
     });
   });
 </script>

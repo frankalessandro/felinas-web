@@ -53,15 +53,9 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // Solo quedan los loops infinitos ambientales: corren en el compositor via CSS.
+      // Las animaciones de entrada (fade-up/fade-in) ahora las maneja GSAP.
       keyframes: {
-        "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(30px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        "fade-in": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
         "bounce-subtle": {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-8px)" },
@@ -80,8 +74,6 @@ export default {
         },
       },
       animation: {
-        "fade-up": "fade-up 0.6s ease-out forwards",
-        "fade-in": "fade-in 0.5s ease-out forwards",
         "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "infinite-scroll": "infinite-scroll 40s linear infinite",

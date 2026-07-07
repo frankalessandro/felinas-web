@@ -1,0 +1,167 @@
+---
+const WHATSAPP_URL = "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20información%20sobre%20las%20membresías%20de%20Felinas";
+
+interface Plan {
+  name: string;
+  price: string;
+  period?: string;
+  features: string[];
+  popular?: boolean;
+}
+
+const tabs: { id: string; label: string }[] = [
+  { id: "combo", label: "TWERK + URBANO" },
+  { id: "twerk", label: "TWERK" },
+  { id: "urbano", label: "URBANO" },
+];
+
+const plans: Record<string, { cards: Plan[]; note?: string; cols: string }> = {
+  combo: {
+    cols: "grid sm:grid-cols-2 lg:grid-cols-4 gap-6",
+    cards: [
+      { name: "Despierta", price: "$120.000", features: ["4 clases al mes", "Twerk + Urbano", "Acceso a eventos"] },
+      { name: "Instinto", price: "$165.000", features: ["6 clases al mes", "Twerk + Urbano", "Acceso a eventos"] },
+      { name: "Alfa", price: "$210.000", features: ["8 clases al mes", "Twerk + Urbano", "Acceso a eventos", "Mejor relación calidad-precio"], popular: true },
+      { name: "Ruge y Fluye", price: "$260.000", features: ["12 clases al mes", "Twerk + Urbano", "Acceso a eventos", "Máxima frecuencia"] },
+    ],
+  },
+  twerk: {
+    cols: "grid sm:grid-cols-2 lg:grid-cols-3 gap-6",
+    cards: [
+      { name: "Plan Shake", price: "$200.000", period: " (P1)", features: ["Personalizado individual", "Plan a tu medida", "Horarios flexibles"] },
+      { name: "Plan Tic Toc", price: "$135.000", features: ["6 clases al mes", "Formato grupal", "Ideal para iniciar"], popular: true },
+      { name: "Plan Jiggle", price: "$360.000", period: " (P1)", features: ["Paquete intensivo", "Personalizado individual", "Progreso acelerado"] },
+    ],
+    note: "Clase individual: $30.000 · Planes dúo (P2) y clan (P6) disponibles. ¡Consulta por WhatsApp!",
+  },
+  urbano: {
+    cols: "grid sm:grid-cols-2 lg:grid-cols-3 gap-6",
+    cards: [
+      { name: "Base", price: "$130.000", features: ["4 clases al mes", "Hip Hop o Breaking", "Acceso a eventos"] },
+      { name: "Intermedio", price: "$180.000", features: ["6 clases al mes", "Hip Hop o Breaking", "Acceso a eventos"], popular: true },
+      { name: "Plus", price: "$225.000", features: ["8 clases al mes", "Hip Hop o Breaking", "Acceso a eventos", "Máxima frecuencia"] },
+    ],
+    note: "Clase individual: $35.000",
+  },
+};
+---
+
+<section id="membresias" class="py-20 md:py-28 bg-muted">
+  <div class="container px-4">
+    <div class="text-center mb-14">
+      <p class="font-display font-semibold text-primary text-sm tracking-[0.2em] uppercase mb-3">Membresías</p>
+      <h2 class="font-display font-black text-3xl md:text-4xl lg:text-5xl text-secondary mb-4">
+        ELIGE TU PLAN Y <span class="text-gradient-pink">EMPIEZA A RUGIR</span>
+      </h2>
+      <p class="text-muted-foreground max-w-lg mx-auto">
+        Clases grupales con capacidad máxima de 6 felinas. Todos los planes incluyen invitaciones a eventos y compartir de la comunidad
+      </p>
+    </div>
+
+    <div class="max-w-5xl mx-auto" id="membership-tabs">
+      <div class="flex mb-10 bg-secondary/10 rounded-full p-1">
+        {tabs.map((tab, i) => (
+          <button
+            type="button"
+            data-tab={tab.id}
+            class:list={[
+              "flex-1 rounded-full font-display font-semibold text-xs sm:text-sm py-2.5 transition-colors",
+              i === 0 ? "bg-primary text-white" : "text-secondary/70 hover:text-secondary",
+            ]}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {Object.entries(plans).map(([id, group], gi) => (
+        <div data-tab-panel={id} class:list={[gi !== 0 && "hidden"]}>
+          <div class={group.cols}>
+            {group.cards.map((p) => (
+              <div
+                class:list={[
+                  "relative rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-1",
+                  p.popular
+                    ? "bg-gradient-felinas text-white shadow-2xl scale-[1.02] border-2 border-felina-dorado"
+                    : "bg-card border border-border hover:shadow-xl",
+                ]}
+              >
+                {p.popular && (
+                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-felina-dorado text-secondary font-display font-bold px-4 py-1 rounded-full text-xs">
+                    MÁS POPULAR
+                  </span>
+                )}
+                <h3 class:list={["font-display font-bold text-lg mb-1", p.popular ? "text-white" : "text-secondary"]}>{p.name}</h3>
+                <div class="mb-6">
+                  <span class:list={["font-display font-black text-3xl md:text-4xl", p.popular ? "text-white" : "text-secondary"]}>{p.price}</span>
+                  <span class:list={["text-sm", p.popular ? "text-white/70" : "text-muted-foreground"]}>{p.period ?? "/mes"}</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                  {p.features.map((f) => (
+                    <li class="flex items-start gap-2 text-sm">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class:list={["mt-0.5 shrink-0", p.popular ? "text-felina-dorado" : "text-primary"]}>
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                      <span class={p.popular ? "text-white/90" : "text-muted-foreground"}>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class:list={[
+                    "block w-full text-center rounded-full font-display font-bold py-3 text-sm transition-colors",
+                    p.popular ? "bg-white text-secondary hover:bg-white/90" : "bg-primary text-white hover:bg-felina-rosa-glow",
+                  ]}
+                >
+                  Elegir este plan
+                </a>
+              </div>
+            ))}
+          </div>
+          {group.note && (
+            <p class="text-center text-muted-foreground text-sm mt-6">{group.note}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "../../scripts/animations";
+
+  const root = document.getElementById("membership-tabs");
+  if (root) {
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-tab]"));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-tab-panel]"));
+    let active = "combo";
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.tab!;
+        if (id === active) return;
+        active = id;
+
+        buttons.forEach((b) => {
+          const on = b.dataset.tab === id;
+          b.classList.toggle("bg-primary", on);
+          b.classList.toggle("text-white", on);
+          b.classList.toggle("text-secondary/70", !on);
+          b.classList.toggle("hover:text-secondary", !on);
+        });
+
+        panels.forEach((panel) => {
+          const on = panel.dataset.tabPanel === id;
+          if (on) {
+            panel.classList.remove("hidden");
+            gsap.fromTo(panel, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.35, ease: "power2.out" });
+          } else {
+            panel.classList.add("hidden");
+          }
+        });
+      });
+    });
+  }
+</script>
