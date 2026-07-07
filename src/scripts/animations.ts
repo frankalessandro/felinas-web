@@ -5,6 +5,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 export { gsap, ScrollTrigger };
 
+const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /** Scroll-reveal para todos los [data-reveal] de la página (reemplaza el IntersectionObserver + transition CSS). */
 export function initReveals(selector = "[data-reveal]") {
   gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
@@ -82,3 +84,126 @@ export function hideLoader(id = "loading-screen", duration = 0.5) {
     onComplete: () => loader.remove(),
   });
 }
+
+/** Parallax horizontal: mueve el elemento en X a medida que se hace scroll vertical. Uso: data-parallax-x="valor px". */
+export function initParallaxX(selector = "[data-parallax-x]") {
+  if (reduceMotion()) return;
+  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
+    const distance = Number(el.dataset.parallaxX ?? 120);
+    gsap.to(el, {
+      x: distance,
+      ease: "none",
+      scrollTrigger: {
+        trigger: el.parentElement ?? el,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+      },
+    });
+  });
+}
+
+/**
+ * Sección con scroll vertical que se convierte en desplazamiento horizontal (pin + scrub).
+ * Uso: contenedor [data-horizontal-scroll] > track [data-horizontal-track] con hijos más anchos que el viewport.
+ */
+export function initHorizontalScrollSections(selector = "[data-horizontal-scroll]") {
+  if (reduceMotion()) return;
+  gsap.utils.toArray<HTMLElement>(selector).forEach((section) => {
+    const track = section.querySelector<HTMLElement>("[data-horizontal-track]");
+    if (!track) return;
+
+    const getDistance = () => track.scrollWidth - section.clientWidth;
+
+    gsap.to(track, {
+      x: () => -getDistance(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: () => `+=${getDistance()}`,
+        scrub: 0.8,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+  });
+}
+
+/** Tilt 3D atrevido: la imagen sigue el mouse dentro de su contenedor. Uso: data-tilt="grados max" en el <img>, perspective en el padre. */
+export function initTilt(selector = "[data-tilt]") {
+  if (reduceMotion()) return;
+  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
+    const max = Number(el.dataset.tilt) || 12;
+    const parent = el.parentElement ?? el;
+    const rotateX = gsap.quickTo(el, "rotateX", { duration: 0.5, ease: "power3" });
+    const rotateY = gsap.quickTo(el, "rotateY", { duration: 0.5, ease: "power3" });
+    const scale = gsap.quickTo(el, "scale", { duration: 0.5, ease: "power3" });
+
+    parent.addEventListener("mousemove", (e) => {
+      const evt = e as MouseEvent;
+      const rect = parent.getBoundingClientRect();
+      const px = (evt.clientX - rect.left) / rect.width - 0.5;
+      const py = (evt.clientY - rect.top) / rect.height - 0.5;
+      rotateX(-py * max);
+      rotateY(px * max);
+      scale(1.04);
+    });
+    parent.addEventListener("mouseleave", () => {
+      rotateX(0);
+      rotateY(0);
+      scale(1);
+    });
+  });
+}
+
+/**
+ * Efecto "cartucho de revólver": pinnea la sección y va rotando una carta 3D a la vez
+ * (como el tambor de un revólver) a medida que se hace scroll, mostrando el siguiente
+ * integrante del equipo en cada paso.
+ * Uso: contenedor [data-revolver] > cartas [data-revolver-card] (una por integrante).
+ */
+export function initRevolverSection(selector = "[data-revolver]") {
+  gsap.utils.toArray<HTMLElement>(selector).forEach((section) => {
+    const cards = gsap.utils.toArray<HTMLElement>("[data-revolver-card]", section);
+    const dots = gsap.utils.toArray<HTMLElement>("[data-revolver-dot]", section);
+    if (cards.length < 2) return;
+
+    if (reduceMotion()) {
+      gsap.set(cards[0], { autoAlpha: 1 });
+      dots[0]?.classList.add("is-active");
+      return;
+    }
+
+    gsap.set(cards, { autoAlpha: 0, rotateY: 90, transformOrigin: "50% 50%" });
+    gsap.set(cards[0], { autoAlpha: 1, rotateY: 0 });
+    dots[0]?.classList.add("is-active");
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: () => `+=${(cards.length - 1) * window.innerHeight}`,
+        scrub: 0.7,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const active = Math.min(cards.length - 1, Math.round(self.progress * (cards.length - 1)));
+          dots.forEach((d, i) => d.classList.toggle("is-active", i === active));
+        },
+      },
+    });
+
+    cards.forEach((card, i) => {
+      if (i === 0) return;
+      tl.to(cards[i - 1], { rotateY: -90, autoAlpha: 0, duration: 1, ease: "power1.inOut" }, i - 1).to(
+        card,
+        { rotateY: 0, autoAlpha: 1, duration: 1, ease: "power1.inOut" },
+        i - 1
+      );
+    });
+  });
+}
+

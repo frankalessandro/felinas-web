@@ -1,0 +1,106 @@
+---
+import { Image } from "astro:assets";
+import maeImg from "../../assets/fproductions/Mae 1.png";
+import gabrielaImg from "../../assets/fproductions/Gabriela 1.png";
+import andreaImg from "../../assets/fproductions/Andrea 1.png";
+import isaImg from "../../assets/fproductions/Isa 1.png";
+import saloImg from "../../assets/fproductions/Salo 1.png";
+import sharyImg from "../../assets/fproductions/SHARY(1).jpg";
+import angieImg from "../../assets/fproductions/Angie2.JPG";
+
+const team = [
+  { name: "Mae", img: maeImg },
+  { name: "Andrea", img: andreaImg },
+  { name: "Isa", img: isaImg },
+  { name: "Salo", img: saloImg },
+  { name: "Gabriela", img: gabrielaImg },
+  { name: "Shary", img: sharyImg },
+  { name: "Angie", img: angieImg },
+];
+---
+
+<section id="equipo" class="relative bg-[#07030b] border-t border-white/5">
+  <div class="container px-4 md:px-8 relative z-10 pt-24 md:pt-36 pb-10 md:pb-14">
+    <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <p class="font-display font-semibold text-[#ff006a] text-xs tracking-[0.35em] uppercase mb-5 flex items-center gap-3">
+          <span class="w-10 h-px bg-[#ff006a]"></span> Las caras del show
+        </p>
+        <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
+          NUESTRO<br /><span class="text-felina-morado">EQUIPO</span>
+        </h2>
+      </div>
+      <p class="text-white/60 max-w-sm text-sm md:text-base leading-relaxed">
+        Bailarinas y artistas profesionales detrás de cada show, video musical y activación de marca.
+        Sigue bajando para conocerlas.
+      </p>
+    </div>
+  </div>
+
+  <!-- Cartucho de revólver: pinneado, cada carta rota 3D para dar paso a la siguiente. Carta centrada, foto completa sin recortar. -->
+  <div data-revolver class="relative h-screen w-full overflow-hidden flex items-center justify-center" style="perspective: 1600px;">
+    <!-- Glow de fondo -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-felina-morado/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+    {team.map((member, i) => (
+      <div
+        data-revolver-card
+        class="absolute inset-0 flex flex-col items-center justify-center gap-6 px-4"
+        style="backface-visibility: hidden;"
+      >
+        <!-- Frame: la foto completa, sin recortar -->
+        <div class="relative h-[58vh] md:h-[68vh] w-auto max-w-[90vw] rounded-2xl overflow-hidden bg-[#11081a] border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
+          <Image
+            src={member.img}
+            alt={`${member.name} — F Productions`}
+            class="h-full w-auto max-w-[90vw] object-contain"
+            widths={[500, 800, 1100]}
+            sizes="90vw"
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+          <!-- Index -->
+          <span
+            class="absolute top-4 left-4 font-display font-black text-transparent leading-none select-none"
+            style="font-size: clamp(2rem, 5vw, 3.5rem); -webkit-text-stroke: 1.5px rgba(255,255,255,0.5);"
+          >
+            0{i + 1}
+          </span>
+        </div>
+
+        <!-- Name -->
+        <div class="relative z-10 text-center">
+          <div class="w-14 h-1 bg-[#ff006a] mb-4 mx-auto"></div>
+          <p class="font-display font-black text-white tracking-tighter leading-[0.85]" style="font-size: clamp(2.5rem, 7vw, 5rem);">
+            {member.name}
+          </p>
+          <p class="text-white/60 uppercase tracking-[0.3em] text-xs md:text-sm mt-3 font-semibold">
+            F Productions · Integrante {i + 1} / {team.length}
+          </p>
+        </div>
+      </div>
+    ))}
+
+    <!-- Indicador tipo tambor de revólver -->
+    <div class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-2 md:gap-3">
+      {team.map((_, i) => (
+        <span
+          data-revolver-dot
+          class="revolver-dot w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/25 transition-all duration-300"
+        ></span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .revolver-dot.is-active {
+    background-color: #ff006a;
+    box-shadow: 0 0 12px 2px rgba(255, 0, 106, 0.7);
+    transform: scale(1.4);
+  }
+</style>
+
+<script>
+  import { initRevolverSection } from "../../scripts/animations";
+  initRevolverSection();
+</script>
