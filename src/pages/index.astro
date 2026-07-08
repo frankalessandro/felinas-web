@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import LandingSplitScreen from "../components/shared/LandingSplitScreen";
+import LandingSplitScreen from "../components/shared/LandingSplitScreen.astro";
 import LoadingScreen from "../components/shared/LoadingScreen.astro";
 import andreaImg from "../assets/academia/Andrea_NoBg_11zon.webp";
 import maeImg from "../assets/fproductions/Mae_NoBg_11zon.webp";
@@ -8,7 +8,7 @@ import maeImg from "../assets/fproductions/Mae_NoBg_11zon.webp";
 
 <Layout title="Felinas — Elige tu lado">
   <LoadingScreen />
-  <LandingSplitScreen client:load andreaSrc={andreaImg.src} maeSrc={maeImg.src} />
+  <LandingSplitScreen andreaSrc={andreaImg.src} maeSrc={maeImg.src} />
 </Layout>
 
 <style is:global>
@@ -20,11 +20,6 @@ import maeImg from "../assets/fproductions/Mae_NoBg_11zon.webp";
 </style>
 
 <script>
-  window.addEventListener("load", () => {
-    const loader = document.getElementById("loading-screen");
-    if (!loader) return;
-    loader.style.transition = "opacity 0.4s ease";
-    loader.style.opacity = "0";
-    setTimeout(() => loader.remove(), 400);
-  });
+  import { hideLoader } from "../scripts/animations";
+  window.addEventListener("load", () => hideLoader("loading-screen", 0.4));
 </script>

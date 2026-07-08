@@ -1,0 +1,265 @@
+---
+interface Props {
+  andreaSrc: string;
+  maeSrc: string;
+}
+const { andreaSrc, maeSrc } = Astro.props;
+---
+
+<div
+  id="split-root"
+  class="h-screen w-screen overflow-hidden flex relative select-none flex-col md:flex-row md:cursor-default"
+  style="opacity: 0; visibility: hidden;"
+>
+  <!-- Logo — desktop: arriba centrado; móvil: centro -->
+  <div
+    data-split-logo
+    class="absolute z-30 pointer-events-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:top-12 md:translate-y-0"
+  >
+    <img
+      src="/assets/PanteraFelinasLogo.svg"
+      alt="Felinas"
+      class="drop-shadow-[0_0_30px_rgba(255,255,255,0.6)] w-14 h-14 md:w-52 md:h-52"
+    />
+  </div>
+
+  <!-- ACADEMIA — arriba en móvil, izquierda en desktop -->
+  <a
+    href="/academia"
+    data-split-panel="academia"
+    class="relative overflow-hidden flex-shrink-0 cursor-pointer w-full md:w-auto"
+    style="flex-grow: 0; flex-shrink: 0; flex-basis: 50%; background-color: #AA145D;"
+  >
+    <div class="absolute inset-0 z-[3] pointer-events-none md:hidden" style="background: linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 45%);"></div>
+    <div class="absolute inset-0 z-[3] pointer-events-none hidden md:block" style="background: linear-gradient(to right, rgba(0,0,0,0.15) 0%, transparent 40%);"></div>
+    <div data-split-dim="academia" class="absolute inset-0 bg-black z-[4] pointer-events-none" style="opacity: 0;"></div>
+
+    <!-- Texto -->
+    <div class="absolute z-[1] pointer-events-none top-1/2 -translate-y-1/2 left-6 md:left-9 xl:left-14">
+      <p
+        data-split-kicker="academia"
+        class="text-white tracking-[0.45em] uppercase font-semibold text-[10px] mb-1 md:text-[13px] md:mb-2"
+        style="opacity: 0.85; text-shadow: 0 2px 12px rgba(0,0,0,0.5);"
+      >
+        Visita la
+      </p>
+      <h2
+        data-split-title="academia"
+        class="split-title font-display font-black uppercase leading-none text-white text-[clamp(2.8rem,13vw,4.5rem)] md:text-[clamp(2.5rem,5.5vw,7rem)]"
+      >
+        ACADEMIA
+      </h2>
+    </div>
+
+    <!-- Revelado inferior (desktop) -->
+    <div
+      data-split-bottom="academia"
+      class="hidden md:block absolute left-5 md:left-9 xl:left-14 z-[20] pointer-events-none overflow-hidden"
+      style="bottom: clamp(1.5rem, 5vh, 3.5rem); max-height: 80px; opacity: 1;"
+    >
+      <p data-split-note="academia" class="text-white/90 text-xs md:text-sm font-medium" style="text-shadow: 0 2px 10px rgba(0,0,0,0.7); opacity: 0.6;">Twerk · Hip Hop · Breaking</p>
+      <span class="inline-block mt-2 text-[10px] md:text-xs text-white font-bold tracking-[0.35em] uppercase border-b border-white/60 pb-0.5" style="text-shadow: 0 2px 10px rgba(0,0,0,0.7);">Entrar →</span>
+    </div>
+
+    <!-- Zona inferior (móvil, siempre visible) -->
+    <div class="md:hidden absolute bottom-5 left-6 z-[20] pointer-events-none">
+      <p class="text-white/90 text-sm font-medium mb-2" style="text-shadow: 0 2px 10px rgba(0,0,0,0.7);">Twerk · Hip Hop · Breaking</p>
+      <span class="text-[11px] text-white font-bold tracking-[0.35em] uppercase border-b border-white/60 pb-0.5" style="text-shadow: 0 2px 10px rgba(0,0,0,0.7);">
+        Entrar →
+      </span>
+    </div>
+
+    <!-- Imagen del personaje -->
+    <div
+      data-split-char="academia"
+      class="absolute z-[2] pointer-events-none right-[-4%] bottom-0 w-[70%] h-[90%] md:right-0 md:bottom-16 md:w-[65%] md:h-[105vh]"
+    >
+      <img
+        src={andreaSrc}
+        alt="Andrea — Academia"
+        class="w-full h-full object-contain object-bottom -scale-x-100"
+        style="filter: drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04);"
+      />
+    </div>
+  </a>
+
+  <!-- SHOW GROUP — abajo en móvil, derecha en desktop -->
+  <a
+    href="/show"
+    data-split-panel="show"
+    class="relative overflow-hidden cursor-pointer w-full md:w-auto"
+    style="flex-grow: 0; flex-shrink: 0; flex-basis: 50%; background-color: #7C0475;"
+  >
+    <div class="absolute inset-0 z-[3] pointer-events-none md:hidden" style="background: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 45%);"></div>
+    <div class="absolute inset-0 z-[3] pointer-events-none hidden md:block" style="background: linear-gradient(to left, rgba(0,0,0,0.15) 0%, transparent 40%);"></div>
+    <div data-split-dim="show" class="absolute inset-0 bg-black z-[4] pointer-events-none" style="opacity: 0;"></div>
+
+    <!-- Texto -->
+    <div class="absolute z-[1] pointer-events-none top-1/2 -translate-y-1/2 left-6 md:left-auto md:right-9 xl:right-14 md:text-right">
+      <p
+        data-split-kicker="show"
+        class="text-white tracking-[0.45em] uppercase font-semibold text-[10px] mb-1 md:text-[13px] md:mb-2"
+        style="opacity: 0.85; text-shadow: 0 2px 12px rgba(0,0,0,0.5);"
+      >
+        Conoce
+      </p>
+      <h2
+        data-split-title="show"
+        class="split-title font-display font-black uppercase leading-[0.88] text-white text-[clamp(1.8rem,8.5vw,3rem)] md:text-[clamp(2.5rem,5.5vw,7rem)]"
+      >
+        F<br />Productions
+      </h2>
+    </div>
+
+    <!-- Revelado inferior (desktop) -->
+    <div
+      data-split-bottom="show"
+      class="hidden md:block absolute right-5 md:right-9 xl:right-14 text-right z-[20] pointer-events-none overflow-hidden"
+      style="bottom: clamp(1.5rem, 5vh, 3.5rem); max-height: 80px; opacity: 1;"
+    >
+      <p data-split-note="show" class="text-white/90 text-xs md:text-sm font-medium" style="text-shadow: 0 2px 10px rgba(0,0,0,0.7); opacity: 0.6;">Shows en vivo · Contrataciones VIP</p>
+      <span class="inline-block mt-2 text-[10px] md:text-xs text-white font-bold tracking-[0.35em] uppercase border-b border-white/60 pb-0.5" style="text-shadow: 0 2px 10px rgba(0,0,0,0.7);">Entrar →</span>
+    </div>
+
+    <!-- Zona inferior (móvil, siempre visible) -->
+    <div class="md:hidden absolute bottom-5 left-6 z-[20] pointer-events-none">
+      <p class="text-white/90 text-sm font-medium mb-2" style="text-shadow: 0 2px 10px rgba(0,0,0,0.7);">Shows en vivo · Contrataciones VIP</p>
+      <span class="text-[11px] text-white font-bold tracking-[0.35em] uppercase border-b border-white/60 pb-0.5" style="text-shadow: 0 2px 10px rgba(0,0,0,0.7);">
+        Entrar →
+      </span>
+    </div>
+
+    <!-- Imagen del personaje -->
+    <div
+      data-split-char="show"
+      class="absolute z-[2] pointer-events-none right-[-4%] top-[15%] bottom-0 w-[74%] h-[95%] md:top-auto md:right-auto md:left-0 md:bottom-0 md:w-[68%] md:h-[92vh]"
+    >
+      <img
+        src={maeSrc}
+        alt="Mae — Show Group"
+        class="w-full h-full object-contain object-bottom md:-scale-x-100"
+        style="filter: drop-shadow(0 -12px 60px rgba(0,0,0,0.65)) brightness(1.04);"
+      />
+    </div>
+  </a>
+
+  <!-- Solo desktop: degradado central + zona muerta -->
+  <div
+    data-split-blend
+    class="hidden md:block absolute inset-y-0 pointer-events-none"
+    style="left: 36%; width: 28%; opacity: 1; background: linear-gradient(to right, #AA145D 0%, #931469 45%, #7C0475 100%);"
+  ></div>
+  <div class="hidden md:block absolute inset-y-0 z-[10] cursor-default" style="left: 35%; width: 30%;"></div>
+
+  <!-- Elige tu lado (oculto en móvil) -->
+  <div data-split-choose class="hidden md:block absolute bottom-5 left-1/2 -translate-x-1/2 z-30 pointer-events-none" style="opacity: 1;">
+    <p class="text-white/70 lg:text-[11px] md:text-[12px] sm:text-xs tracking-[0.5em] uppercase font-semibold" style="text-shadow: 0 2px 12px rgba(0,0,0,0.6);">
+      Elige tu lado
+    </p>
+  </div>
+</div>
+
+<style>
+  .split-title {
+    text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18), 0 8px 40px rgba(0, 0, 0, 0.4);
+    transition: text-shadow 0.35s ease-out;
+  }
+  .split-title.glow {
+    text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18), 0 8px 40px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 255, 255, 0.22);
+  }
+</style>
+
+<script>
+  import { gsap } from "../../scripts/animations";
+
+  type Side = "academia" | "show" | null;
+
+  const root = document.getElementById("split-root")!;
+  const q = (sel: string) => root.querySelector<HTMLElement>(sel)!;
+
+  const logo = q("[data-split-logo]");
+  const panels = { academia: q('[data-split-panel="academia"]'), show: q('[data-split-panel="show"]') };
+  const dims = { academia: q('[data-split-dim="academia"]'), show: q('[data-split-dim="show"]') };
+  const kickers = { academia: q('[data-split-kicker="academia"]'), show: q('[data-split-kicker="show"]') };
+  const titles = { academia: q('[data-split-title="academia"]'), show: q('[data-split-title="show"]') };
+  const bottoms = { academia: q('[data-split-bottom="academia"]'), show: q('[data-split-bottom="show"]') };
+  const notes = { academia: q('[data-split-note="academia"]'), show: q('[data-split-note="show"]') };
+  const chars = { academia: q('[data-split-char="academia"]'), show: q('[data-split-char="show"]') };
+  const blend = q("[data-split-blend]");
+  const choose = q("[data-split-choose]");
+
+  const mq = window.matchMedia("(min-width: 768px)");
+  let active: Side = null;
+
+  const D = 0.7;
+  const EASE = "power2.inOut";
+
+  const applyState = (side: Side, instant = false) => {
+    const d = instant ? 0 : D;
+    const tw = (target: gsap.TweenTarget, vars: gsap.TweenVars) =>
+      gsap.to(target, { duration: d, ease: EASE, overwrite: "auto", ...vars });
+
+    (["academia", "show"] as const).forEach((s) => {
+      const own = side === s;
+      const other = side !== null && !own;
+
+      tw(panels[s], { flexBasis: own ? "62%" : other ? "38%" : "50%" });
+      tw(dims[s], { opacity: other ? 0.36 : 0 });
+      tw(kickers[s], { opacity: other ? 0.2 : 0.85, duration: instant ? 0 : 0.5 });
+      tw(titles[s], { opacity: other ? 0.28 : 1, scale: own ? 1.04 : 1, y: own ? -4 : 0, duration: instant ? 0 : 0.4, ease: "power2.out" });
+      titles[s].classList.toggle("glow", own);
+      tw(bottoms[s], { opacity: other ? 0.2 : 1, duration: instant ? 0 : 0.5 });
+      tw(notes[s], { opacity: own ? 1 : 0.6, duration: instant ? 0 : 0.5 });
+      tw(chars[s], { opacity: own ? 1 : 0.001, yPercent: own ? 0 : 16 });
+    });
+
+    tw(logo, { x: side === "academia" ? "-7vw" : side === "show" ? "7vw" : "0vw" });
+    tw(blend, { left: side === "academia" ? "48%" : side === "show" ? "24%" : "36%", opacity: side ? 0 : 1 });
+    tw(choose, { opacity: side ? 0 : 1, duration: instant ? 0 : 0.5 });
+  };
+
+  const initDesktop = () => {
+    gsap.set(logo, { xPercent: -50, x: 0 });
+    applyState(null, true);
+  };
+
+  const clearDesktop = () => {
+    active = null;
+    (["academia", "show"] as const).forEach((s) => {
+      gsap.set([panels[s], dims[s], kickers[s], titles[s], bottoms[s], notes[s], chars[s]], { clearProps: "all" });
+      titles[s].classList.remove("glow");
+    });
+    gsap.set([logo, blend, choose], { clearProps: "all" });
+  };
+
+  root.addEventListener("mousemove", (e) => {
+    if (!mq.matches) return;
+    const x = e.clientX / window.innerWidth;
+    const next: Side = x < 0.35 ? "academia" : x > 0.65 ? "show" : null;
+    if (next !== active) {
+      active = next;
+      applyState(active);
+    }
+  });
+
+  root.addEventListener("mouseleave", () => {
+    if (!mq.matches || active === null) return;
+    active = null;
+    applyState(null);
+  });
+
+  mq.addEventListener("change", () => (mq.matches ? initDesktop() : clearDesktop()));
+  if (mq.matches) initDesktop();
+
+  // Precarga de imágenes y fade-in del contenedor (como hacía el useEffect de React)
+  const srcs = Array.from(root.querySelectorAll<HTMLImageElement>("img")).map((img) => img.src);
+  Promise.all(
+    srcs.map((src) => {
+      const img = new Image();
+      img.src = src;
+      return img.decode().catch(() => {});
+    })
+  ).then(() => {
+    gsap.to(root, { autoAlpha: 1, duration: 0.3, ease: "power1.out" });
+  });
+</script>

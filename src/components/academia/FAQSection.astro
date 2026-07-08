@@ -60,28 +60,26 @@ const faqSchema = {
 
 <section id="comunidad" class="py-20 md:py-28 bg-background">
   <div class="container px-4 max-w-3xl mx-auto">
-    <div class="text-center mb-14">
+    <div data-reveal class="text-center mb-14">
       <p class="font-display font-semibold text-primary text-sm tracking-[0.2em] uppercase mb-3">FAQ</p>
       <h2 class="font-display font-black text-3xl md:text-4xl text-secondary">PREGUNTAS FRECUENTES</h2>
     </div>
 
     <div class="space-y-3" data-faq-accordion>
       {faqs.map((faq) => (
-        <div class="border border-border rounded-xl px-6 data-[open=true]:bg-muted/50 transition-colors" data-faq-item>
+        <div data-reveal class="border border-border rounded-xl px-6 data-[open=true]:bg-muted/50 transition-colors" data-faq-item>
           <button
             type="button"
             aria-expanded="false"
             class="w-full flex justify-between items-center gap-4 text-left font-display font-semibold text-secondary text-sm md:text-base cursor-pointer py-5"
           >
             {faq.q}
-            <span class="ml-4 shrink-0 text-primary font-bold text-xl leading-none transition-transform duration-300 select-none" data-faq-icon>+</span>
+            <span class="ml-4 shrink-0 text-primary font-bold text-xl leading-none select-none inline-block" data-faq-icon>+</span>
           </button>
-          <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out" data-faq-panel>
-            <div class="overflow-hidden">
-              <p class="text-muted-foreground text-sm md:text-base leading-relaxed pb-5">
-                {faq.a}
-              </p>
-            </div>
+          <div class="overflow-hidden h-0" data-faq-panel>
+            <p class="text-muted-foreground text-sm md:text-base leading-relaxed pb-5">
+              {faq.a}
+            </p>
           </div>
         </div>
       ))}
@@ -90,6 +88,8 @@ const faqSchema = {
 </section>
 
 <script>
+  import { gsap } from "../../scripts/animations";
+
   const accordion = document.querySelector("[data-faq-accordion]");
   if (accordion) {
     const items = Array.from(accordion.querySelectorAll<HTMLElement>("[data-faq-item]"));
@@ -97,15 +97,15 @@ const faqSchema = {
     const close = (item: HTMLElement) => {
       item.dataset.open = "false";
       item.querySelector("button")?.setAttribute("aria-expanded", "false");
-      item.querySelector<HTMLElement>("[data-faq-panel]")!.style.gridTemplateRows = "0fr";
-      item.querySelector<HTMLElement>("[data-faq-icon]")!.style.transform = "rotate(0deg)";
+      gsap.to(item.querySelector("[data-faq-panel]"), { height: 0, duration: 0.35, ease: "power2.inOut", overwrite: "auto" });
+      gsap.to(item.querySelector("[data-faq-icon]"), { rotation: 0, duration: 0.3, ease: "power2.out", overwrite: "auto" });
     };
 
     const open = (item: HTMLElement) => {
       item.dataset.open = "true";
       item.querySelector("button")?.setAttribute("aria-expanded", "true");
-      item.querySelector<HTMLElement>("[data-faq-panel]")!.style.gridTemplateRows = "1fr";
-      item.querySelector<HTMLElement>("[data-faq-icon]")!.style.transform = "rotate(45deg)";
+      gsap.to(item.querySelector("[data-faq-panel]"), { height: "auto", duration: 0.35, ease: "power2.inOut", overwrite: "auto" });
+      gsap.to(item.querySelector("[data-faq-icon]"), { rotation: 45, duration: 0.3, ease: "power2.out", overwrite: "auto" });
     };
 
     items.forEach((item) => {
