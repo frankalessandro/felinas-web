@@ -3,15 +3,6 @@ import maeImg from "../../assets/fproductions/Mae_NoBg_11zon.webp";
 
 const WHATSAPP_URL =
   "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20contratar%20un%20show%20de%20Felinas";
-
-const marquee = [
-  "Shows en vivo",
-  "Eventos privados",
-  "Activaciones de marca",
-  "Discotecas",
-  "Producción escénica",
-  "Coreografías a medida",
-];
 ---
 
 <section
@@ -33,13 +24,13 @@ const marquee = [
   </div>
 
   <!-- Ghost word — más impactante, stroke magenta -->
-  <div class="absolute top-1/2 -translate-y-1/2 -left-4 md:left-2 opacity-[0.07] pointer-events-none select-none z-[1] overflow-hidden">
+  <div data-parallax-x="220" class="absolute top-1/2 -translate-y-1/2 -left-4 md:left-2 opacity-[0.07] pointer-events-none select-none z-[1] overflow-hidden">
     <h2 class="font-display font-black leading-[0.8]" style="font-size: clamp(10rem, 24vw, 28rem); color: transparent; -webkit-text-stroke: 2px #ff006a;">
       LIVE
     </h2>
   </div>
   <!-- Ghost word sombra chromática — offset morado -->
-  <div class="absolute top-1/2 -translate-y-1/2 -left-4 md:left-2 opacity-[0.035] pointer-events-none select-none z-[1] overflow-hidden" style="transform: translateY(-50%) translateX(6px) translateY(-4px);">
+  <div data-parallax-x="160" class="absolute top-1/2 -translate-y-1/2 -left-4 md:left-2 opacity-[0.035] pointer-events-none select-none z-[1] overflow-hidden" style="transform: translateY(-50%) translateX(6px) translateY(-4px);">
     <h2 class="font-display font-black leading-[0.8]" style="font-size: clamp(10rem, 24vw, 28rem); color: transparent; -webkit-text-stroke: 2px #c084fc;">
       LIVE
     </h2>
@@ -69,8 +60,8 @@ const marquee = [
           class="text-base md:text-xl text-white/70 leading-relaxed mb-9 font-light max-w-xl mx-auto lg:mx-0"
         >
           Somos <span class="text-white font-medium">F Productions</span>, el grupo de shows en vivo de Felinas.
-          Llevamos energía, baile y puesta en escena profesional a tu evento — desde discotecas
-          hasta activaciones de marca.
+          Shows en vivo, videos musicales, modelaje y potenciación de marcas — llevamos energía y
+          puesta en escena profesional a tu evento, desde discotecas hasta activaciones de marca.
         </p>
 
         <div data-hero-fade class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -78,12 +69,14 @@ const marquee = [
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            class="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-sm bg-white text-[#07030b] font-display font-bold text-sm tracking-wider uppercase transition-all hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_55px_rgba(255,0,106,0.55)]"
+            class="cta-flame group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-sm text-white font-display font-bold text-sm tracking-wider uppercase transition-all hover:scale-105 overflow-hidden"
           >
-            Contratar show
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <span class="relative z-10 flex items-center gap-3">
+              Contratar show
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </span>
           </a>
           <a
             href="#servicios"
@@ -95,13 +88,14 @@ const marquee = [
       </div>
 
       <!-- Image column -->
-      <div data-hero-fade class="lg:col-span-5 relative h-[42vh] sm:h-[50vh] lg:h-[78vh]">
+      <div data-hero-fade class="lg:col-span-5 relative h-[42vh] sm:h-[50vh] lg:h-[78vh]" style="perspective: 1200px;">
         <div class="absolute inset-0 flex items-center justify-center">
           <div class="absolute w-[80%] aspect-square rounded-full bg-felina-morado/30 blur-[90px]"></div>
           <div class="absolute w-[60%] aspect-square rounded-full bg-[#ff006a]/15 blur-[70px]" style="transform: translate(20%, 10%)"></div>
           <div class="absolute bottom-[6%] w-[70%] max-w-[340px] aspect-[2/1] rounded-[50%] bg-black/60 blur-2xl"></div>
         </div>
         <img
+          data-tilt="14"
           src={maeImg.src}
           alt="Mae — F Productions"
           class="relative z-10 w-full h-full object-contain object-bottom drop-shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
@@ -111,25 +105,36 @@ const marquee = [
     </div>
   </div>
 
-  <!-- Bottom marquee — más agresivo -->
-  <div class="absolute bottom-0 left-0 right-0 z-20 border-t border-[#ff006a]/10 bg-[#07030b]/70 backdrop-blur-md overflow-hidden">
-    <div class="flex w-[200%] animate-infinite-scroll py-3 md:py-4">
-      {[0, 1].map(() => (
-        <div class="flex w-1/2 shrink-0 items-center justify-around">
-          {marquee.map((m) => (
-            <span class="flex items-center gap-4 px-4 text-white/55 font-display font-black uppercase tracking-[0.3em] text-xs md:text-sm whitespace-nowrap">
-              {m}
-              <span class="text-[#ff006a]">◆</span>
-            </span>
-          ))}
-        </div>
-      ))}
-    </div>
-  </div>
 </section>
+
+<style>
+  .cta-flame {
+    background: linear-gradient(115deg, #ff006a 0%, #7c0475 55%, #c084fc 100%);
+    background-size: 220% 220%;
+    background-position: 0% 50%;
+    box-shadow: 0 0 35px rgba(255, 0, 106, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: background-position 0.6s ease, box-shadow 0.4s ease, transform 0.3s ease;
+  }
+  .cta-flame:hover {
+    background-position: 100% 50%;
+    box-shadow: 0 0 55px rgba(255, 0, 106, 0.7), 0 0 30px rgba(124, 4, 117, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+  .cta-flame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+  }
+  .cta-flame:hover::before {
+    transform: translateX(120%);
+  }
+</style>
 
 <script>
   // Entrada escalonada del hero con GSAP (antes: animate-fade-up + animation-delay en CSS)
-  import { initHeroIntro } from "../../scripts/animations";
+  import { initHeroIntro, initTilt } from "../../scripts/animations";
   initHeroIntro(document.getElementById("inicio"));
+  initTilt();
 </script>
