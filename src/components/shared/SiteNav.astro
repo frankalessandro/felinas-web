@@ -19,7 +19,7 @@ const CONFIG = {
       { label: "Inicio", href: "#inicio" },
       { label: "Clases", href: "#clases" },
       { label: "Membresías", href: "#membresias" },
-      { label: "Comunidad", href: "#comunidad" },
+      { label: "FAQs", href: "#comunidad" },
       { label: "Contacto", href: "#contacto" },
     ],
     cta: {
@@ -400,8 +400,8 @@ const theme = side === "academia" ? "light" : "dark";
     padding: 0.2rem 0;
     font-family: "Montserrat", sans-serif;
     font-weight: 900;
-    font-size: clamp(2rem, 11vw, 3.2rem);
-    line-height: 1.05;
+    font-size: clamp(1.5rem, 7vw, 2.25rem);
+    line-height: 1.1;
     letter-spacing: -0.02em;
     text-transform: uppercase;
     text-decoration: none;
@@ -410,9 +410,9 @@ const theme = side === "academia" ? "light" : "dark";
 
   .nav-panel-index {
     font-family: "Inter", sans-serif;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
     color: var(--accent);
   }
 
@@ -515,16 +515,37 @@ const theme = side === "academia" ? "light" : "dark";
     });
 
     // --- Sección activa: resalta el link cuyo bloque ocupa el centro del viewport ---
-    nav.querySelectorAll<HTMLAnchorElement>("[data-spy]").forEach((link) => {
-      const target = document.querySelector(link.dataset.spy!);
-      if (!target) return;
-      ScrollTrigger.create({
-        trigger: target,
-        start: "top 55%",
-        end: "bottom 55%",
-        onToggle: (self) => link.classList.toggle("is-active", self.isActive),
-      });
-    });
+    // Se mide con getBoundingClientRect en vivo (no con un rango start/end precalculado):
+    // una sección pineada (ver initRevolverSection) mantiene su altura de caja original
+    // aunque su scroll dure varias pantallas, así que un ScrollTrigger con "bottom 55%"
+    // la daba por terminada mucho antes de que el pin realmente soltara, activando el
+    // siguiente link de golpe. Leyendo la posición real en cada frame, el link se queda
+    // activo mientras la sección siga en pantalla, esté pineada o no.
+    const spySections = Array.from(nav.querySelectorAll<HTMLAnchorElement>("[data-spy]"))
+      .map((link) => ({ link, target: document.querySelector<HTMLElement>(link.dataset.spy!) }))
+      .filter((s): s is { link: HTMLAnchorElement; target: HTMLElement } => !!s.target);
+
+    if (spySections.length) {
+      const markActiveSection = () => {
+        const centerY = window.innerHeight * 0.55;
+        let closest: HTMLElement | null = null;
+        let minDist = Infinity;
+
+        for (const { target } of spySections) {
+          const rect = target.getBoundingClientRect();
+          if (rect.bottom <= 0 || rect.top >= window.innerHeight) continue; // fuera de pantalla
+          const dist = Math.abs(rect.top + rect.height / 2 - centerY);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = target;
+          }
+        }
+
+        spySections.forEach(({ link, target }) => link.classList.toggle("is-active", target === closest));
+      };
+
+      ScrollTrigger.create({ start: 0, end: "max", onUpdate: markActiveSection, onRefresh: markActiveSection });
+    }
 
     // --- Panel móvil ---
     // El panel se saca del árbol accesible recién cuando la salida terminó.
