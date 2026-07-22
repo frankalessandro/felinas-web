@@ -11,8 +11,8 @@ import Footer from "../components/shared/Footer.astro";
 import WhatsAppButton from "../components/shared/WhatsAppButton.astro";
 import HeroSpotlight from "../components/academia/HeroSpotlight.astro";
 import LoadingScreen from "../components/shared/LoadingScreen.astro";
-import maeHeroImg from "../assets/academia/MaeHero_birefnet.webp";
-import panterHeroImg from "../assets/academia/PanterHero_inspyrenet.webp";
+import maeHeroImg from "../assets/academia/mae-hero.webp";
+import panterHeroImg from "../assets/academia/panter-hero.webp";
 ---
 
 <Layout title="Felinas Academia — Danza Urbana">
@@ -34,15 +34,14 @@ import panterHeroImg from "../assets/academia/PanterHero_inspyrenet.webp";
 </Layout>
 
 <script>
-  import { initReveals, initSlideReveals, initCounters, hideLoader } from "../scripts/animations";
+  // Orquestador único de la página: todas las timelines se registran acá.
+  import { initReveals, initSlideReveals, initCounters, initAmbient } from "../scripts/animations";
+  import { revealPage } from "../scripts/loader";
 
   initReveals();
   initSlideReveals();
   initCounters();
+  initAmbient();
 
-  window.addEventListener("load", () => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => hideLoader("loading-screen", 0.9));
-    });
-  });
+  revealPage();
 </script>

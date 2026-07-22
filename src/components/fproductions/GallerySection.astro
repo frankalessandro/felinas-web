@@ -1,11 +1,19 @@
 ---
+import { Image } from "astro:assets";
+import galeriaMae from "../../assets/fproductions/galeria-mae.webp";
+import galeriaSalo from "../../assets/fproductions/galeria-salo.webp";
+import galeriaIsa from "../../assets/fproductions/galeria-isa.webp";
+import galeriaAndrea from "../../assets/fproductions/galeria-andrea.webp";
+import galeriaGabriela from "../../assets/fproductions/galeria-gabriela.webp";
+import galeriaAngie from "../../assets/fproductions/galeria-angie.webp";
+
 const BENTO = [
-  { src: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop", tag: "Main stage", title: "Energía en vivo" },
-  { src: "https://images.unsplash.com/photo-1504506894056-b8db25345719?q=80&w=900&auto=format&fit=crop", tag: null, title: null },
-  { src: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=900&auto=format&fit=crop", tag: "Eventos", title: "Hora loca" },
-  { src: "https://images.unsplash.com/photo-1543807535-eceef0bc6599?q=80&w=1000&auto=format&fit=crop", tag: null, title: null },
-  { src: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop", tag: "Discotecas", title: "Noches que se cuentan" },
-  { src: "https://images.unsplash.com/photo-1542282811-943ef1a6770f?q=80&w=900&auto=format&fit=crop", tag: null, title: null },
+  { src: galeriaMae, alt: "Mae en escena", tag: "Main stage", title: "Energía en vivo" },
+  { src: galeriaSalo, alt: "Salo — F Productions", tag: null, title: null },
+  { src: galeriaIsa, alt: "Isa en un evento", tag: "Eventos", title: "Hora loca" },
+  { src: galeriaAndrea, alt: "Andrea — F Productions", tag: null, title: null },
+  { src: galeriaGabriela, alt: "Gabriela en discoteca", tag: "Discotecas", title: "Noches que se cuentan" },
+  { src: galeriaAngie, alt: "Angie — F Productions", tag: null, title: null },
 ];
 ---
 
@@ -33,10 +41,12 @@ const BENTO = [
         >
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent z-20 transition-opacity duration-500 group-hover:opacity-60"></div>
           <div class="absolute inset-0 bg-gradient-to-tr from-[#ff006a]/60 via-transparent to-felina-morado/50 mix-blend-color z-10 opacity-100 group-hover:opacity-0 transition-opacity duration-700"></div>
-          <img
+          <Image
             src={item.src}
-            alt="Galería F Productions"
-            loading="lazy"
+            alt={item.alt}
+            widths={[400, 700, 1000]}
+            sizes="(max-width: 640px) 78vw, 38vw"
+            loading={i < 2 ? "eager" : "lazy"}
             class="w-full h-full object-cover grayscale-[60%] scale-105 transition-all duration-700 ease-out group-hover:grayscale-0 group-hover:scale-125 group-hover:rotate-1"
           />
           <div class="absolute inset-0 border-2 border-[#ff006a]/0 group-hover:border-[#ff006a]/60 rounded-3xl transition-colors duration-500 z-20 pointer-events-none"></div>

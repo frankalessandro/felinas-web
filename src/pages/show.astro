@@ -11,12 +11,14 @@ import GallerySection from "../components/fproductions/GallerySection.astro";
 import ProcessSection from "../components/fproductions/ProcessSection.astro";
 import BookingCTA from "../components/fproductions/BookingCTA.astro";
 import ShowFooter from "../components/fproductions/ShowFooter.astro";
+import LoadingScreen from "../components/shared/LoadingScreen.astro";
 ---
 
 <Layout
   title="Felinas F Productions — Shows en vivo y eventos"
   description="F Productions es el grupo de shows en vivo de Felinas. Contrata shows de baile, videos musicales, animación de eventos y modelaje para marcas en discotecas, eventos privados y activaciones."
 >
+  <LoadingScreen />
   <div class="min-h-screen bg-[#07030b] text-[#f8f5fa] font-sans antialiased selection:bg-felina-morado/40">
     <ShowNavbar />
     <main>
@@ -40,9 +42,14 @@ import ShowFooter from "../components/fproductions/ShowFooter.astro";
     initReveals,
     initParallaxX,
     initHorizontalScrollSections,
+    initAmbient,
   } from "../scripts/animations";
+  import { revealPage } from "../scripts/loader";
 
   initReveals();
   initParallaxX();
   initHorizontalScrollSections();
+  initAmbient();
+
+  revealPage();
 </script>

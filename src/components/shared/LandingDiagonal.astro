@@ -70,7 +70,15 @@ const REPS = 4;
   <div class="dg-center">
     <span class="dg-halo" data-halo aria-hidden="true"></span>
     <span class="dg-fork dg-fork-up" data-fork aria-hidden="true"></span>
-    <img class="dg-logo" data-logo src="/assets/PanteraFelinasLogo.svg" alt="Felinas" />
+    <img
+      class="dg-logo"
+      data-logo
+      src="/assets/PanteraFelinasLogo.svg"
+      alt="Felinas"
+      width="1158"
+      height="1020"
+      fetchpriority="high"
+    />
     <span class="dg-fork dg-fork-down" data-fork aria-hidden="true"></span>
   </div>
 
@@ -381,7 +389,8 @@ const REPS = 4;
 </style>
 
 <script>
-  import { gsap, LOADER_DONE } from "../../scripts/animations";
+  import { gsap } from "../../scripts/gsap";
+  import { LOADER_DONE } from "../../scripts/loader";
 
   type Key = "academia" | "show";
 

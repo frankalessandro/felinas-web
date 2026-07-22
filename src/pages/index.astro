@@ -13,11 +13,11 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
   html, body {
     overflow: hidden !important;
     height: 100%;
-    background: #000;
+    background: #050505;
   }
 </style>
 
 <script>
-  import { hideLoader } from "../scripts/animations";
-  window.addEventListener("load", () => hideLoader("loading-screen", 0.4));
+  import { revealPage } from "../scripts/loader";
+  revealPage({ duration: 0.5 });
 </script>

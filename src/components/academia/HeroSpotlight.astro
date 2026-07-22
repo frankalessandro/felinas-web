@@ -24,8 +24,9 @@ const imgStyle = [
 ---
 
 <section id="inicio" class="relative min-h-screen flex items-center overflow-hidden bg-background">
-  <!-- Grid parallax -->
-  <div class="absolute inset-0 z-[1] pointer-events-none" style="opacity: 0.13;">
+  <!-- Grid parallax: se mueve con transform en el contenedor, no reescribiendo el <pattern>
+       (mover el pattern obliga a re-renderizar todo el SVG en cada frame). -->
+  <div id="hero-grid" class="absolute z-[1] pointer-events-none" style="inset: -24px; opacity: 0.13; will-change: transform;">
     <svg width="100%" height="100%">
       <defs>
         <pattern id="hgrid" width={CELL} height={CELL} patternUnits="userSpaceOnUse" x="0" y="0">
@@ -108,11 +109,16 @@ const imgStyle = [
           "
         >
           <!-- Imagen base (MaeHero) -->
-          <img src={bg1} alt="" style={imgStyle} />
+          <img src={bg1} alt="" width="703" height="590" fetchpriority="high" decoding="async" style={imgStyle} />
 
-          <!-- Revelado spotlight (PanterHero) -->
-          <div id="hero-reveal" class="absolute inset-0 pointer-events-none">
-            <img src={bg2} alt="" style={imgStyle} />
+          <!-- Revelado spotlight (PanterHero).
+               El disco tiene una máscara radial FIJA y solo se traslada; su contenido se traslada
+               en sentido contrario para quedar alineado con la imagen base. Así nunca se recalcula
+               la máscara: son dos transforms, que van por compositor. -->
+          <div id="hero-spot" class="pointer-events-none">
+            <div id="hero-spot-inner">
+              <img src={bg2} alt="" width="703" height="590" decoding="async" style={imgStyle} />
+            </div>
           </div>
         </div>
       </div>
@@ -120,7 +126,7 @@ const imgStyle = [
   </div>
 
   <!-- Scroll indicator -->
-  <div class="absolute bottom-10 left-8 md:left-14 z-50 animate-bounce-subtle flex flex-col items-center gap-2">
+  <div class="absolute bottom-10 left-8 md:left-14 z-50 flex flex-col items-center gap-2" data-ambient="bounce">
     <span
       class="text-[10px] uppercase font-bold tracking-widest font-display"
       style="color: hsl(var(--muted-foreground)); writing-mode: vertical-rl;"
@@ -140,76 +146,161 @@ const imgStyle = [
   </div>
 </section>
 
-<script>
-  import { gsap, initHeroIntro } from "../../scripts/animations";
+<style>
+  /* Disco del spotlight: tamaño fijo, máscara fija. Solo cambia su transform. */
+  #hero-spot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 520px;
+    height: 520px;
+    will-change: transform;
+    /* El radio va explícito (260px = mitad de la caja). Sin él, radial-gradient usa
+       farthest-corner (368px acá) y el degradado nunca llega a transparente dentro de
+       la caja: el borde del contenedor aparece como un corte recto. */
+    -webkit-mask-image: radial-gradient(
+      circle 260px at center,
+      rgba(255, 255, 255, 1) 40%,
+      rgba(255, 255, 255, 0.75) 60%,
+      rgba(255, 255, 255, 0.4) 75%,
+      rgba(255, 255, 255, 0.12) 88%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      circle 260px at center,
+      rgba(255, 255, 255, 1) 40%,
+      rgba(255, 255, 255, 0.75) 60%,
+      rgba(255, 255, 255, 0.4) 75%,
+      rgba(255, 255, 255, 0.12) 88%,
+      transparent 100%
+    );
+    /* Sin no-repeat la máscara se mosaiquea sobre el contenido que desborda la caja
+       y el revelado aparece en cuadrícula en vez de un solo círculo. */
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    overflow: hidden;
+  }
 
-  const SPOTLIGHT_R = 260;
-  const OFFSCREEN = -SPOTLIGHT_R * 4;
+  /* Copia exacta del área de la imagen, contra-trasladada dentro del disco. */
+  #hero-spot-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+  }
+</style>
+
+<script>
+  import { gsap, ScrollTrigger, initHeroIntro } from "../../scripts/animations";
+
+  const SPOT_R = 260; // debe coincidir con el tamaño de #hero-spot en el CSS (520px)
+  const OFFSCREEN = -SPOT_R * 4;
 
   const section = document.getElementById("inicio")!;
   const area = document.getElementById("hero-image-area")!;
-  const reveal = document.getElementById("hero-reveal")!;
-  const pattern = section.querySelector<SVGPatternElement>("#hgrid");
+  const spot = document.getElementById("hero-spot")!;
+  const inner = document.getElementById("hero-spot-inner")!;
+  const grid = document.getElementById("hero-grid")!;
   const isTouch = window.matchMedia("(hover: none)").matches;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Entrada escalonada del hero (reemplaza animate-fade-up / animate-fade-in)
   initHeroIntro(section);
 
   document.getElementById("hero-scroll-btn")?.addEventListener("click", () => {
     document.getElementById("comunidad-section")?.scrollIntoView({ behavior: "smooth" });
   });
 
-  const mouse = { x: OFFSCREEN, y: OFFSCREEN };
-  const smooth = { x: OFFSCREEN, y: OFFSCREEN };
-  const gridOff = { x: 0, y: 0 };
+  /**
+   * Coloca el disco. El contenido se contra-traslada para que la imagen revelada
+   * siga alineada con la de abajo: dos transforms, cero recálculo de máscara.
+   */
+  const setSpot = (x: number, y: number) => {
+    const left = x - SPOT_R;
+    const top = y - SPOT_R;
+    gsap.set(spot, { x: left, y: top });
+    gsap.set(inner, { x: -left, y: -top });
+  };
 
-  if (!isTouch) {
+  // El rect del área solo cambia al hacer scroll o resize, no en cada frame:
+  // leerlo dentro del bucle forzaba un reflow sincrónico por frame.
+  let areaRect = area.getBoundingClientRect();
+  const track = () => (areaRect = area.getBoundingClientRect());
+  const resize = () => {
+    track();
+    // El interior replica el tamaño del área; solo cambia al redimensionar.
+    inner.style.width = `${areaRect.width}px`;
+    inner.style.height = `${areaRect.height}px`;
+  };
+  resize();
+  window.addEventListener("resize", resize);
+  window.addEventListener("scroll", track, { passive: true });
+
+  setSpot(OFFSCREEN, OFFSCREEN);
+
+  if (reduce) {
+    // Sin movimiento: el revelado se queda quieto en un punto legible.
+    setSpot(areaRect.width * 0.5, areaRect.height * 0.42);
+  } else if (isTouch) {
+    // Móvil: el barrido lo maneja ScrollTrigger, que solo dispara mientras hay scroll.
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: "bottom top",
+      onUpdate: (self) => {
+        // 1.6x comprime el barrido para que Pantera aparezca al ~30% del scroll
+        const p = Math.min(self.progress * 1.6, 1);
+        setSpot(-SPOT_R + p * (areaRect.width + SPOT_R * 2), areaRect.height * 0.38);
+      },
+    });
+  } else {
+    const mouse = { x: OFFSCREEN, y: OFFSCREEN };
+    const smooth = { x: OFFSCREEN, y: OFFSCREEN };
+    const gridOff = { x: 0, y: 0 };
+    let awake = false; // el bucle duerme cuando el puntero se detiene
+    let visible = true;
+
+    const tick = () => {
+      if (!awake || !visible) return;
+
+      smooth.x += (mouse.x - smooth.x) * 0.2;
+      smooth.y += (mouse.y - smooth.y) * 0.2;
+
+      const cx = (smooth.x - areaRect.left) / section.offsetWidth - 0.5;
+      const cy = (smooth.y - areaRect.top) / section.offsetHeight - 0.5;
+      gridOff.x += (cx * 14 - gridOff.x) * 0.07;
+      gridOff.y += (cy * 14 - gridOff.y) * 0.07;
+      gsap.set(grid, { x: gridOff.x, y: gridOff.y });
+
+      setSpot(smooth.x - areaRect.left, smooth.y - areaRect.top);
+
+      // Ya alcanzó al puntero: no hay nada que animar hasta el próximo movimiento.
+      if (Math.abs(mouse.x - smooth.x) < 0.4 && Math.abs(mouse.y - smooth.y) < 0.4) awake = false;
+    };
+
+    gsap.ticker.add(tick);
+
     section.addEventListener("mousemove", (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
+      awake = true;
     });
     section.addEventListener("mouseleave", () => {
       mouse.x = OFFSCREEN;
       mouse.y = OFFSCREEN;
+      awake = true;
+    });
+
+    // Con el hero fuera de pantalla el bucle no tiene por qué seguir corriendo.
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top bottom",
+      end: "bottom top",
+      onToggle: (self) => {
+        visible = self.isActive;
+        if (visible) awake = true;
+      },
     });
   }
-
-  const setMask = (x: number, y: number) => {
-    const mask = `radial-gradient(circle ${SPOTLIGHT_R}px at ${x}px ${y}px, rgba(255,255,255,1) 40%, rgba(255,255,255,0.75) 60%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.12) 88%, transparent 100%)`;
-    reveal.style.webkitMaskImage = mask;
-    reveal.style.maskImage = mask;
-  };
-
-  // Bucle con gsap.ticker (reemplaza el requestAnimationFrame + canvas.toDataURL de React,
-  // que generaba un data-URL nuevo en cada frame; la máscara radial-gradient es mucho más barata)
-  gsap.ticker.add(() => {
-    if (isTouch) {
-      // Móvil: el spotlight se mueve con el progreso de scroll de la sección
-      const rect = section.getBoundingClientRect();
-      const progress = Math.max(0, Math.min(1, -rect.top / rect.height));
-      const w = area.offsetWidth;
-      const h = area.offsetHeight;
-      // 1.6x comprime el barrido para que Pantera aparezca al ~30% del scroll
-      const p = Math.min(progress * 1.6, 1);
-      const spotX = -SPOTLIGHT_R + p * (w + SPOTLIGHT_R * 2);
-      setMask(spotX, h * 0.38);
-    } else {
-      // Desktop: spotlight suavizado siguiendo el cursor
-      smooth.x += (mouse.x - smooth.x) * 0.2;
-      smooth.y += (mouse.y - smooth.y) * 0.2;
-
-      const r = section.getBoundingClientRect();
-      const cx = (smooth.x - r.left) / r.width - 0.5;
-      const cy = (smooth.y - r.top) / r.height - 0.5;
-      gridOff.x += (cx * 14 - gridOff.x) * 0.07;
-      gridOff.y += (cy * 14 - gridOff.y) * 0.07;
-      if (pattern) {
-        pattern.setAttribute("x", String(gridOff.x));
-        pattern.setAttribute("y", String(gridOff.y));
-      }
-
-      const areaRect = area.getBoundingClientRect();
-      setMask(smooth.x - areaRect.left, smooth.y - areaRect.top);
-    }
-  });
 </script>

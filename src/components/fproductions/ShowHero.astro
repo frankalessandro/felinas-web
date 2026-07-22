@@ -1,5 +1,6 @@
 ---
-import maeImg from "../../assets/fproductions/Mae_NoBg_11zon.webp";
+import { Image } from "astro:assets";
+import maeImg from "../../assets/fproductions/mae-nobg.webp";
 
 const WHATSAPP_URL =
   "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20contratar%20un%20show%20de%20Felinas";
@@ -13,9 +14,9 @@ const WHATSAPP_URL =
   <div class="absolute inset-0 bg-[#07030b]"></div>
 
   <!-- Glows: morado izquierda + magenta derecha — más directivos, más crudos -->
-  <div class="absolute top-[5%] left-[8%] w-[480px] h-[480px] rounded-full bg-felina-morado/30 blur-[110px] mix-blend-screen animate-float-light" style="animation-duration:11s"></div>
-  <div class="absolute bottom-[10%] right-[4%] w-[500px] h-[500px] rounded-full bg-[#ff006a]/18 blur-[100px] mix-blend-screen animate-float-light" style="animation-direction:reverse;animation-duration:9s"></div>
-  <div class="absolute top-[30%] right-[20%] w-[250px] h-[250px] rounded-full bg-[#ff006a]/10 blur-[70px] mix-blend-screen animate-float-light" style="animation-duration:7s"></div>
+  <div class="absolute top-[5%] left-[8%] w-[480px] h-[480px] rounded-full bg-felina-morado/30 blur-[110px] mix-blend-screen" data-ambient="float" data-ambient-duration="11"></div>
+  <div class="absolute bottom-[10%] right-[4%] w-[500px] h-[500px] rounded-full bg-[#ff006a]/18 blur-[100px] mix-blend-screen" data-ambient="float" data-ambient-duration="9" data-ambient-reverse></div>
+  <div class="absolute top-[30%] right-[20%] w-[250px] h-[250px] rounded-full bg-[#ff006a]/10 blur-[70px] mix-blend-screen" data-ambient="float" data-ambient-duration="7"></div>
 
   <!-- Líneas diagonales decorativas -->
   <div class="absolute inset-0 pointer-events-none overflow-hidden">
@@ -42,7 +43,7 @@ const WHATSAPP_URL =
       <div class="lg:col-span-7 text-center lg:text-left">
         <!-- Badge — indicador magenta -->
         <div data-hero-fade class="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-[#ff006a]/30 bg-[#ff006a]/8 text-white/80 text-[10px] md:text-xs font-semibold tracking-[0.2em] uppercase mb-7 backdrop-blur-md">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#ff006a] animate-pulse"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#ff006a]" data-ambient="pulse"></span>
           Show Group · Felinas
         </div>
 
@@ -94,10 +95,14 @@ const WHATSAPP_URL =
           <div class="absolute w-[60%] aspect-square rounded-full bg-[#ff006a]/15 blur-[70px]" style="transform: translate(20%, 10%)"></div>
           <div class="absolute bottom-[6%] w-[70%] max-w-[340px] aspect-[2/1] rounded-[50%] bg-black/60 blur-2xl"></div>
         </div>
-        <img
+        <Image
           data-tilt="14"
-          src={maeImg.src}
+          src={maeImg}
           alt="Mae — F Productions"
+          widths={[500, 800, 1100]}
+          sizes="(max-width: 1024px) 70vw, 40vw"
+          loading="eager"
+          fetchpriority="high"
           class="relative z-10 w-full h-full object-contain object-bottom drop-shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
           style="filter: drop-shadow(0 0 50px rgba(124,4,117,0.35)) drop-shadow(0 0 30px rgba(255,0,106,0.15)) brightness(1.03);"
         />

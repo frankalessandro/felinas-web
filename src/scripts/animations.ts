@@ -1,11 +1,13 @@
-import { gsap } from "gsap";
+/**
+ * Animaciones ligadas al scroll. Importar desde acá arrastra ScrollTrigger;
+ * si solo hace falta GSAP core (landing, loader), importar desde `./gsap`.
+ */
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, reduceMotion } from "./gsap";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export { gsap, ScrollTrigger };
-
-const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** Scroll-reveal para todos los [data-reveal] de la página (reemplaza el IntersectionObserver + transition CSS). */
 export function initReveals(selector = "[data-reveal]") {
@@ -73,40 +75,55 @@ export function initHeroIntro(scope?: HTMLElement | null) {
   );
 }
 
-/** Evento que emite el loader al terminar; la landing lo usa para encadenar su intro. */
-export const LOADER_DONE = "felinas:loader-done";
-
 /**
- * Desvanece y elimina la pantalla de carga.
- * El halo neón crece un poco al salir para que el corte con el fondo negro de la página no se note.
+ * Animaciones ambientales en bucle (glows flotantes, latidos, rebotes) que antes eran
+ * @keyframes de CSS. En GSAP se pueden pausar cuando el elemento sale del viewport,
+ * cosa que una animación CSS no permite: un glow con blur de 110px animándose fuera de
+ * pantalla sigue costando composición en cada frame.
+ *
+ * Uso: data-ambient="float | glow | bounce | pulse" y, opcional, data-ambient-duration.
  */
-export function hideLoader(id = "loading-screen", duration = 0.5) {
-  const loader = document.getElementById(id);
-  const done = () => window.dispatchEvent(new CustomEvent(LOADER_DONE));
-  if (!loader) {
-    done();
-    return;
-  }
+export function initAmbient(selector = "[data-ambient]") {
+  if (reduceMotion()) return;
 
-  const halo = loader.querySelector<HTMLElement>(".ls-halo");
-  const stack = loader.querySelector<HTMLElement>(".ls-stack");
-  const logo = loader.querySelector<HTMLElement>(".ls-logo");
-  // Una animación CSS gana sobre el transform inline: hay que apagarla antes de que GSAP tome el relevo.
-  [halo, logo].forEach((el) => el && (el.style.animation = "none"));
+  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
+    const kind = el.dataset.ambient;
+    const duration = Number(el.dataset.ambientDuration) || undefined;
+    const base = { repeat: -1, yoyo: true, ease: "sine.inOut", paused: true };
 
-  const tl = gsap.timeline({
-    onComplete: () => {
-      loader.remove();
-      done();
-    },
+    let tween: gsap.core.Tween;
+    switch (kind) {
+      case "float":
+        tween = gsap.to(el, { ...base, duration: duration ?? 8, y: -20, scale: 1.05, opacity: 0.8 });
+        gsap.set(el, { opacity: 0.5 });
+        break;
+      case "glow":
+        tween = gsap.to(el, {
+          ...base,
+          duration: duration ?? 2,
+          boxShadow: "0 0 40px hsl(340 82% 52% / 0.6)",
+        });
+        gsap.set(el, { boxShadow: "0 0 20px hsl(340 82% 52% / 0.3)" });
+        break;
+      case "bounce":
+        tween = gsap.to(el, { ...base, duration: duration ?? 2, y: -8 });
+        break;
+      case "pulse":
+        tween = gsap.to(el, { ...base, duration: duration ?? 1, opacity: 0.35 });
+        break;
+      default:
+        return;
+    }
+
+    if (el.dataset.ambientReverse !== undefined) tween.progress(0.5);
+
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top bottom",
+      end: "bottom top",
+      onToggle: (self) => (self.isActive ? tween.play() : tween.pause()),
+    });
   });
-
-  if (!reduceMotion()) {
-    if (halo) tl.to(halo, { scale: 1.6, opacity: 0, duration: duration * 1.4, ease: "power2.in" }, 0);
-    if (stack) tl.to(stack, { scale: 0.94, y: -8, duration: duration * 1.2, ease: "power2.in" }, 0);
-  }
-
-  tl.to(loader, { autoAlpha: 0, duration, ease: "power1.out" }, duration * 0.25);
 }
 
 /** Parallax horizontal: mueve el elemento en X a medida que se hace scroll vertical. Uso: data-parallax-x="valor px". */

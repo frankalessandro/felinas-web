@@ -1,6 +1,4 @@
 ---
-import { Image } from "astro:assets";
-import felinasLogo from "../../assets/PanteraFelinasLogo.svg";
 
 const WHATSAPP_URL = "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20agendar%20mi%20clase%20en%20Felinas";
 const navLinks = [
@@ -29,7 +27,7 @@ const navLinks = [
 
       <!-- Centro: logo + nombre -->
       <a href="#inicio" class="flex items-center gap-2.5 nav-link">
-        <Image src={felinasLogo} alt="Felinas" class="h-6 md:h-7 w-auto object-contain" width={116} height={102} />
+        <img src="/assets/PanteraFelinasLogo.svg" alt="Felinas" width="1158" height="1020" class="h-6 md:h-7 w-auto object-contain" />
         <span class="font-display font-black text-base md:text-xl tracking-[0.14em] text-white whitespace-nowrap">
           FELINAS
         </span>
