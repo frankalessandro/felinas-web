@@ -1,42 +1,58 @@
 # Felinas Web
 
-Sitio web oficial de **Pantera Felinas**, academia de danza urbana femenina. El sitio está orientado a la captación de alumnas nuevas y presenta la oferta de clases, membresías y la identidad de la academia.
+![Felinas](docs/bannerReadme.png)
+
+Sitio web oficial de **Pantera Felinas**, academia de danza urbana femenina. Pensado para captar alumnas nuevas: presenta la identidad de la academia, la oferta de clases y membresías, y da acceso directo a agendar una clase gratis por WhatsApp.
+
+🔗 [felinas-web.vercel.app](https://felinas-web.vercel.app/)
 
 ---
 
-## Páginas
+## La experiencia
 
-| Ruta        | Descripción                                                             |
-| :---------- | :---------------------------------------------------------------------- |
-| `/`         | Landing split-screen de entrada con elección de sección                 |
-| `/academia` | Página principal de la academia: hero, clases, membresías, FAQ y más    |
-| `/show`     | Sección de shows y presentaciones                                       |
+El sitio arranca con una **landing split-screen**: dos bandas diagonales, una para Academia y otra para Show, que se expanden al pasar el mouse y llevan a cada sección con una transición tipo wipe. De ahí en adelante, todo el recorrido está pensado como una sola pieza animada en vez de una serie de secciones sueltas: reveals al hacer scroll, contadores animados, parallax y loops ambientes (glow, float, bounce) en los elementos decorativos.
 
----
+### `/academia`
 
-## Secciones de `/academia`
+La página principal de captación de alumnas:
 
-- **Hero** — llamado a acción principal con botón directo a WhatsApp para agendar clase gratis
-- **About** — historia y valores de Felinas (empoderamiento, autoconfianza, comunidad)
-- **Stats** — estadísticas de la academia con animaciones al hacer scroll
+- **Hero** con llamado a la acción directo a WhatsApp para agendar una clase gratis
+- **About** — historia y valores de la academia (empoderamiento, autoconfianza, comunidad)
+- **Stats** — números de la academia con animación de conteo al entrar en viewport
 - **Clases** — catálogo de estilos: Twerk, Hip Hop, Breaking y más
-- **Membresías** — planes disponibles con precios
+- **Membresías** — planes y precios
 - **FAQ** — preguntas frecuentes
-- **CTA** — sección final de conversión
-- **WhatsApp Button** — botón flotante de contacto directo
+- **CTA final** de conversión
+- **Botón de WhatsApp** flotante, siempre accesible
+
+### `/show`
+
+Sección dedicada a las presentaciones y shows de Felinas, con su propia galería visual.
+
+---
+
+## Dirección de diseño
+
+El sitio evita a propósito los defaults genéricos (fuentes de sistema, gradientes morados, layouts predecibles). La identidad se apoya en:
+
+- Tipografía **Montserrat** (display) + **Inter** (texto), no las típicas Inter/Space Grotesk sueltas
+- Paleta oscura de marca con acentos definidos, no tonos tibios repartidos por igual
+- Composición asimétrica en la landing (bandas diagonales) en vez de un hero centrado convencional
+- Movimiento orquestado con GSAP en cada entrada de página y cada scroll, no animaciones sueltas por elemento
 
 ---
 
 ## Tecnologías
 
-- **Astro 6** — framework base con renderizado estático
-- **React** — componentes interactivos (Stats, Clases, Membresías, Landing)
-- **TypeScript**
-- **Tailwind CSS**
+- **[Astro](https://astro.build)** — sitio 100% estático, sin servidor, build a `dist/`
+- **React** — solo en los islands que lo necesitan (Stats, Clases, Membresías, Landing), cargados de forma diferida (`client:visible` / `client:idle`)
+- **GSAP + ScrollTrigger** — reveals, contadores, parallax y loops ambientes; respeta `prefers-reduced-motion`
+- **TypeScript** — tipado en componentes y utilidades
+- **Tailwind CSS** — estilos con variables de marca
 - **pnpm** — gestor de paquetes
 
 ---
 
 ## Assets
 
-Los assets de la academia (logo, fotos de instructoras) se encuentran en `public/assets/`.
+Las imágenes de la academia y de los shows (logo, fotos de instructoras, galería) están en `public/assets/`, optimizadas a webp.
