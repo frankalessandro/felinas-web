@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import WhatsAppButton from "../components/shared/WhatsAppButton.astro";
-import ShowNavbar from "../components/fproductions/ShowNavbar.astro";
+import SiteNav from "../components/shared/SiteNav.astro";
 import ShowHero from "../components/fproductions/ShowHero.astro";
 import ManifestoSection from "../components/fproductions/ManifestoSection.astro";
 import TeamSection from "../components/fproductions/TeamSection.astro";
@@ -10,15 +10,17 @@ import WhyUsSection from "../components/fproductions/WhyUsSection.astro";
 import GallerySection from "../components/fproductions/GallerySection.astro";
 import ProcessSection from "../components/fproductions/ProcessSection.astro";
 import BookingCTA from "../components/fproductions/BookingCTA.astro";
-import ShowFooter from "../components/fproductions/ShowFooter.astro";
+import SiteFooter from "../components/shared/SiteFooter.astro";
+import LoadingScreen from "../components/shared/LoadingScreen.astro";
 ---
 
 <Layout
   title="Felinas F Productions — Shows en vivo y eventos"
   description="F Productions es el grupo de shows en vivo de Felinas. Contrata shows de baile, videos musicales, animación de eventos y modelaje para marcas en discotecas, eventos privados y activaciones."
 >
+  <LoadingScreen />
   <div class="min-h-screen bg-[#07030b] text-[#f8f5fa] font-sans antialiased selection:bg-felina-morado/40">
-    <ShowNavbar />
+    <SiteNav side="show" />
     <main>
       <ShowHero />
       <ManifestoSection />
@@ -29,7 +31,7 @@ import ShowFooter from "../components/fproductions/ShowFooter.astro";
       <ProcessSection />
       <BookingCTA />
     </main>
-    <ShowFooter />
+    <SiteFooter side="show" />
     <WhatsAppButton />
   </div>
 </Layout>
@@ -40,9 +42,18 @@ import ShowFooter from "../components/fproductions/ShowFooter.astro";
     initReveals,
     initParallaxX,
     initHorizontalScrollSections,
+    initAmbient,
+    initScrollActive,
+    initScrollSpotlight,
   } from "../scripts/animations";
+  import { revealPage } from "../scripts/loader";
 
   initReveals();
   initParallaxX();
   initHorizontalScrollSections();
+  initAmbient();
+  initScrollActive();
+  initScrollSpotlight("#services-list");
+
+  revealPage();
 </script>

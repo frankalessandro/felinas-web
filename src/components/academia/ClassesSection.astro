@@ -1,9 +1,10 @@
 ---
-import twerkRecreativoPortada from "../../assets/academia/TwerkRecreativoPortada.webp";
-import hipHopPortada from "../../assets/academia/HipHopPortada.webp";
-import breakingPortada from "../../assets/academia/BreakingPortada.webp";
-import flexPortada from "../../assets/academia/FlexPortada.webp";
-import twerkAvanzadoPortada from "../../assets/academia/TwerkAvanzadoPortada.webp";
+import { Image } from "astro:assets";
+import twerkRecreativoPortada from "../../assets/academia/clase-twerk-recreativo.webp";
+import hipHopPortada from "../../assets/academia/clase-hip-hop.webp";
+import breakingPortada from "../../assets/academia/clase-breaking.webp";
+import flexPortada from "../../assets/academia/clase-flex.webp";
+import twerkAvanzadoPortada from "../../assets/academia/clase-twerk-avanzado.webp";
 
 const WHATSAPP_NUMBER = "573203426558";
 const classBookingUrl = (title: string) =>
@@ -16,7 +17,7 @@ type ClassInfo = {
   level: string;
   gradient: string;
   trailerUrl?: string;
-  portada: string;
+  portada: ImageMetadata;
   teacher: { name: string; role: string; social: string; image: string };
 };
 
@@ -28,7 +29,7 @@ const classes: ClassInfo[] = [
     level: "Grupal · Todos los niveles",
     gradient: "from-pink-500 to-rose-600",
     trailerUrl: "https://www.youtube.com/embed/p-4LGl15AIk",
-    portada: twerkRecreativoPortada.src,
+    portada: twerkRecreativoPortada,
     teacher: { name: "Mae", role: "Instructora de Twerk Recreativo", social: "https://www.instagram.com/mae.aleja", image: twerkRecreativoPortada.src },
   },
   {
@@ -38,7 +39,7 @@ const classes: ClassInfo[] = [
     level: "Grupal · Sin experiencia",
     gradient: "from-amber-500 to-yellow-500",
     trailerUrl: "https://www.youtube.com/embed/HiPuniltcn4",
-    portada: hipHopPortada.src,
+    portada: hipHopPortada,
     teacher: { name: "Angélica", role: "Instructora de Hip Hop", social: "https://www.instagram.com/angee.ortizg", image: hipHopPortada.src },
   },
   {
@@ -48,7 +49,7 @@ const classes: ClassInfo[] = [
     level: "Grupal · Sin experiencia",
     gradient: "from-gray-800 to-amber-600",
     trailerUrl: "https://www.youtube.com/embed/HpC0wH0wZog",
-    portada: breakingPortada.src,
+    portada: breakingPortada,
     teacher: { name: "Jahn Evels", role: "Instructor de Breaking", social: "https://www.instagram.com/bboyevelss", image: breakingPortada.src },
   },
   {
@@ -58,7 +59,7 @@ const classes: ClassInfo[] = [
     level: "Grupal · Sin experiencia",
     gradient: "from-purple-700 to-fuchsia-600",
     trailerUrl: "https://www.youtube.com/embed/8PsQwdEasdM",
-    portada: flexPortada.src,
+    portada: flexPortada,
     teacher: { name: "Andrea Altamirano", role: "Instructora de Flex, Yoga y Gimnasia", social: "https://www.instagram.com/andrealtamirano_", image: flexPortada.src },
   },
   {
@@ -68,7 +69,7 @@ const classes: ClassInfo[] = [
     level: "Grupal · Con experiencia",
     gradient: "from-rose-600 to-fuchsia-700",
     trailerUrl: "https://www.youtube.com/embed/PWJwZYkTZmw",
-    portada: twerkAvanzadoPortada.src,
+    portada: twerkAvanzadoPortada,
     teacher: { name: "Mae", role: "Instructora de Twerk Avanzado", social: "https://www.instagram.com/mae.aleja", image: twerkAvanzadoPortada.src },
   },
 ];
@@ -139,10 +140,18 @@ const modalData = classes.map((c) => ({
               <button
                 type="button"
                 data-class-open={i}
+                data-scroll-active
                 aria-label={`Ver clase de ${c.title}`}
-                class:list={["absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-[4/5] bg-secondary rounded-3xl border border-border shadow-2xl overflow-hidden hover:rotate-0 hover:scale-[1.03] transition-all duration-500 cursor-pointer text-left", isEven ? "rotate-6" : "-rotate-6"]}
+                class:list={["absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-[4/5] bg-secondary rounded-3xl border border-border shadow-2xl overflow-hidden hover:rotate-0 data-[active=true]:rotate-0 hover:scale-[1.03] data-[active=true]:scale-[1.03] transition-all duration-500 cursor-pointer text-left", isEven ? "rotate-6" : "-rotate-6"]}
               >
-                <img src={c.portada} alt={c.title} loading="lazy" class="absolute inset-0 w-full h-full object-cover" />
+                <Image
+                  src={c.portada}
+                  alt={c.title}
+                  widths={[360, 600, 900]}
+                  sizes="(max-width: 768px) 80vw, 40vw"
+                  loading="lazy"
+                  class="absolute inset-0 w-full h-full object-cover"
+                />
                 <div class:list={["absolute inset-0 bg-gradient-to-br opacity-20 mix-blend-overlay", c.gradient]}></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent"></div>
               </button>
@@ -180,10 +189,10 @@ const modalData = classes.map((c) => ({
 </section>
 
 <!-- Modal de clase (uno solo, se rellena por JS) -->
-<div id="class-modal" class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center p-0 sm:p-4 md:p-8">
+<div id="class-modal" class="fixed inset-0 z-[100] hidden items-stretch md:items-center justify-center p-0 md:p-8">
   <div data-modal-backdrop class="absolute inset-0 bg-secondary/90 backdrop-blur-md"></div>
 
-  <div data-modal-panel class="relative w-full max-w-4xl z-10 flex flex-col md:flex-row bg-card border border-border rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] sm:max-h-[90vh] md:h-[85vh] md:max-h-[640px]">
+  <div data-modal-panel class="relative z-10 w-full h-full max-w-none md:h-[85vh] md:max-h-[640px] md:max-w-4xl flex flex-col md:flex-row bg-card border-0 md:border border-border rounded-none md:rounded-3xl shadow-2xl overflow-hidden">
     <button
       type="button"
       data-modal-close
@@ -194,13 +203,13 @@ const modalData = classes.map((c) => ({
     </button>
 
     <!-- Trailer panel — vertical 9:16 -->
-    <div class="relative shrink-0 bg-black flex items-center justify-center overflow-hidden group w-full h-[38vh] max-h-[360px] md:w-[38%] md:h-full md:max-h-none border-b md:border-b-0 md:border-r border-border">
+    <div class="relative shrink-0 bg-black flex items-center justify-center overflow-hidden group w-full h-[58dvh] md:w-[38%] md:h-full border-b md:border-b-0 md:border-r border-border">
       <iframe
         data-modal-iframe
         class="h-full aspect-[9/16] max-w-full hidden"
         src=""
         title="Trailer"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture"
         allowfullscreen
       ></iframe>
       <div data-modal-fallback class="absolute inset-0 hidden">
@@ -220,7 +229,7 @@ const modalData = classes.map((c) => ({
 
     <!-- Info panel -->
     <div class="flex-1 min-h-0 flex flex-col bg-background">
-      <div class="flex-1 min-h-0 overflow-y-auto hidden-scroll p-6 md:p-8">
+      <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain hidden-scroll p-6 md:p-8">
         <div class="flex items-center gap-2.5 mb-5 md:mb-6">
           <span data-modal-dot class="inline-block w-2.5 h-2.5 rounded-full bg-gradient-to-r shadow"></span>
           <span data-modal-level class="text-primary font-bold tracking-widest text-[11px] uppercase px-3 py-1 rounded-full border border-primary/20 bg-primary/5"></span>
@@ -275,7 +284,7 @@ const modalData = classes.map((c) => ({
 <script type="application/json" id="class-modal-data" set:html={JSON.stringify(modalData)}></script>
 
 <script>
-  import { gsap } from "../../scripts/animations";
+  import { gsap } from "../../scripts/gsap";
 
   type ModalClass = {
     title: string;
@@ -302,6 +311,10 @@ const modalData = classes.map((c) => ({
 
   let gradientClasses: string[] = [];
   let isOpen = false;
+
+  // Debajo de md el modal ocupa toda la pantalla (mismo corte que las clases del markup).
+  const fullscreenQuery = window.matchMedia("(max-width: 767px)");
+  const isFull = () => fullscreenQuery.matches;
 
   const open = (c: ModalClass) => {
     setText("[data-modal-level]", c.level);
@@ -337,10 +350,14 @@ const modalData = classes.map((c) => ({
     isOpen = true;
 
     gsap.fromTo(backdrop, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: "power1.out" });
+    // A pantalla completa el panel no puede escalar: se verían los bordes del fondo.
+    // En móvil entra deslizándose desde abajo; en desktop sigue siendo una tarjeta que crece.
     gsap.fromTo(
       panel,
-      { autoAlpha: 0, y: 48, scale: 0.97 },
-      { autoAlpha: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }
+      isFull() ? { autoAlpha: 0, yPercent: 8 } : { autoAlpha: 0, y: 48, scale: 0.97 },
+      isFull()
+        ? { autoAlpha: 1, yPercent: 0, duration: 0.4, ease: "power3.out" }
+        : { autoAlpha: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }
     );
   };
 
@@ -350,14 +367,15 @@ const modalData = classes.map((c) => ({
     gsap.to(backdrop, { autoAlpha: 0, duration: 0.25, ease: "power1.in" });
     gsap.to(panel, {
       autoAlpha: 0,
-      y: 36,
-      scale: 0.97,
+      ...(isFull() ? { yPercent: 8 } : { y: 36, scale: 0.97 }),
       duration: 0.3,
       ease: "power2.in",
       onComplete: () => {
         modal.classList.add("hidden");
         modal.classList.remove("flex");
+        // Vaciar el src detiene la reproducción; si no, el audio sigue sonando cerrado.
         iframe.src = "";
+        gsap.set(panel, { clearProps: "transform" });
         document.body.style.overflow = "auto";
       },
     });

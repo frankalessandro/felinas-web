@@ -1,8 +1,8 @@
 ---
 const pillars = [
-  { k: "01", t: "Energía real", d: "No actuamos: vivimos cada show. Esa intensidad se siente desde la primera fila." },
-  { k: "02", t: "Puesta en escena", d: "Coreografía, vestuario y música pensados como una sola experiencia." },
-  { k: "03", t: "Hechas para tu evento", d: "Adaptamos cada presentación al espacio, al público y a tu marca." },
+  { k: "01", t: "Energía Felina", d: "Actitud, presencia y conexión con el público. Esa es la esencia que llevamos a cada escenario." },
+  { k: "02", t: "Versatilidad escénica", d: "Shows, videoclips, activaciones, campañas digitales o eventos corporativos. Nos adaptamos al formato que tu proyecto necesita." },
+  { k: "03", t: "Producción y experiencias", d: "Coreografía, imagen, puesta en escena y creatividad trabajadas en conjunto para ofrecer una experiencia completa." },
 ];
 ---
 
@@ -31,24 +31,33 @@ const pillars = [
           <span class="w-10 h-px bg-[#ff006a]"></span> Quiénes somos
         </p>
         <h2 class="font-display font-black text-4xl sm:text-5xl md:text-6xl leading-[0.95] tracking-tight mb-8">
-          <span class="text-white">NO SOLO</span><br />
-          <span class="text-transparent" style="-webkit-text-stroke: 1.5px #ff006a;">BAILAMOS.</span>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff006a] to-felina-morado italic"> CREAMOS</span><br />
-          <span class="text-white">MOMENTOS QUE</span>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-felina-morado italic"> SE RECUERDAN.</span>
+          <span class="text-white">LA ENERGÍA</span>
+          <span class="text-transparent" style="-webkit-text-stroke: 1.5px #ff006a;"> FELINA</span>
+          <span class="text-white"> QUE TU EVENTO</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-felina-morado italic"> NECESITA</span>
+          <br /><br />
+          <span class="text-white">NO SOLO</span>
+          <span class="text-transparent" style="-webkit-text-stroke: 1.5px #ff006a;"> BAILAMOS.</span>
+          <br />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff006a] to-felina-morado italic">CREAMOS</span>
+          <span class="text-white"> EXPERIENCIAS QUE</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-felina-morado italic"> CONECTAN.</span>
         </h2>
         <p class="text-base md:text-lg text-white/70 leading-relaxed max-w-xl font-light">
-          F Productions nació dentro de Felinas para llevar el escenario a otro nivel. Somos un colectivo
-          de bailarinas y artistas que convierte cualquier evento en una experiencia con identidad propia:
-          presencia escénica, energía juvenil y producción de verdad. Si vas a hacer un evento, que la gente
-          recuerde el momento en que salimos a la pista.
+          F Productions nació para transformar ideas en experiencias memorables. Somos un equipo de
+          artistas que combina danza, presencia escénica y creatividad para adaptarse a cada proyecto.
+          Desde un escenario hasta una campaña digital, nuestro propósito es generar momentos que conecten
+          con el público y representen la esencia de cada marca o artista.
         </p>
       </div>
 
       <!-- Pillars -->
       <div data-reveal class="lg:col-span-5 flex flex-col gap-5">
         {pillars.map((p) => (
-          <div class="group relative rounded-none border-l-2 border-white/10 bg-white/[0.02] pl-6 pr-5 py-5 transition-all duration-300 hover:border-l-[#ff006a] hover:bg-[#ff006a]/[0.04]">
+          <div
+            data-scroll-active
+            class="group relative rounded-none border-l-2 border-white/10 bg-white/[0.02] pl-6 pr-5 py-5 transition-all duration-300 hover:border-l-[#ff006a] data-[active=true]:border-l-[#ff006a] hover:bg-[#ff006a]/[0.04] data-[active=true]:bg-[#ff006a]/[0.04]"
+          >
             <div class="flex items-start gap-5">
               <span class="font-display font-black text-3xl text-transparent shrink-0 transition-all duration-300" style="-webkit-text-stroke: 1px rgba(255,0,106,0.4);" >{p.k}</span>
               <div>

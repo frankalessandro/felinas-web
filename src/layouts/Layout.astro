@@ -1,22 +1,39 @@
 ---
 import "../styles/global.css";
+
 interface Props {
   title?: string;
   description?: string;
 }
+
 const {
   title = "Felinas",
   description = "Empoderamiento femenino a través de la danza. Twerk, hip hop, breaking y más.",
 } = Astro.props;
+
+// Solo los pesos que se usan de verdad: Montserrat para display, Inter para texto.
+const FONTS_HREF =
+  "https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600&display=swap";
 ---
+
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/assets/PanteraFelinasLogo.svg" />
-    <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#050505" />
+
+    <link rel="icon" type="image/svg+xml" href="/assets/PanteraFelinasLogo.svg" />
+    <link rel="apple-touch-icon" href="/favicon-180.png" />
+
+    <!-- Las fuentes venían de un @import dentro del CSS: eso encadena dos peticiones
+         antes de poder pintar. Con preconnect + link en paralelo se gana el primer render. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href={FONTS_HREF} />
+
     <title>{title}</title>
   </head>
   <body>

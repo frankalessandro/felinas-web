@@ -55,31 +55,9 @@ export default {
       },
       // Solo quedan los loops infinitos ambientales: corren en el compositor via CSS.
       // Las animaciones de entrada (fade-up/fade-in) ahora las maneja GSAP.
-      keyframes: {
-        "bounce-subtle": {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-8px)" },
-        },
-        "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(340 82% 52% / 0.3)" },
-          "50%": { boxShadow: "0 0 40px hsl(340 82% 52% / 0.6)" },
-        },
-        "infinite-scroll": {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-50%)" },
-        },
-        "float-light": {
-          "0%, 100%": { transform: "translateY(0) scale(1)", opacity: "0.5" },
-          "50%": { transform: "translateY(-20px) scale(1.05)", opacity: "0.8" },
-        },
-      },
-      animation: {
-        "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
-        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
-        "infinite-scroll": "infinite-scroll 40s linear infinite",
-        "float-light": "float-light 8s ease-in-out infinite",
-      },
+      // Los bucles ambientales (float / glow / bounce / pulse) los maneja GSAP vía
+      // data-ambient: ver initAmbient() en src/scripts/animations.ts. Se pausan fuera del viewport.
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 } satisfies Config;
