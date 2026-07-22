@@ -73,16 +73,40 @@ export function initHeroIntro(scope?: HTMLElement | null) {
   );
 }
 
-/** Desvanece y elimina la pantalla de carga. */
+/** Evento que emite el loader al terminar; la landing lo usa para encadenar su intro. */
+export const LOADER_DONE = "felinas:loader-done";
+
+/**
+ * Desvanece y elimina la pantalla de carga.
+ * El halo neón crece un poco al salir para que el corte con el fondo negro de la página no se note.
+ */
 export function hideLoader(id = "loading-screen", duration = 0.5) {
   const loader = document.getElementById(id);
-  if (!loader) return;
-  gsap.to(loader, {
-    autoAlpha: 0,
-    duration,
-    ease: "power1.out",
-    onComplete: () => loader.remove(),
+  const done = () => window.dispatchEvent(new CustomEvent(LOADER_DONE));
+  if (!loader) {
+    done();
+    return;
+  }
+
+  const halo = loader.querySelector<HTMLElement>(".ls-halo");
+  const stack = loader.querySelector<HTMLElement>(".ls-stack");
+  const logo = loader.querySelector<HTMLElement>(".ls-logo");
+  // Una animación CSS gana sobre el transform inline: hay que apagarla antes de que GSAP tome el relevo.
+  [halo, logo].forEach((el) => el && (el.style.animation = "none"));
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      loader.remove();
+      done();
+    },
   });
+
+  if (!reduceMotion()) {
+    if (halo) tl.to(halo, { scale: 1.6, opacity: 0, duration: duration * 1.4, ease: "power2.in" }, 0);
+    if (stack) tl.to(stack, { scale: 0.94, y: -8, duration: duration * 1.2, ease: "power2.in" }, 0);
+  }
+
+  tl.to(loader, { autoAlpha: 0, duration, ease: "power1.out" }, duration * 0.25);
 }
 
 /** Parallax horizontal: mueve el elemento en X a medida que se hace scroll vertical. Uso: data-parallax-x="valor px". */
