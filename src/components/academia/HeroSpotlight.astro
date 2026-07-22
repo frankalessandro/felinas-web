@@ -2,25 +2,42 @@
 interface Props {
   bg1: string;
   bg2: string;
+  /** Encuadre nativo de cada imagen (px). El sujeto de ambas empata cuando se
+   *  renderizan a estos tamaños, ancladas abajo y centradas. La base llena la
+   *  altura (100%); la revelada se escala relativa a ella para no desalinearse. */
+  baseSize?: { w: number; h: number };
+  spotSize?: { w: number; h: number };
 }
-const { bg1, bg2 } = Astro.props;
+const {
+  bg1,
+  bg2,
+  baseSize = { w: 703, h: 590 },
+  spotSize = { w: 687, h: 577 },
+} = Astro.props;
 
 const WA = "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20agendar%20mi%20clase%20en%20Felinas";
 const CELL = 48;
 
-const imgStyle = [
-  "position:absolute",
-  "bottom:0",
-  "left:50%",
-  "transform:translateX(-50%)",
-  "height:100%",
-  "width:auto",
-  "max-width:none",
-  "pointer-events:none",
-  "object-fit:contain",
-  "object-position:bottom center",
-  "filter:drop-shadow(0 24px 60px rgba(0,0,0,0.14)) drop-shadow(-8px 0 30px rgba(0,0,0,0.06)) drop-shadow(8px 0 30px rgba(0,0,0,0.06)) drop-shadow(0 0 50px rgba(233,30,140,0.18))",
-].join(";");
+// La revelada empata con la base a escala uniforme: su alto es (spot/base)·100%.
+const spotHeightPct = (spotSize.h / baseSize.h) * 100;
+
+const baseImgStyle = (height: string) =>
+  [
+    "position:absolute",
+    "bottom:0",
+    "left:50%",
+    "transform:translateX(-50%)",
+    `height:${height}`,
+    "width:auto",
+    "max-width:none",
+    "pointer-events:none",
+    "object-fit:contain",
+    "object-position:bottom center",
+    "filter:drop-shadow(0 24px 60px rgba(0,0,0,0.14)) drop-shadow(-8px 0 30px rgba(0,0,0,0.06)) drop-shadow(8px 0 30px rgba(0,0,0,0.06)) drop-shadow(0 0 50px rgba(233,30,140,0.18))",
+  ].join(";");
+
+const imgStyle = baseImgStyle("100%");
+const spotImgStyle = baseImgStyle(`${spotHeightPct.toFixed(4)}%`);
 ---
 
 <section id="inicio" class="relative min-h-screen flex items-center overflow-hidden bg-background">
@@ -109,7 +126,7 @@ const imgStyle = [
           "
         >
           <!-- Imagen base (MaeHero) -->
-          <img src={bg1} alt="" width="703" height="590" fetchpriority="high" decoding="async" style={imgStyle} />
+          <img src={bg1} alt="" width={baseSize.w} height={baseSize.h} fetchpriority="high" decoding="async" style={imgStyle} />
 
           <!-- Revelado spotlight (PanterHero).
                El disco tiene una máscara radial FIJA y solo se traslada; su contenido se traslada
@@ -117,7 +134,7 @@ const imgStyle = [
                la máscara: son dos transforms, que van por compositor. -->
           <div id="hero-spot" class="pointer-events-none">
             <div id="hero-spot-inner">
-              <img src={bg2} alt="" width="703" height="590" decoding="async" style={imgStyle} />
+              <img src={bg2} alt="" width={spotSize.w} height={spotSize.h} decoding="async" style={spotImgStyle} />
             </div>
           </div>
         </div>
