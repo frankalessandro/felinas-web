@@ -43,6 +43,8 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
     initParallaxX,
     initHorizontalScrollSections,
     initAmbient,
+    initScrollActive,
+    initScrollSpotlight,
   } from "../scripts/animations";
   import { revealPage } from "../scripts/loader";
 
@@ -50,6 +52,8 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
   initParallaxX();
   initHorizontalScrollSections();
   initAmbient();
+  initScrollActive();
+  initScrollSpotlight("#services-list");
 
   revealPage();
 </script>

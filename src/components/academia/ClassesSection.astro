@@ -140,8 +140,9 @@ const modalData = classes.map((c) => ({
               <button
                 type="button"
                 data-class-open={i}
+                data-scroll-active
                 aria-label={`Ver clase de ${c.title}`}
-                class:list={["absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-[4/5] bg-secondary rounded-3xl border border-border shadow-2xl overflow-hidden hover:rotate-0 hover:scale-[1.03] transition-all duration-500 cursor-pointer text-left", isEven ? "rotate-6" : "-rotate-6"]}
+                class:list={["absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-[4/5] bg-secondary rounded-3xl border border-border shadow-2xl overflow-hidden hover:rotate-0 data-[active=true]:rotate-0 hover:scale-[1.03] data-[active=true]:scale-[1.03] transition-all duration-500 cursor-pointer text-left", isEven ? "rotate-6" : "-rotate-6"]}
               >
                 <Image
                   src={c.portada}

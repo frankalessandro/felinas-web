@@ -26,6 +26,57 @@ export function initReveals(selector = "[data-reveal]") {
   });
 }
 
+/**
+ * Simula :hover con el scroll: cuando un [data-scroll-active] entra en la banda central
+ * del viewport se le marca data-active="true" (leído por variantes Tailwind
+ * `group-data-[active=true]:` o `data-[active=true]:`). Así los mismos estilos que antes
+ * solo se veían con el mouse se disparan solos al pasar por pantalla — imprescindible en
+ * móvil, donde no existe hover, y da vida al scroll también en desktop.
+ */
+export function initScrollActive(selector = "[data-scroll-active]") {
+  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
+    ScrollTrigger.create({
+      trigger: el,
+      start: "top 75%",
+      end: "bottom 25%",
+      onToggle: (self) => {
+        el.dataset.active = self.isActive ? "true" : "false";
+      },
+    });
+  });
+}
+
+/**
+ * Variante exclusiva de initScrollActive: dentro de un contenedor, solo el elemento más
+ * cercano al centro del viewport queda activo (data-spot="true"), nunca dos a la vez.
+ * Existe porque una banda ancha (initScrollActive) permite que dos filas grandes y vecinas
+ * queden encendidas al mismo tiempo — bien para acentos sutiles, mal para efectos fuertes
+ * como un flood de color que invierte el texto: ahí dos activos a la vez se ve roto.
+ */
+export function initScrollSpotlight(containerSelector: string, itemSelector = "[data-spotlight-item]") {
+  document.querySelectorAll<HTMLElement>(containerSelector).forEach((container) => {
+    const items = Array.from(container.querySelectorAll<HTMLElement>(itemSelector));
+    if (!items.length) return;
+
+    const mark = () => {
+      const centerY = window.innerHeight / 2;
+      let closest: HTMLElement | null = null;
+      let minDist = Infinity;
+      for (const item of items) {
+        const rect = item.getBoundingClientRect();
+        const dist = Math.abs(rect.top + rect.height / 2 - centerY);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = item;
+        }
+      }
+      items.forEach((it) => (it.dataset.spot = it === closest ? "true" : "false"));
+    };
+
+    ScrollTrigger.create({ trigger: container, start: "top bottom", end: "bottom top", onUpdate: mark, onRefresh: mark });
+  });
+}
+
 /** Contadores animados para [data-counter] (reemplaza los setInterval de React). */
 export function initCounters(selector = "[data-counter]") {
   document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
@@ -156,6 +207,26 @@ export function initHorizontalScrollSections(selector = "[data-horizontal-scroll
 
     const getDistance = () => track.scrollWidth - section.clientWidth;
 
+    // Tarjetas marcadas [data-scroll-active]: mientras el filmstrip se desplaza,
+    // la más cercana al centro de pantalla queda "activa" (mismo mecanismo que
+    // initScrollActive, aplicado aquí porque el scroll es horizontal, no vertical).
+    const cards = Array.from(track.querySelectorAll<HTMLElement>("[data-scroll-active]"));
+    const markActiveCard = () => {
+      if (!cards.length) return;
+      const centerX = window.innerWidth / 2;
+      let closest: HTMLElement | null = null;
+      let minDist = Infinity;
+      for (const card of cards) {
+        const rect = card.getBoundingClientRect();
+        const dist = Math.abs(rect.left + rect.width / 2 - centerX);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = card;
+        }
+      }
+      cards.forEach((c) => (c.dataset.active = c === closest ? "true" : "false"));
+    };
+
     gsap.to(track, {
       x: () => -getDistance(),
       ease: "none",
@@ -167,6 +238,7 @@ export function initHorizontalScrollSections(selector = "[data-horizontal-scroll
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
+        onUpdate: markActiveCard,
       },
     });
   });

@@ -9,13 +9,13 @@ import sharyImg from "../../assets/fproductions/shary.webp";
 import angieImg from "../../assets/fproductions/angie.webp";
 
 const team = [
-  { name: "Mae", img: maeImg },
-  { name: "Andrea", img: andreaImg },
-  { name: "Isa", img: isaImg },
-  { name: "Salo", img: saloImg },
-  { name: "Gabriela", img: gabrielaImg },
-  { name: "Shary", img: sharyImg },
-  { name: "Angie", img: angieImg },
+  { name: "Mae", role: "Directora", trait: "La alegre del equipo", img: maeImg },
+  { name: "Andrea", role: "Integrante", trait: "La multifacética del equipo", img: andreaImg },
+  { name: "Isa", role: "Integrante", trait: "La auténtica del equipo", img: isaImg },
+  { name: "Salo", role: "Integrante", trait: "La enérgica del equipo", img: saloImg },
+  { name: "Gabby", role: "Integrante", trait: "La fashionista del equipo", img: gabrielaImg },
+  { name: "Shary", role: "Integrante", trait: "La soñadora del equipo", img: sharyImg },
+  { name: "Angie", role: "Integrante", trait: "La apasionada del equipo", img: angieImg },
 ];
 ---
 
@@ -24,15 +24,15 @@ const team = [
     <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
         <p class="font-display font-semibold text-[#ff006a] text-xs tracking-[0.35em] uppercase mb-5 flex items-center gap-3">
-          <span class="w-10 h-px bg-[#ff006a]"></span> Las caras del show
+          <span class="w-10 h-px bg-[#ff006a]"></span> Quiénes hacen posible cada experiencia
         </p>
         <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
           NUESTRO<br /><span class="text-felina-morado">EQUIPO</span>
         </h2>
       </div>
       <p class="text-white/60 max-w-sm text-sm md:text-base leading-relaxed">
-        Bailarinas y artistas profesionales detrás de cada show, video musical y activación de marca.
-        Sigue bajando para conocerlas.
+        Detrás de cada proyecto hay personas apasionadas por lo que hacen. Cada integrante aporta su
+        talento, personalidad y compromiso para crear experiencias auténticas y memorables.
       </p>
     </div>
   </div>
@@ -58,13 +58,6 @@ const team = [
             sizes="90vw"
             loading={i === 0 ? "eager" : "lazy"}
           />
-          <!-- Index -->
-          <span
-            class="absolute top-4 left-4 font-display font-black text-transparent leading-none select-none"
-            style="font-size: clamp(2rem, 5vw, 3.5rem); -webkit-text-stroke: 1.5px rgba(255,255,255,0.5);"
-          >
-            0{i + 1}
-          </span>
         </div>
 
         <!-- Name -->
@@ -73,8 +66,10 @@ const team = [
           <p class="font-display font-black text-white tracking-tighter leading-[0.85]" style="font-size: clamp(2.5rem, 7vw, 5rem);">
             {member.name}
           </p>
-          <p class="text-white/60 uppercase tracking-[0.3em] text-xs md:text-sm mt-3 font-semibold">
-            F Productions · Integrante {i + 1} / {team.length}
+          <p class="flex items-center justify-center gap-3 mt-3 text-xs md:text-sm">
+            <span class="text-[#ff006a] uppercase tracking-[0.3em] font-semibold">{member.role}</span>
+            <span class="text-white/25">·</span>
+            <span class="text-white/50 italic">{member.trait}</span>
           </p>
         </div>
       </div>

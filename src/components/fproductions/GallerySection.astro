@@ -21,10 +21,11 @@ const BENTO = [
   <div class="container px-4 md:px-8 relative z-10 mb-10 md:mb-0">
     <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-16">
       <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
-        MOMENTOS<br /><span class="text-felina-morado">INOLVIDABLES</span>
+        MOMENTOS<br /><span class="text-felina-morado">QUE HABLAN POR SÍ SOLOS.</span>
       </h2>
-      <p class="text-white/60 max-w-sm text-sm uppercase tracking-[0.15em] font-medium">
-        Sigue bajando: la galería se mueve contigo. Shows en vivo, eventos y presentaciones estelares.
+      <p class="text-white/60 max-w-sm text-sm md:text-base leading-relaxed">
+        Cada imagen cuenta una historia. Así vivimos cada escenario, cada producción y cada experiencia
+        que creamos junto a nuestros clientes.
       </p>
     </div>
   </div>
@@ -34,26 +35,27 @@ const BENTO = [
     <div data-horizontal-track class="flex h-full items-center gap-4 md:gap-6 pl-4 md:pl-8 pr-[10vw] will-change-transform">
       {BENTO.map((item, i) => (
         <div
+          data-scroll-active
           class:list={[
             "group relative shrink-0 h-[48%] md:h-[58%] rounded-3xl overflow-hidden bg-[#11081a] cursor-pointer",
             i % 3 === 0 ? "w-[78vw] sm:w-[52vw] md:w-[38vw]" : "w-[62vw] sm:w-[38vw] md:w-[24vw]",
           ]}
         >
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent z-20 transition-opacity duration-500 group-hover:opacity-60"></div>
-          <div class="absolute inset-0 bg-gradient-to-tr from-[#ff006a]/60 via-transparent to-felina-morado/50 mix-blend-color z-10 opacity-100 group-hover:opacity-0 transition-opacity duration-700"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent z-20 transition-opacity duration-500 group-hover:opacity-60 group-data-[active=true]:opacity-60"></div>
+          <div class="absolute inset-0 bg-gradient-to-tr from-[#ff006a]/60 via-transparent to-felina-morado/50 mix-blend-color z-10 opacity-100 group-hover:opacity-0 group-data-[active=true]:opacity-0 transition-opacity duration-700"></div>
           <Image
             src={item.src}
             alt={item.alt}
             widths={[400, 700, 1000]}
             sizes="(max-width: 640px) 78vw, 38vw"
             loading={i < 2 ? "eager" : "lazy"}
-            class="w-full h-full object-cover grayscale-[60%] scale-105 transition-all duration-700 ease-out group-hover:grayscale-0 group-hover:scale-125 group-hover:rotate-1"
+            class="w-full h-full object-cover grayscale-[60%] scale-105 transition-all duration-700 ease-out group-hover:grayscale-0 group-data-[active=true]:grayscale-0 group-hover:scale-125 group-data-[active=true]:scale-125 group-hover:rotate-1 group-data-[active=true]:rotate-1"
           />
-          <div class="absolute inset-0 border-2 border-[#ff006a]/0 group-hover:border-[#ff006a]/60 rounded-3xl transition-colors duration-500 z-20 pointer-events-none"></div>
+          <div class="absolute inset-0 border-2 border-[#ff006a]/0 group-hover:border-[#ff006a]/60 group-data-[active=true]:border-[#ff006a]/60 rounded-3xl transition-colors duration-500 z-20 pointer-events-none"></div>
           {item.tag && (
             <div class="absolute bottom-5 left-5 z-30 overflow-hidden">
-              <p class="text-[10px] uppercase tracking-[0.25em] text-purple-300 font-bold mb-1 transition-transform duration-500 group-hover:-translate-y-1">{item.tag}</p>
-              <p class="text-lg md:text-2xl font-display font-bold text-white transition-transform duration-500 group-hover:translate-x-2">{item.title}</p>
+              <p class="text-[10px] uppercase tracking-[0.25em] text-purple-300 font-bold mb-1 transition-transform duration-500 group-hover:-translate-y-1 group-data-[active=true]:-translate-y-1">{item.tag}</p>
+              <p class="text-lg md:text-2xl font-display font-bold text-white transition-transform duration-500 group-hover:translate-x-2 group-data-[active=true]:translate-x-2">{item.title}</p>
             </div>
           )}
         </div>

@@ -33,10 +33,10 @@ const steps = [
     <div id="process-steps" class="relative pb-28 md:pb-44">
 
       <!-- Track base -->
-      <div class="absolute left-[11px] md:left-[13px] top-0 bottom-0 w-[1px] bg-white/6 hidden md:block"></div>
+      <div class="absolute left-[11px] md:left-[13px] top-0 bottom-0 w-[1px] bg-white/6"></div>
       <!-- Track fill -->
       <div id="process-fill"
-        class="absolute left-[11px] md:left-[13px] top-0 w-[1px] bg-gradient-to-b from-felina-morado via-purple-500 to-[#ff006a] hidden md:block pointer-events-none"
+        class="absolute left-[11px] md:left-[13px] top-0 w-[1px] bg-gradient-to-b from-felina-morado via-purple-500 to-[#ff006a] pointer-events-none"
         style="height: 0; will-change: height;">
       </div>
 
@@ -46,7 +46,7 @@ const steps = [
           data-i={String(i)}
         >
           <!-- Node -->
-          <div class="hidden md:block shrink-0 pt-1 relative z-10">
+          <div class="shrink-0 pt-1 relative z-10">
             <div class="step-node w-[27px] h-[27px] rounded-full border border-white/12 bg-[#07030b] flex items-center justify-center relative transition-all duration-600">
               <div class="step-dot w-[9px] h-[9px] rounded-full bg-white/15 transition-all duration-600"></div>
               <div class="step-ring absolute inset-[-4px] rounded-full border border-transparent transition-all duration-600"></div>
