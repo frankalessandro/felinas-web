@@ -42,6 +42,19 @@ const team = [
     <!-- Glow de fondo -->
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-felina-morado/10 rounded-full blur-[140px] pointer-events-none"></div>
 
+    <!-- Aclara que el avance es por scroll vertical, no un carrusel swipeable -->
+    <div
+      data-revolver-hint
+      class="absolute top-24 md:top-28 right-5 md:right-10 z-20 flex flex-col items-center gap-2 pointer-events-none"
+    >
+      <span class="text-white/45 text-[10px] font-semibold uppercase tracking-[0.3em]" style="writing-mode: vertical-rl;">
+        Scroll
+      </span>
+      <div class="w-6 h-9 rounded-full border border-white/25 flex justify-center pt-1.5" data-ambient="bounce">
+        <span class="w-1 h-1.5 rounded-full bg-white/60"></span>
+      </div>
+    </div>
+
     {team.map((member, i) => (
       <div
         data-revolver-card

@@ -1,5 +1,8 @@
 ---
-const WHATSAPP_URL = "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20información%20sobre%20las%20membresías%20de%20Felinas";
+const planWhatsappURL = (planName: string, price: string) => {
+  const msg = "¡Hola! Quiero información sobre el plan \"" + planName + "\" (" + price + "/mes) de Felinas Academia";
+  return "https://wa.me/573203426558?text=" + encodeURIComponent(msg);
+};
 
 type AccentId = "combo" | "twerk" | "urbano";
 
@@ -137,7 +140,7 @@ const plans: Record<AccentId, { cards: Plan[]; note?: string; cols: string }> = 
                   ))}
                 </ul>
                 <a
-                  href={WHATSAPP_URL}
+                  href={planWhatsappURL(p.name, p.price)}
                   target="_blank"
                   rel="noopener noreferrer"
                   class:list={[

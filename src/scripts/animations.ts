@@ -281,11 +281,13 @@ export function initRevolverSection(selector = "[data-revolver]") {
   gsap.utils.toArray<HTMLElement>(selector).forEach((section) => {
     const cards = gsap.utils.toArray<HTMLElement>("[data-revolver-card]", section);
     const dots = gsap.utils.toArray<HTMLElement>("[data-revolver-dot]", section);
+    const hint = section.querySelector<HTMLElement>("[data-revolver-hint]");
     if (cards.length < 2) return;
 
     if (reduceMotion()) {
       gsap.set(cards[0], { autoAlpha: 1 });
       dots[0]?.classList.add("is-active");
+      if (hint) gsap.set(hint, { autoAlpha: 0 });
       return;
     }
 
@@ -305,6 +307,8 @@ export function initRevolverSection(selector = "[data-revolver]") {
         onUpdate: (self) => {
           const active = Math.min(cards.length - 1, Math.round(self.progress * (cards.length - 1)));
           dots.forEach((d, i) => d.classList.toggle("is-active", i === active));
+          // El hint solo orienta al llegar a la sección; se retira apenas el usuario empieza a scrollear.
+          if (hint) gsap.to(hint, { autoAlpha: self.progress > 0.03 ? 0 : 1, duration: 0.3, overwrite: true });
         },
       },
     });
