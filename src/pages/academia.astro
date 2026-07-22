@@ -1,13 +1,13 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Navbar from "../components/shared/Navbar.astro";
+import SiteNav from "../components/shared/SiteNav.astro";
 import AboutSection from "../components/academia/AboutSection.astro";
 import StatsSection from "../components/academia/StatsSection.astro";
 import ClassesSection from "../components/academia/ClassesSection.astro";
 import MembershipSection from "../components/academia/MembershipSection.astro";
 import FAQSection from "../components/academia/FAQSection.astro";
 import CTASection from "../components/academia/CTASection.astro";
-import Footer from "../components/shared/Footer.astro";
+import SiteFooter from "../components/shared/SiteFooter.astro";
 import WhatsAppButton from "../components/shared/WhatsAppButton.astro";
 import HeroSpotlight from "../components/academia/HeroSpotlight.astro";
 import LoadingScreen from "../components/shared/LoadingScreen.astro";
@@ -18,7 +18,7 @@ import panterHeroImg from "../assets/academia/panter-hero.webp";
 <Layout title="Felinas Academia — Danza Urbana">
   <LoadingScreen />
   <div class="min-h-screen bg-black">
-    <Navbar />
+    <SiteNav side="academia" />
     <main>
       <HeroSpotlight bg1={maeHeroImg.src} bg2={panterHeroImg.src} />
       <AboutSection />
@@ -28,7 +28,7 @@ import panterHeroImg from "../assets/academia/panter-hero.webp";
       <FAQSection />
       <CTASection />
     </main>
-    <Footer />
+    <SiteFooter side="academia" />
     <WhatsAppButton />
   </div>
 </Layout>
