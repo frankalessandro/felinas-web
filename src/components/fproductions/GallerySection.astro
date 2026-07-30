@@ -62,18 +62,19 @@ const BENTO: Tile[] = [
     <!--
       Sin esto la sección se lee como un carrusel roto: el usuario ve fotos cortadas
       a la derecha y no tiene forma de saber que se avanza scrolleando hacia abajo.
-      Mismo lenguaje que la pista de TeamSection, en horizontal.
+      Mismo cursor de "seguí scrolleando" que TeamSection/ShowHero (píldora vertical +
+      punto que rebota), no una flecha lateral: una flecha apuntando al costado sugiere
+      arrastrar/swipe horizontal, y el gesto real acá es scroll vertical normal.
     -->
     <div
-      class="absolute top-6 md:top-10 right-4 md:right-10 z-30 flex items-center gap-3 pointer-events-none"
+      class="absolute top-6 md:top-10 right-4 md:right-10 z-30 flex flex-col items-center gap-2 pointer-events-none"
       aria-hidden="true"
     >
-      <span class="text-white/55 text-[10px] font-semibold uppercase tracking-[0.3em]">Scroll</span>
-      <div class="flex items-center gap-1" data-ambient="float" data-ambient-duration="2.4">
-        <span class="block w-6 h-px bg-white/40"></span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#ff006a]">
-          <path d="m9 18 6-6-6-6" />
-        </svg>
+      <span class="text-white/55 text-[10px] font-semibold uppercase tracking-[0.3em]" style="writing-mode: vertical-rl;">
+        Scroll
+      </span>
+      <div class="w-6 h-9 rounded-full border border-white/25 flex justify-center pt-1.5" data-ambient="bounce">
+        <span class="w-1 h-1.5 rounded-full bg-[#ff006a]"></span>
       </div>
     </div>
 

@@ -51,19 +51,25 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
   import { initReels } from "../scripts/reels";
   import { revealPage } from "../scripts/loader";
 
-  // revealPage() va primero y no después: solo arma promesas (fonts.ready +
-  // decode de las imágenes eager), así que es barata. Todo lo demás abajo crea
-  // ScrollTriggers para CADA sección de la página — gallería, equipo, reels,
-  // servicios — y cada uno mide el layout real de sus elementos (forced reflow).
-  // Si esa inicialización corriera antes, bloquearía el hilo principal entero y
-  // con él el primer paint / el cierre del loader, aunque el usuario no vaya a
-  // scrollear hasta esas secciones en varios segundos. Un rAF alcanza para dejar
-  // que el navegador pinte primero: el usuario no puede scrollear más rápido que
-  // eso, así que difererir un frame es imperceptible.
+  // initReveals() oculta los [data-reveal] YA (gsap.set, sin medir layout): tiene
+  // que pasar antes del primer paint o el usuario ve el contenido visible un frame
+  // y saltar a oculto al siguiente, que cuenta como layout shift real. Lo caro de
+  // esa función —crear un ScrollTrigger por elemento, que sí mide layout— se
+  // devuelve como función y se ejecuta más abajo, ya diferido.
+  const wireReveals = initReveals();
+
+  // revealPage() también va temprano: solo arma promesas (fonts.ready + decode de
+  // las imágenes eager), así que es barata y no depende de lo de abajo.
   revealPage();
 
+  // Todo esto crea ScrollTriggers para CADA sección de la página — gallería,
+  // equipo, reels, servicios— y cada uno mide el layout real de sus elementos
+  // (forced reflow). Si corriera antes del primer paint, bloquearía el hilo
+  // principal entero con trabajo de secciones que el usuario tarda varios
+  // segundos en alcanzar. Un rAF alcanza para dejar pintar primero: nadie
+  // scrollea más rápido que un frame, así que diferir esto es imperceptible.
   requestAnimationFrame(() => {
-    initReveals();
+    wireReveals();
     initParallaxX();
     initHorizontalScrollSections();
     initAmbient();
