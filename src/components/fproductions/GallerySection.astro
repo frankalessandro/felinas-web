@@ -53,6 +53,29 @@ const BENTO: Tile[] = [
 
   <!-- Filmstrip horizontal pinneado: el scroll vertical mueve la galería en X, centrado en pantalla -->
   <div data-horizontal-scroll class="relative h-screen w-full overflow-hidden">
+    <!--
+      Sin esto la sección se lee como un carrusel roto: el usuario ve fotos cortadas
+      a la derecha y no tiene forma de saber que se avanza scrolleando hacia abajo.
+      Mismo lenguaje que la pista de TeamSection, en horizontal.
+    -->
+    <div
+      class="absolute top-6 md:top-10 right-4 md:right-10 z-30 flex items-center gap-3 pointer-events-none"
+      aria-hidden="true"
+    >
+      <span class="text-white/55 text-[10px] font-semibold uppercase tracking-[0.3em]">Scroll</span>
+      <div class="flex items-center gap-1" data-ambient="float" data-ambient-duration="2.4">
+        <span class="block w-6 h-px bg-white/40"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#ff006a]">
+          <path d="m9 18 6-6-6-6" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Progreso del recorrido horizontal: cuánto queda de galería. -->
+    <div class="absolute bottom-8 md:bottom-12 left-4 md:left-8 right-4 md:right-8 z-30 h-px bg-white/12" aria-hidden="true">
+      <span data-horizontal-progress class="block h-full origin-left scale-x-0 bg-[#ff006a]"></span>
+    </div>
+
     <div data-horizontal-track class="flex h-full items-center gap-4 md:gap-6 pl-4 md:pl-8 pr-[10vw] will-change-transform">
       {BENTO.map((item, i) => (
         <div
@@ -60,7 +83,15 @@ const BENTO: Tile[] = [
           {...(item.kind === "video" ? { "data-reel-loop": true, "data-playing": "false" } : {})}
           class:list={[
             "group relative shrink-0 h-[48%] md:h-[58%] rounded-3xl overflow-hidden bg-[#11081a] cursor-pointer",
-            i % 3 === 0 ? "w-[78vw] sm:w-[52vw] md:w-[38vw]" : "w-[62vw] sm:w-[38vw] md:w-[24vw]",
+            // Los clips llevan el ratio nativo del archivo (9:16 vertical) y dejan que
+            // el ancho salga de la altura. Con las medidas de las fotos, que son más
+            // anchas, el object-cover recortaba cabezas y pies y ampliaba la imagen
+            // ~35%, que es lo que se leía como video comprimido.
+            item.kind === "video"
+              ? "aspect-[9/16] w-auto"
+              : i % 3 === 0
+                ? "w-[78vw] sm:w-[52vw] md:w-[38vw]"
+                : "w-[62vw] sm:w-[38vw] md:w-[24vw]",
           ]}
         >
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent z-20 transition-opacity duration-500 group-hover:opacity-60 group-data-[active=true]:opacity-60"></div>

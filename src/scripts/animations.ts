@@ -227,6 +227,10 @@ export function initHorizontalScrollSections(selector = "[data-horizontal-scroll
       cards.forEach((c) => (c.dataset.active = c === closest ? "true" : "false"));
     };
 
+    // La barra de progreso se alimenta del mismo trigger que mueve el track: un
+    // segundo ScrollTrigger sobre la misma sección se desincronizaría con el pin.
+    const progress = section.querySelector<HTMLElement>("[data-horizontal-progress]");
+
     gsap.to(track, {
       x: () => -getDistance(),
       ease: "none",
@@ -238,7 +242,10 @@ export function initHorizontalScrollSections(selector = "[data-horizontal-scroll
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        onUpdate: markActiveCard,
+        onUpdate: (self) => {
+          markActiveCard();
+          if (progress) gsap.set(progress, { scaleX: self.progress });
+        },
       },
     });
   });

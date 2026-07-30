@@ -39,10 +39,21 @@
   body {
     @apply bg-background text-foreground font-sans;
     font-family: 'Inter', sans-serif;
-    scroll-behavior: smooth;
+    /* Sin `scroll-behavior: smooth`: GSAP desaconseja combinarlo con ScrollTrigger
+       (pelea con el scroll programático del pin y descuadra las medidas). El scroll
+       suave de los links del nav se hace en JS, en SiteNav.astro. */
     overscroll-behavior: none;
   }
   h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
+
+  /* Foco visible propio: antes solo había el outline por defecto del navegador, que
+     sobre #07030b es casi invisible. Se usa :focus-visible para que el anillo aparezca
+     al navegar con teclado pero no al hacer click con el mouse. */
+  :focus-visible {
+    outline: 2px solid #ff006a;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
 }
 
 @layer utilities {

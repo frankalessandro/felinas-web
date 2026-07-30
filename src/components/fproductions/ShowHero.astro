@@ -84,7 +84,7 @@ const WHATSAPP_URL =
       </div>
 
       <!-- Image column -->
-      <div data-hero-fade class="lg:col-span-5 relative h-[42vh] sm:h-[50vh] lg:h-[78vh]" style="perspective: 1200px;">
+      <div data-hero-fade class="hero-media lg:col-span-5 relative" style="perspective: 1200px;">
         <div class="absolute inset-0 flex items-center justify-center">
           <div class="absolute w-[80%] aspect-square rounded-full bg-felina-morado/30 blur-[90px]"></div>
           <div class="absolute w-[60%] aspect-square rounded-full bg-[#ff006a]/15 blur-[70px]" style="transform: translate(20%, 10%)"></div>
@@ -98,7 +98,7 @@ const WHATSAPP_URL =
           El tilt va en el grupo entero para que las tres capas se muevan juntas.
         -->
         <div data-tilt="10" class="relative z-10 h-full flex items-center justify-center">
-          <div class="hero-frame relative h-full aspect-[4/5]">
+          <div class="hero-frame relative">
             <div class="hero-cut absolute inset-0 bg-[#ff006a] -translate-x-2.5 -translate-y-2.5 md:-translate-x-4 md:-translate-y-4"></div>
             <div class="hero-cut absolute inset-0 bg-felina-morado translate-x-2.5 translate-y-2.5 md:translate-x-4 md:translate-y-4"></div>
             <div class="hero-cut absolute inset-0 overflow-hidden bg-white">
@@ -118,6 +118,22 @@ const WHATSAPP_URL =
     </div>
   </div>
 
+  <!--
+    Indicador de scroll: el hero ocupa toda la pantalla y no había ninguna señal de
+    que hubiera contenido debajo. Se oculta en pantallas bajas (donde la siguiente
+    sección ya asoma sola y el indicador solo robaría espacio).
+  -->
+  <div
+    data-hero-fade
+    class="absolute bottom-7 left-1/2 -translate-x-1/2 z-10 hidden sm:flex flex-col items-center gap-2 pointer-events-none"
+    aria-hidden="true"
+  >
+    <span class="text-white/55 text-[10px] font-semibold uppercase tracking-[0.3em]">Scroll</span>
+    <div class="w-6 h-9 rounded-full border border-white/25 flex justify-center pt-1.5" data-ambient="bounce">
+      <span class="w-1 h-1.5 rounded-full bg-[#ff006a]"></span>
+    </div>
+  </div>
+
 </section>
 
 <style>
@@ -131,7 +147,35 @@ const WHATSAPP_URL =
     clip-path: polygon(0 0, 91% 0, 100% 7%, 100% 100%, 9% 100%, 0 93%);
   }
 
+  /*
+   * La columna publica su propia altura como variable para que el marco pueda
+   * calcular su ancho a partir de ella.
+   */
+  .hero-media {
+    --col-h: 42vh;
+    height: var(--col-h);
+  }
+
+  @media (min-width: 640px) {
+    .hero-media { --col-h: 50vh; }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-media { --col-h: 78vh; }
+  }
+
+  /*
+   * El marco se pisaba con el texto porque era `height: 100%` + `aspect-ratio`: el
+   * ancho salía de la altura, así que en pantallas altas y angostas (tablet vertical)
+   * crecía más que su columna y se desbordaba sobre la columna de texto.
+   * Ahora el ancho es el MENOR entre el ancho disponible y el que pide la altura,
+   * y la altura se deriva del ancho — nunca puede exceder la columna.
+   * El 0.76 (en vez de 0.8 = 4/5) deja aire para las placas desplazadas, que asoman
+   * fuera de la caja del marco.
+   */
   .hero-frame {
+    width: min(100%, calc(var(--col-h) * 0.76));
+    aspect-ratio: 4 / 5;
     filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.55))
       drop-shadow(0 0 60px rgba(124, 4, 117, 0.3));
   }
