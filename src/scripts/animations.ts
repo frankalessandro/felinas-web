@@ -10,20 +10,31 @@ gsap.registerPlugin(ScrollTrigger);
 export { gsap, ScrollTrigger };
 
 /** Scroll-reveal para todos los [data-reveal] de la página (reemplaza el IntersectionObserver + transition CSS). */
+/**
+ * Devuelve una función para terminar la configuración, en vez de hacerlo todo de una.
+ * `gsap.fromTo` renderiza el estado "from" (oculto) en el momento en que se crea el
+ * tween: si esa llamada se retrasa a un frame posterior al primer paint (para no
+ * bloquear el render, ver show.astro/academia.astro), el elemento se ve un frame en
+ * su posición final visible y al siguiente salta a oculto+desplazado — un layout
+ * shift real y perceptible. Separar "ocultar ya" (barato, sin medir layout) de
+ * "conectar el ScrollTrigger" (caro, sí mide layout) permite que la página pinte con
+ * el contenido ya oculto pero deje la creación de triggers para después.
+ */
 export function initReveals(selector = "[data-reveal]") {
-  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
-    gsap.fromTo(
-      el,
-      { autoAlpha: 0, y: 28 },
-      {
+  const els = gsap.utils.toArray<HTMLElement>(selector);
+  gsap.set(els, { autoAlpha: 0, y: 28 });
+
+  return () => {
+    els.forEach((el) => {
+      gsap.to(el, {
         autoAlpha: 1,
         y: 0,
         duration: 0.7,
         ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 88%", once: true },
-      }
-    );
-  });
+      });
+    });
+  };
 }
 
 /**
@@ -97,21 +108,23 @@ export function initCounters(selector = "[data-counter]") {
 }
 
 /** Entrada lateral para [data-reveal-x="left|right"] (imágenes/paneles que entran desde un costado). */
+/** Mismo criterio que initReveals: ocultar es síncrono, conectar el trigger se difiere. */
 export function initSlideReveals(selector = "[data-reveal-x]") {
-  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
-    const dir = el.dataset.revealX === "right" ? 1 : -1;
-    gsap.fromTo(
-      el,
-      { autoAlpha: 0, x: 60 * dir },
-      {
+  const els = gsap.utils.toArray<HTMLElement>(selector);
+  const dirs = els.map((el) => (el.dataset.revealX === "right" ? 1 : -1));
+  els.forEach((el, i) => gsap.set(el, { autoAlpha: 0, x: 60 * dirs[i] }));
+
+  return () => {
+    els.forEach((el, i) => {
+      gsap.to(el, {
         autoAlpha: 1,
         x: 0,
         duration: 0.8,
         ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
-      }
-    );
-  });
+      });
+    });
+  };
 }
 
 /** Entrada escalonada tipo hero para los [data-hero-fade] (reemplaza animate-fade-up con animation-delay). */
