@@ -38,11 +38,16 @@ import maePantherImg from "../assets/academia/mae-panther-hero.webp";
   import { initReveals, initSlideReveals, initCounters, initAmbient, initScrollActive } from "../scripts/animations";
   import { revealPage } from "../scripts/loader";
 
-  initReveals();
-  initSlideReveals();
-  initCounters();
-  initAmbient();
-  initScrollActive();
-
+  // Mismo criterio que en show.astro: revealPage() primero porque es barata (solo
+  // promesas), y el ScrollTrigger de cada sección se difiere un frame para no
+  // bloquear el primer paint con el forced reflow de crear todos los triggers.
   revealPage();
+
+  requestAnimationFrame(() => {
+    initReveals();
+    initSlideReveals();
+    initCounters();
+    initAmbient();
+    initScrollActive();
+  });
 </script>
