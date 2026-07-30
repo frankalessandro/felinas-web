@@ -7,7 +7,8 @@ const steps = [
 ];
 ---
 
-<section id="proceso" class="relative bg-[#07030b] border-t border-white/5 overflow-hidden">
+<section id="proceso" class="relative bg-[#07030b] overflow-hidden">
+  <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-purple-400/25 to-transparent"></div>
   <!-- Ambient glows -->
   <div class="absolute top-1/4 -left-40 w-[700px] h-[700px] rounded-full bg-felina-morado/12 blur-[180px] pointer-events-none"></div>
   <div class="absolute bottom-1/4 -right-40 w-[600px] h-[600px] rounded-full bg-[#ff006a]/8 blur-[160px] pointer-events-none"></div>
@@ -20,9 +21,9 @@ const steps = [
       <p class="font-display font-semibold text-purple-400 text-xs tracking-[0.35em] uppercase mb-6 flex items-center gap-3">
         <span class="w-10 h-px bg-purple-400/50"></span> Show de principio a fin
       </p>
-      <h2 class="font-display font-black tracking-tighter leading-[0.88]" style="font-size: clamp(3rem, 9vw, 7rem);">
+      <h2 class="font-display font-black tracking-tighter leading-[0.88] max-w-full" style="font-size: clamp(2.2rem, 12vw, 7rem);">
         <span class="text-white block">ASÍ</span>
-        <span class="block text-transparent" style="-webkit-text-stroke: 2px rgba(148,50,210,0.65);">TRABAJAMOS</span>
+        <span class="block text-transparent break-words" style="-webkit-text-stroke: 2px rgba(148,50,210,0.65);">TRABAJAMOS</span>
       </h2>
       <p class="text-white/60 text-base md:text-lg mt-8 max-w-md leading-relaxed">
         No te dejamos solos. Desde el primer mensaje hasta el último aplauso, estamos contigo.

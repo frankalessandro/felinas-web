@@ -17,6 +17,9 @@ type Tile = {
   alt: string;
   tag: string | null;
   title: string | null;
+  /** Fuerza el ancho "grande" del patrón aunque no le toque por posición: la foto de Salo,
+   * angosta y vertical, recortaba la cara con el ancho chico. */
+  wide?: boolean;
 };
 
 /**
@@ -30,7 +33,7 @@ type Tile = {
 const BENTO: Tile[] = [
   { kind: "image", src: galeriaMae, alt: "Mae en escena", tag: null, title: null },
   { kind: "video", src: posterLoop3144, file: "loop-3144", alt: "Coreografía de F Productions en movimiento", tag: "En movimiento", title: "Así se ve en vivo" },
-  { kind: "image", src: galeriaSalo, alt: "Salo — F Productions", tag: null, title: null },
+  { kind: "image", src: galeriaSalo, alt: "Salo — F Productions", tag: null, title: null, wide: true },
   { kind: "video", src: posterLoop3199, file: "loop-3199", alt: "Presentación de F Productions en movimiento", tag: "En movimiento", title: "Puesta en escena" },
   { kind: "image", src: galeriaAndrea, alt: "Andrea — F Productions", tag: null, title: null },
   { kind: "video", src: posterLoop3414, file: "loop-3414", alt: "Show de F Productions en movimiento", tag: "En movimiento", title: "Cada detalle cuenta" },
@@ -39,6 +42,9 @@ const BENTO: Tile[] = [
 ---
 
 <section id="galeria" class="relative py-24 md:py-16 bg-[#07030b] overflow-hidden">
+  <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#ff006a]/25 to-transparent"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-56 bg-[#ff006a]/10 blur-[120px] pointer-events-none"></div>
+
   <div class="container px-4 md:px-8 relative z-10 mb-10 md:mb-0">
     <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-16">
       <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
@@ -89,7 +95,7 @@ const BENTO: Tile[] = [
             // ~35%, que es lo que se leía como video comprimido.
             item.kind === "video"
               ? "aspect-[9/16] w-auto"
-              : i % 3 === 0
+              : i % 3 === 0 || item.wide
                 ? "w-[78vw] sm:w-[52vw] md:w-[38vw]"
                 : "w-[62vw] sm:w-[38vw] md:w-[24vw]",
           ]}

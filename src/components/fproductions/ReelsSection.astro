@@ -29,6 +29,7 @@ const REELS: Reel[] = [
 ---
 
 <section id="reels" class="relative py-24 md:py-36 bg-[#07030b] overflow-hidden">
+  <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-felina-morado/25 to-transparent"></div>
   <div
     class="pointer-events-none absolute left-[15%] top-1/2 -translate-y-1/2 h-[70vh] w-[60vw] rounded-full bg-felina-morado/20 blur-[130px]"
     aria-hidden="true"
@@ -90,7 +91,7 @@ const REELS: Reel[] = [
 
             <span class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" aria-hidden="true"></span>
 
-            <span class="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-sm bg-black/50 backdrop-blur-sm border border-white/20">
+            <span class="absolute top-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm border border-white/20">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#ff006a]">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
