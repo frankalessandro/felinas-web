@@ -2,18 +2,39 @@
 import { Image } from "astro:assets";
 import galeriaMae from "../../assets/fproductions/galeria-mae.webp";
 import galeriaSalo from "../../assets/fproductions/galeria-salo.webp";
-import galeriaIsa from "../../assets/fproductions/galeria-isa.webp";
 import galeriaAndrea from "../../assets/fproductions/galeria-andrea.webp";
 import galeriaGabriela from "../../assets/fproductions/galeria-gabriela.webp";
-import galeriaAngie from "../../assets/fproductions/galeria-angie.webp";
+import posterLoop3144 from "../../assets/fproductions/posters/loop-3144.webp";
+import posterLoop3199 from "../../assets/fproductions/posters/loop-3199.webp";
+import posterLoop3414 from "../../assets/fproductions/posters/loop-3414.webp";
 
-const BENTO = [
-  { src: galeriaMae, alt: "Mae en escena", tag: "Main stage", title: "Energía en vivo" },
-  { src: galeriaSalo, alt: "Salo — F Productions", tag: null, title: null },
-  { src: galeriaIsa, alt: "Isa en un evento", tag: "Eventos", title: "Hora loca" },
-  { src: galeriaAndrea, alt: "Andrea — F Productions", tag: null, title: null },
-  { src: galeriaGabriela, alt: "Gabriela en discoteca", tag: "Discotecas", title: "Noches que se cuentan" },
-  { src: galeriaAngie, alt: "Angie — F Productions", tag: null, title: null },
+type Tile = {
+  /** Los `video` son clips mudos que corren solos mientras el tile está en pantalla. */
+  kind: "image" | "video";
+  src: ImageMetadata;
+  /** Solo para kind === "video": nombre del mp4 en /videos. */
+  file?: string;
+  alt: string;
+  tag: string | null;
+  title: string | null;
+};
+
+/**
+ * Los clips van intercalados entre las fotos, no agrupados: el movimiento
+ * aparece de a poco a lo largo del filmstrip en vez de golpear todo junto.
+ *
+ * Las fotos van sin rótulo a propósito: hablan solas y el texto competía con
+ * ellas. Los clips sí lo llevan, porque ahí el rótulo cumple otra función —
+ * avisa que eso se mueve.
+ */
+const BENTO: Tile[] = [
+  { kind: "image", src: galeriaMae, alt: "Mae en escena", tag: null, title: null },
+  { kind: "video", src: posterLoop3144, file: "loop-3144", alt: "Coreografía de F Productions en movimiento", tag: "En movimiento", title: "Así se ve en vivo" },
+  { kind: "image", src: galeriaSalo, alt: "Salo — F Productions", tag: null, title: null },
+  { kind: "video", src: posterLoop3199, file: "loop-3199", alt: "Presentación de F Productions en movimiento", tag: "En movimiento", title: "Puesta en escena" },
+  { kind: "image", src: galeriaAndrea, alt: "Andrea — F Productions", tag: null, title: null },
+  { kind: "video", src: posterLoop3414, file: "loop-3414", alt: "Show de F Productions en movimiento", tag: "En movimiento", title: "Cada detalle cuenta" },
+  { kind: "image", src: galeriaGabriela, alt: "Gabriela en discoteca", tag: null, title: null },
 ];
 ---
 
@@ -36,6 +57,7 @@ const BENTO = [
       {BENTO.map((item, i) => (
         <div
           data-scroll-active
+          {...(item.kind === "video" ? { "data-reel-loop": true, "data-playing": "false" } : {})}
           class:list={[
             "group relative shrink-0 h-[48%] md:h-[58%] rounded-3xl overflow-hidden bg-[#11081a] cursor-pointer",
             i % 3 === 0 ? "w-[78vw] sm:w-[52vw] md:w-[38vw]" : "w-[62vw] sm:w-[38vw] md:w-[24vw]",
@@ -49,8 +71,19 @@ const BENTO = [
             widths={[400, 700, 1000]}
             sizes="(max-width: 640px) 78vw, 38vw"
             loading={i < 2 ? "eager" : "lazy"}
-            class="w-full h-full object-cover grayscale-[60%] scale-105 transition-all duration-700 ease-out group-hover:grayscale-0 group-data-[active=true]:grayscale-0 group-hover:scale-125 group-data-[active=true]:scale-125 group-hover:rotate-1 group-data-[active=true]:rotate-1"
+            class="w-full h-full object-cover grayscale-[60%] scale-105 transition-all duration-700 ease-out group-hover:grayscale-0 group-data-[active=true]:grayscale-0 group-hover:scale-125 group-data-[active=true]:scale-125 group-hover:rotate-1 group-data-[active=true]:rotate-1 group-data-[playing=true]:opacity-0"
           />
+          {item.kind === "video" && (
+            <video
+              data-src={`/videos/${item.file}.mp4`}
+              poster={item.src.src}
+              muted
+              loop
+              playsinline
+              preload="none"
+              class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-data-[playing=true]:opacity-100 grayscale-[60%] group-hover:grayscale-0 group-data-[active=true]:grayscale-0"
+            />
+          )}
           <div class="absolute inset-0 border-2 border-[#ff006a]/0 group-hover:border-[#ff006a]/60 group-data-[active=true]:border-[#ff006a]/60 rounded-3xl transition-colors duration-500 z-20 pointer-events-none"></div>
           {item.tag && (
             <div class="absolute bottom-5 left-5 z-30 overflow-hidden">

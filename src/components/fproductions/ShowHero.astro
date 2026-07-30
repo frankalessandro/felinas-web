@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import maeImg from "../../assets/fproductions/mae-nobg.webp";
+import fotoGrupal from "../../assets/fproductions/foto-grupal.webp";
 
 const WHATSAPP_URL =
   "https://wa.me/573203426558?text=%C2%A1Hola!%20Quiero%20contratar%20un%20show%20de%20Felinas";
@@ -88,20 +88,32 @@ const WHATSAPP_URL =
         <div class="absolute inset-0 flex items-center justify-center">
           <div class="absolute w-[80%] aspect-square rounded-full bg-felina-morado/30 blur-[90px]"></div>
           <div class="absolute w-[60%] aspect-square rounded-full bg-[#ff006a]/15 blur-[70px]" style="transform: translate(20%, 10%)"></div>
-          <div class="absolute bottom-[6%] w-[70%] max-w-[340px] aspect-[2/1] rounded-[50%] bg-black/60 blur-2xl"></div>
         </div>
-        <!-- TODO: reemplazar por la foto grupal cuando la clienta la envíe -->
-        <Image
-          data-tilt="14"
-          src={maeImg}
-          alt="Equipo F Productions"
-          widths={[500, 800, 1100]}
-          sizes="(max-width: 1024px) 70vw, 40vw"
-          loading="eager"
-          fetchpriority="high"
-          class="relative z-10 w-full h-full object-contain object-bottom drop-shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
-          style="filter: drop-shadow(0 0 50px rgba(124,4,117,0.35)) drop-shadow(0 0 30px rgba(255,0,106,0.15)) brightness(1.03);"
-        />
+
+        <!--
+          Marco de desregistro: dos placas de color asomando por esquinas opuestas
+          detrás de la foto. Es el mismo recurso que las palabras fantasma "LIVE"
+          de esta sección (duplicadas y desplazadas en magenta y morado), aplicado
+          al retrato — el borde no es un adorno suelto, es el idioma del hero.
+          El tilt va en el grupo entero para que las tres capas se muevan juntas.
+        -->
+        <div data-tilt="10" class="relative z-10 h-full flex items-center justify-center">
+          <div class="hero-frame relative h-full aspect-[4/5]">
+            <div class="hero-cut absolute inset-0 bg-[#ff006a] -translate-x-2.5 -translate-y-2.5 md:-translate-x-4 md:-translate-y-4"></div>
+            <div class="hero-cut absolute inset-0 bg-felina-morado translate-x-2.5 translate-y-2.5 md:translate-x-4 md:translate-y-4"></div>
+            <div class="hero-cut absolute inset-0 overflow-hidden bg-white">
+              <Image
+                src={fotoGrupal}
+                alt="El equipo de F Productions"
+                widths={[440, 700, 1000, 1280]}
+                sizes="(max-width: 1024px) 70vw, 40vw"
+                loading="eager"
+                fetchpriority="high"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -109,6 +121,21 @@ const WHATSAPP_URL =
 </section>
 
 <style>
+  /*
+   * Esquinas cortadas en diagonal (arriba-derecha y abajo-izquierda). En porcentaje
+   * y no en px para que el corte mantenga la proporción del recorte en cualquier
+   * tamaño: en móvil un notch fijo de 30px se comería la foto.
+   * Las tres capas comparten la forma — es lo que hace legible el desregistro.
+   */
+  .hero-cut {
+    clip-path: polygon(0 0, 91% 0, 100% 7%, 100% 100%, 9% 100%, 0 93%);
+  }
+
+  .hero-frame {
+    filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.55))
+      drop-shadow(0 0 60px rgba(124, 4, 117, 0.3));
+  }
+
   .cta-flame {
     background: linear-gradient(115deg, #ff006a 0%, #7c0475 55%, #c084fc 100%);
     background-size: 220% 220%;

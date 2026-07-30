@@ -68,6 +68,20 @@ Desktop.ini
 coverage/
 .nyc_output/
 
+# === Videos originales sin comprimir ===
+# Los exports crudos de camara (4K60 / 120fps, ~420 MB) se quedan en local.
+# Al repo solo entran las versiones comprimidas de public/videos/ (~15 MB).
+# Para regenerarlas: scripts/encode-reels.sh
+src/assets/fproductions/*.mp4
+src/assets/fproductions/*.MP4
+src/assets/fproductions/*.mov
+src/assets/fproductions/*.MOV
+
+# Mismo criterio para fotos: al repo entra el .webp reencodeado, no el export original.
+# (foto-grupal.PNG pesa 27.9 MB; su .webp a 1600px pesa 202 KB.)
+src/assets/fproductions/*.png
+src/assets/fproductions/*.PNG
+
 # === Varios ===
 *.tmp
 *.temp

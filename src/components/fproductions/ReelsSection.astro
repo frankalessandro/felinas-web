@@ -1,0 +1,154 @@
+---
+import { Image } from "astro:assets";
+
+import posterReel2543 from "../../assets/fproductions/posters/reel-2543.webp";
+import posterReel3155 from "../../assets/fproductions/posters/reel-3155.webp";
+import posterReel3410 from "../../assets/fproductions/posters/reel-3410.webp";
+import posterReel3413 from "../../assets/fproductions/posters/reel-3413.webp";
+import posterReel9167 from "../../assets/fproductions/posters/reel-9167.webp";
+
+type Reel = {
+  file: string;
+  poster: ImageMetadata;
+  alt: string;
+  tag: string;
+  title: string;
+};
+
+/**
+ * Reels con audio: se abren en lightbox al click. Los clips mudos de acompañamiento
+ * viven en GallerySection, intercalados con las fotos.
+ */
+const REELS: Reel[] = [
+  { file: "reel-3413", poster: posterReel3413, alt: "Show de F Productions en vivo", tag: "Main stage", title: "El show completo" },
+  { file: "reel-9167", poster: posterReel9167, alt: "Presentación de F Productions", tag: "Producción", title: "Puesta en escena" },
+  { file: "reel-3155", poster: posterReel3155, alt: "Coreografía de F Productions", tag: "Coreografía", title: "Ensayo y precisión" },
+  { file: "reel-2543", poster: posterReel2543, alt: "F Productions en evento", tag: "Eventos", title: "Energía en vivo" },
+  { file: "reel-3410", poster: posterReel3410, alt: "Show de F Productions en discoteca", tag: "Discotecas", title: "Noche cerrada" },
+];
+---
+
+<section id="reels" class="relative py-24 md:py-32 bg-[#07030b] overflow-hidden">
+  <!-- Halo de marca detrás del muro; puramente decorativo -->
+  <div
+    class="pointer-events-none absolute left-1/2 top-1/3 -z-0 h-[60vh] w-[80vw] -translate-x-1/2 rounded-full bg-felina-morado/20 blur-[120px]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container px-4 md:px-8 relative z-10">
+    <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-20">
+      <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
+        NO TE LO<br /><span class="text-felina-morado">CONTAMOS. MIRALO.</span>
+      </h2>
+      <p class="text-white/60 max-w-sm text-sm md:text-base leading-relaxed">
+        Shows, ensayos y producciones con sonido. Tocá cualquiera para verlo completo.
+      </p>
+    </div>
+
+    <!--
+      Móvil: tira horizontal con scroll-snap (el gesto natural para 9:16).
+      Desktop: grilla de 5 columnas con desfase vertical alterno para romper la retícula.
+    -->
+    <div
+      class="flex md:grid md:grid-cols-5 gap-4 md:gap-5 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none -mx-4 px-4 md:mx-0 md:px-0 pb-4 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {
+        REELS.map((reel, i) => (
+          <button
+            data-reveal
+            data-reel-hero
+            data-src={`/videos/${reel.file}.mp4`}
+            data-caption={reel.title}
+            type="button"
+            aria-label={`Reproducir con sonido: ${reel.title}`}
+            class:list={[
+              "group/tile relative shrink-0 w-[68vw] sm:w-[42vw] md:w-auto aspect-[9/16] rounded-3xl overflow-hidden bg-[#11081a] snap-center text-left cursor-pointer",
+              // Desfase alterno: rompe la línea recta de la grilla sin tocar el layout en móvil.
+              i % 2 === 1 ? "md:translate-y-10" : "",
+            ]}
+          >
+            <Image
+              src={reel.poster}
+              alt={reel.alt}
+              widths={[360, 540, 720]}
+              sizes="(max-width: 768px) 68vw, 18vw"
+              loading={i < 2 ? "eager" : "lazy"}
+              class="absolute inset-0 w-full h-full object-cover grayscale-[55%] scale-105 transition-all duration-700 ease-out group-hover/tile:grayscale-0 group-hover/tile:scale-110"
+            />
+
+            {/* Lavado de marca que se retira al hacer hover, igual que en la galería */}
+            <div class="absolute inset-0 z-10 bg-gradient-to-tr from-[#ff006a]/50 via-transparent to-felina-morado/40 mix-blend-color transition-opacity duration-700 group-hover/tile:opacity-0" />
+            <div class="absolute inset-0 z-20 bg-gradient-to-t from-black/85 via-black/10 to-transparent transition-opacity duration-500 group-hover/tile:opacity-70" />
+            <div class="absolute inset-0 z-30 rounded-3xl border-2 border-[#ff006a]/0 transition-colors duration-500 group-hover/tile:border-[#ff006a]/60 pointer-events-none" />
+
+            {/* Marca de "tiene sonido": lo que distingue estos tiles de los clips mudos de la galería */}
+            <div class="absolute top-4 right-4 z-30 grid place-items-center w-11 h-11 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 transition-transform duration-500 group-hover/tile:scale-110 group-hover/tile:bg-[#ff006a]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-white">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </div>
+
+            <div class="absolute bottom-5 left-5 right-5 z-30">
+              <p class="text-[10px] uppercase tracking-[0.25em] text-purple-300 font-bold mb-1 transition-transform duration-500 group-hover/tile:-translate-y-1">
+                {reel.tag}
+              </p>
+              <p class="text-base md:text-lg font-display font-bold text-white transition-transform duration-500 group-hover/tile:translate-x-1">
+                {reel.title}
+              </p>
+            </div>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<!--
+  Lightbox único para todos los reels con audio. Vive fuera de la grilla para que
+  el overlay no herede transforms ni overflow de la sección.
+-->
+<div
+  data-reel-lightbox
+  hidden
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Reproductor de video"
+  class="fixed inset-0 z-[100] grid place-items-center bg-black/90 backdrop-blur-md p-4"
+>
+  <button
+    data-reel-close
+    type="button"
+    aria-label="Cerrar video"
+    class="absolute top-5 right-5 z-10 grid place-items-center w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white transition-colors hover:bg-[#ff006a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ff006a]"
+  >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="w-6 h-6">
+      <path d="M18 6 6 18M6 6l12 12" />
+    </svg>
+  </button>
+
+  <div data-reel-lightbox-panel class="relative w-full max-w-[min(430px,92vw)]">
+    <video
+      controls
+      playsinline
+      preload="none"
+      class="w-full aspect-[9/16] rounded-2xl bg-black object-cover shadow-[0_0_80px_rgba(168,85,247,0.25)]"
+    ></video>
+    <p data-reel-lightbox-caption class="mt-4 text-center font-display font-bold text-white text-lg"></p>
+  </div>
+</div>
+
+<style>
+  /*
+   * El overlay usa `grid` para centrar el panel, y esa clase de autor gana sobre el
+   * `[hidden] { display: none }` del user-agent stylesheet: sin esta regla el lightbox
+   * aparecería abierto al cargar la página. Va aquí y no en global.css porque es una
+   * consecuencia directa del layout de este componente.
+   */
+  [data-reel-lightbox][hidden] {
+    display: none;
+  }
+</style>
