@@ -11,15 +11,18 @@ import angieImg from "../../assets/fproductions/angie.webp";
 const team = [
   { name: "Mae", role: "Directora", trait: "La alegre del equipo", img: maeImg },
   { name: "Andrea", role: "Integrante", trait: "La multifacética del equipo", img: andreaImg },
+  { name: "Angie", role: "Integrante", trait: "La apasionada del equipo", img: angieImg },
+  { name: "Gabby", role: "Integrante", trait: "La fashionista del equipo", img: gabrielaImg },
   { name: "Isa", role: "Integrante", trait: "La auténtica del equipo", img: isaImg },
   { name: "Salo", role: "Integrante", trait: "La enérgica del equipo", img: saloImg },
-  { name: "Gabby", role: "Integrante", trait: "La fashionista del equipo", img: gabrielaImg },
   { name: "Shary", role: "Integrante", trait: "La soñadora del equipo", img: sharyImg },
-  { name: "Angie", role: "Integrante", trait: "La apasionada del equipo", img: angieImg },
 ];
 ---
 
-<section id="equipo" class="relative bg-[#07030b] border-t border-white/5">
+<section id="equipo" class="relative bg-[#07030b]">
+  <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#ff006a]/25 to-transparent"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[70vw] h-56 bg-felina-morado/12 blur-[110px] pointer-events-none"></div>
+
   <div class="container px-4 md:px-8 relative z-10 pt-24 md:pt-36 pb-10 md:pb-14">
     <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
@@ -87,26 +90,8 @@ const team = [
         </div>
       </div>
     ))}
-
-    <!-- Indicador tipo tambor de revólver -->
-    <div class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-2 md:gap-3">
-      {team.map((_, i) => (
-        <span
-          data-revolver-dot
-          class="revolver-dot w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/25 transition-all duration-300"
-        ></span>
-      ))}
-    </div>
   </div>
 </section>
-
-<style>
-  .revolver-dot.is-active {
-    background-color: #ff006a;
-    box-shadow: 0 0 12px 2px rgba(255, 0, 106, 0.7);
-    transform: scale(1.4);
-  }
-</style>
 
 <script>
   import { initRevolverSection } from "../../scripts/animations";

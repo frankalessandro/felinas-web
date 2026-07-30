@@ -15,6 +15,11 @@ const CONFIG = {
   academia: {
     wordmark: "FELINAS",
     accent: "#E8115B",
+    // Líneas finas (progreso, subrayado): degradado claro→profundo dentro del rosa.
+    accentGradient: "linear-gradient(90deg, #FF4D86 0%, #E8115B 55%, #A50E48 100%)",
+    // El CTA va aparte del acento: es fondo con texto blanco encima, así que se
+    // mantiene en el tramo profundo del rosa para que el label se lea.
+    ctaGradient: "linear-gradient(115deg, #E8115B 0%, #A50E48 100%)",
     links: [
       { label: "Inicio", href: "#inicio" },
       { label: "Clases", href: "#clases" },
@@ -32,7 +37,13 @@ const CONFIG = {
   },
   show: {
     wordmark: "F·PRODUCTIONS",
-    accent: "#A855F7",
+    // El navbar iba en violeta (#A855F7), un color que no aparecía en ninguna otra
+    // parte de la página y por eso se leía como ajeno. Ahora usa el magenta que sí
+    // es el acento dominante de F Productions (71 usos en la sección).
+    accent: "#FF006A",
+    accentGradient: "linear-gradient(90deg, #FF6FA5 0%, #FF006A 55%, #C2004F 100%)",
+    // Tramo profundo del magenta: el CTA lleva texto blanco encima.
+    ctaGradient: "linear-gradient(115deg, #FF006A 0%, #B00350 100%)",
     links: [
       { label: "Nosotras", href: "#nosotras" },
       { label: "Equipo", href: "#equipo" },
@@ -46,17 +57,19 @@ const CONFIG = {
     },
     cross: { label: "Academia", href: "/academia", note: "Clases y formación" },
     // Sobre fondo oscuro arranca casi blanco para que el trazo del logo se lea.
-    gradient: "linear-gradient(115deg, #F6E9FF 0%, #C084FC 42%, #7C0475 100%)",
+    // El tramo de color pasó de morado (#C084FC → #7C0475) al rosa de marca: el
+    // logotipo era la mancha de morado más visible del navbar.
+    gradient: "linear-gradient(115deg, #FFEAF2 0%, #FF6FA5 42%, #C2004F 100%)",
   },
 } as const;
 
-const { wordmark, accent, links, cta, cross, gradient } = CONFIG[side];
+const { wordmark, accent, accentGradient, ctaGradient, links, cta, cross, gradient } = CONFIG[side];
 
 // Academia vive sobre fondo claro; F Productions sobre fondo oscuro.
 const theme = side === "academia" ? "light" : "dark";
 ---
 
-<header class:list={["nav", theme === "light" && "is-light"]} data-nav style={`--accent: ${accent}; --brand-gradient: ${gradient}`}>
+<header class:list={["nav", theme === "light" && "is-light"]} data-nav style={`--accent: ${accent}; --accent-gradient: ${accentGradient}; --cta-gradient: ${ctaGradient}; --brand-gradient: ${gradient}`}>
   <div class="nav-bar" data-nav-bar>
     <!-- Volver a la landing -->
     <a class="nav-back" href="/" aria-label="Volver al inicio">
@@ -186,7 +199,7 @@ const theme = side === "academia" ? "light" : "dark";
     right: 0;
     bottom: -1px;
     height: 2px;
-    background: var(--accent);
+    background: var(--accent-gradient);
     transform: scaleX(0);
     transform-origin: left;
   }
@@ -276,7 +289,7 @@ const theme = side === "academia" ? "light" : "dark";
     right: 0;
     bottom: 0;
     height: 1px;
-    background: var(--accent);
+    background: var(--accent-gradient);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
@@ -304,7 +317,7 @@ const theme = side === "academia" ? "light" : "dark";
     align-items: center;
     padding: 0.55rem 1.1rem;
     border-radius: 999px;
-    background: var(--accent);
+    background: var(--cta-gradient);
     color: #fff;
     font-size: 0.66rem;
     font-weight: 700;
@@ -316,12 +329,14 @@ const theme = side === "academia" ? "light" : "dark";
   }
 
   .nav-cta {
-    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 32%, transparent);
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 40%, transparent);
   }
 
   .nav-cta:hover {
     transform: translateY(-1px);
-    box-shadow: 0 0 26px color-mix(in srgb, var(--accent) 60%, transparent);
+    /* El halo sí usa el acento claro: es luz alrededor del botón, no texto sobre él,
+       así que aporta el brillo de marca sin comprometer la legibilidad del label. */
+    box-shadow: 0 0 26px color-mix(in srgb, var(--accent) 55%, transparent);
   }
 
   /* --- Botón hamburguesa: dos trazos que forman la X --- */
@@ -428,7 +443,7 @@ const theme = side === "academia" ? "light" : "dark";
     align-self: flex-start;
     padding: 0.9rem 1.8rem;
     border-radius: 999px;
-    background: var(--accent);
+    background: var(--cta-gradient);
     color: #fff;
     font-size: 0.72rem;
     font-weight: 700;

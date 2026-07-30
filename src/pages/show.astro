@@ -8,6 +8,7 @@ import TeamSection from "../components/fproductions/TeamSection.astro";
 import ServicesSection from "../components/fproductions/ServicesSection.astro";
 import WhyUsSection from "../components/fproductions/WhyUsSection.astro";
 import GallerySection from "../components/fproductions/GallerySection.astro";
+import ReelsSection from "../components/fproductions/ReelsSection.astro";
 import ProcessSection from "../components/fproductions/ProcessSection.astro";
 import BookingCTA from "../components/fproductions/BookingCTA.astro";
 import SiteFooter from "../components/shared/SiteFooter.astro";
@@ -28,6 +29,7 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
       <ServicesSection />
       <WhyUsSection />
       <GallerySection />
+      <ReelsSection />
       <ProcessSection />
       <BookingCTA />
     </main>
@@ -46,14 +48,27 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
     initScrollActive,
     initScrollSpotlight,
   } from "../scripts/animations";
+  import { initReels } from "../scripts/reels";
   import { revealPage } from "../scripts/loader";
 
-  initReveals();
-  initParallaxX();
-  initHorizontalScrollSections();
-  initAmbient();
-  initScrollActive();
-  initScrollSpotlight("#services-list");
-
+  // revealPage() va primero y no después: solo arma promesas (fonts.ready +
+  // decode de las imágenes eager), así que es barata. Todo lo demás abajo crea
+  // ScrollTriggers para CADA sección de la página — gallería, equipo, reels,
+  // servicios — y cada uno mide el layout real de sus elementos (forced reflow).
+  // Si esa inicialización corriera antes, bloquearía el hilo principal entero y
+  // con él el primer paint / el cierre del loader, aunque el usuario no vaya a
+  // scrollear hasta esas secciones en varios segundos. Un rAF alcanza para dejar
+  // que el navegador pinte primero: el usuario no puede scrollear más rápido que
+  // eso, así que difererir un frame es imperceptible.
   revealPage();
+
+  requestAnimationFrame(() => {
+    initReveals();
+    initParallaxX();
+    initHorizontalScrollSections();
+    initAmbient();
+    initScrollActive();
+    initScrollSpotlight("#services-list");
+    initReels();
+  });
 </script>
