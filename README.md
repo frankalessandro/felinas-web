@@ -27,7 +27,15 @@ La página principal de captación de alumnas:
 
 ### `/show`
 
-Sección dedicada a las presentaciones y shows de Felinas, con su propia galería visual.
+**F Productions**, el equipo comercial de Felinas — shows en vivo, videoclips, activaciones de marca:
+
+- **Hero** con la foto grupal del equipo, enmarcada con un desregistro de placas de color (magenta + morado) que retoma el mismo recurso de las palabras fantasma
+- **Manifiesto** y **Por qué elegirnos**
+- **Equipo** — cartucho tipo revólver: cada integrante rota en 3D y da paso a la siguiente con el scroll (pin + scrub)
+- **Servicios** y **Proceso** de trabajo
+- **Galería** — filmstrip horizontal pinneado (el scroll vertical mueve las fotos en X) con clips de video mudos intercalados entre las fotos, que autoreproducen solo mientras están en pantalla
+- **Reels** — los shows con audio. En desktop, un índice editorial (títulos en contorno tipográfico, el activo se rellena) controla un escenario con el mismo desregistro de placas del hero; en mobile se pinnea y el scroll avanza de reel en reel. Al tocar uno se abre en un lightbox navegable con flechas
+- **CTA de reserva** por WhatsApp
 
 ---
 
@@ -44,15 +52,29 @@ El sitio evita a propósito los defaults genéricos (fuentes de sistema, gradien
 
 ## Tecnologías
 
-- **[Astro](https://astro.build)** — sitio 100% estático, sin servidor, build a `dist/`
-- **React** — solo en los islands que lo necesitan (Stats, Clases, Membresías, Landing), cargados de forma diferida (`client:visible` / `client:idle`)
-- **GSAP + ScrollTrigger** — reveals, contadores, parallax y loops ambientes; respeta `prefers-reduced-motion`
+- **[Astro](https://astro.build)** — sitio 100% estático, sin servidor, build a `dist/`. Sin frameworks de UI: toda la interactividad es `<script>` vanilla con TypeScript
+- **GSAP + ScrollTrigger** — reveals, contadores, parallax, pines con scroll y loops ambientes; respeta `prefers-reduced-motion` en todos los casos
 - **TypeScript** — tipado en componentes y utilidades
 - **Tailwind CSS** — estilos con variables de marca
-- **pnpm** — gestor de paquetes
+- **pnpm** — gestor de paquetes (nunca npm/yarn)
+
+---
+
+## Desarrollo local
+
+```bash
+pnpm install
+pnpm dev       # http://localhost:4321
+pnpm build     # genera dist/
+pnpm preview   # sirve el build de producción
+```
+
+Requiere Node ≥ 22.12.
 
 ---
 
 ## Assets
 
-Las imágenes de la academia y de los shows (logo, fotos de instructoras, galería) están en `public/assets/`, optimizadas a webp.
+- **Imágenes** — `src/assets/{academia,fproductions}/`, importadas con `astro:assets` (`<Image>`): Astro genera automáticamente los tamaños responsive y las sirve en webp.
+- **Video** — los reels y loops comprimidos viven en `public/videos/` (~500 KB–13 MB cada uno, listos para producción). Los originales de cámara (4K/120fps, cientos de MB) **no se versionan**: se procesan con `scripts/encode-reels.sh`, que recorta ruido, reencodea a 720×1280 y genera también los posters en `src/assets/fproductions/posters/`.
+- El logo y los favicons están en `public/assets/` y `public/`, servidos tal cual (no pasan por el pipeline de imágenes).
