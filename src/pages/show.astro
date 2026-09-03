@@ -43,7 +43,7 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
   import {
     initReveals,
     initParallaxX,
-    initHorizontalScrollSections,
+    initStackCards,
     initAmbient,
     initScrollActive,
     initScrollSpotlight,
@@ -80,17 +80,17 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
     initScrollActive();
     initScrollSpotlight("#services-list");
 
-    // Segundo frame: los pines (Reels, Equipo, Galería) van en el mismo orden en
-    // que aparecen en el documento. Cada uno mide "dónde empieza" con
+    // Segundo frame: lo caro de medir. Los pines (Reels, Equipo) van en el mismo
+    // orden en que aparecen en el documento: cada uno mide "dónde empieza" con
     // getBoundingClientRect, y esa medida incluye el pin-spacer de todo lo que esté
-    // ANTES en el DOM: si Galería se creara antes que Reels/Equipo, mediría la
-    // página sin los ~3000px que esos pines todavía no agregaron, y terminaría
-    // pinneándose de más. El refresh final vuelve a medir por si fuentes/imágenes
-    // movieron el layout. Se difiere un frame más para no bloquear el primer paint.
+    // ANTES en el DOM, así que crearlos fuera de orden los desplaza. Galería va
+    // después porque sus triggers se apoyan en la altura que esos pines agregan.
+    // El refresh final vuelve a medir por si fuentes/imágenes movieron el layout.
+    // Se difiere un frame más para no bloquear el primer paint.
     requestAnimationFrame(() => {
       initReels();
       initRevolverSection();
-      initHorizontalScrollSections();
+      initStackCards();
       ScrollTrigger.refresh();
     });
   });

@@ -209,57 +209,45 @@ export function initParallaxX(selector = "[data-parallax-x]") {
 }
 
 /**
- * Sección con scroll vertical que se convierte en desplazamiento horizontal (pin + scrub).
- * Uso: contenedor [data-horizontal-scroll] > track [data-horizontal-track] con hijos más anchos que el viewport.
+ * Mazo de cartas apiladas: cada [data-stack-card] queda sticky bajo el borde superior
+ * y la siguiente se monta encima. El apilado en sí es CSS puro; esto solo anima el
+ * "retroceso" de la carta que queda debajo —escala, giro leve y oscurecido— para que
+ * se lea profundidad en vez de un corte seco entre una foto y la siguiente.
+ *
+ * El trigger es la carta SIGUIENTE, no la propia: una carta sticky deja de moverse
+ * respecto del viewport en cuanto se pega, así que su propio progreso de scroll se
+ * congela y no sirve para medir nada. La que sí viaja es la que sube por encima.
  */
-export function initHorizontalScrollSections(selector = "[data-horizontal-scroll]") {
+export function initStackCards(selector = "[data-stack]") {
   if (reduceMotion()) return;
-  gsap.utils.toArray<HTMLElement>(selector).forEach((section) => {
-    const track = section.querySelector<HTMLElement>("[data-horizontal-track]");
-    if (!track) return;
+  gsap.utils.toArray<HTMLElement>(selector).forEach((stack) => {
+    const cards = gsap.utils.toArray<HTMLElement>("[data-stack-card]", stack);
 
-    const getDistance = () => track.scrollWidth - section.clientWidth;
+    cards.forEach((card, i) => {
+      const next = cards[i + 1];
+      if (!next) return;
 
-    // Tarjetas marcadas [data-scroll-active]: mientras el filmstrip se desplaza,
-    // la más cercana al centro de pantalla queda "activa" (mismo mecanismo que
-    // initScrollActive, aplicado aquí porque el scroll es horizontal, no vertical).
-    const cards = Array.from(track.querySelectorAll<HTMLElement>("[data-scroll-active]"));
-    const markActiveCard = () => {
-      if (!cards.length) return;
-      const centerX = window.innerWidth / 2;
-      let closest: HTMLElement | null = null;
-      let minDist = Infinity;
-      for (const card of cards) {
-        const rect = card.getBoundingClientRect();
-        const dist = Math.abs(rect.left + rect.width / 2 - centerX);
-        if (dist < minDist) {
-          minDist = dist;
-          closest = card;
-        }
-      }
-      cards.forEach((c) => (c.dataset.active = c === closest ? "true" : "false"));
-    };
+      const inner = card.querySelector<HTMLElement>("[data-stack-inner]");
+      if (!inner) return;
+      const dim = inner.querySelector<HTMLElement>("[data-stack-dim]");
 
-    // La barra de progreso se alimenta del mismo trigger que mueve el track: un
-    // segundo ScrollTrigger sobre la misma sección se desincronizaría con el pin.
-    const progress = section.querySelector<HTMLElement>("[data-horizontal-progress]");
+      // Giro alternado: da sensación de mazo repartido a mano en vez de una pila
+      // perfectamente alineada, que se lee como un simple fade.
+      const tilt = i % 2 === 0 ? -2.2 : 2.2;
 
-    gsap.to(track, {
-      x: () => -getDistance(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: () => `+=${getDistance()}`,
-        scrub: 0.8,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          markActiveCard();
-          if (progress) gsap.set(progress, { scaleX: self.progress });
+      // Una sola timeline por carta: dos ScrollTriggers sobre el mismo tramo se
+      // desincronizan entre sí al hacer refresh.
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: next,
+          start: "top bottom",
+          end: "top top",
+          scrub: 0.6,
+          invalidateOnRefresh: true,
         },
-      },
+      });
+      tl.to(inner, { scale: 0.9, rotate: tilt, ease: "none" }, 0);
+      if (dim) tl.to(dim, { opacity: 0.55, ease: "none" }, 0);
     });
   });
 }

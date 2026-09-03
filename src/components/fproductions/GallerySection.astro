@@ -17,36 +17,37 @@ type Tile = {
   alt: string;
   tag: string | null;
   title: string | null;
-  /** Fuerza el ancho "grande" del patrón aunque no le toque por posición: la foto de Salo,
-   * angosta y vertical, recortaba la cara con el ancho chico. */
-  wide?: boolean;
 };
 
 /**
  * Los clips van intercalados entre las fotos, no agrupados: el movimiento
- * aparece de a poco a lo largo del filmstrip en vez de golpear todo junto.
+ * aparece de a poco a lo largo del mazo en vez de golpear todo junto.
  *
  * Las fotos van sin rótulo a propósito: hablan solas y el texto competía con
  * ellas. Los clips sí lo llevan, porque ahí el rótulo cumple otra función —
  * avisa que eso se mueve.
  */
-const BENTO: Tile[] = [
+const CARDS: Tile[] = [
   { kind: "image", src: galeriaMae, alt: "Mae en escena", tag: null, title: null },
   { kind: "video", src: posterLoop3144, file: "loop-3144", alt: "Coreografía de F Productions en movimiento", tag: "En movimiento", title: "Así se ve en vivo" },
-  { kind: "image", src: galeriaSalo, alt: "Salo — F Productions", tag: null, title: null, wide: true },
+  { kind: "image", src: galeriaSalo, alt: "Salo — F Productions", tag: null, title: null },
   { kind: "video", src: posterLoop3199, file: "loop-3199", alt: "Presentación de F Productions en movimiento", tag: "En movimiento", title: "Puesta en escena" },
   { kind: "image", src: galeriaAndrea, alt: "Andrea — F Productions", tag: null, title: null },
   { kind: "video", src: posterLoop3414, file: "loop-3414", alt: "Show de F Productions en movimiento", tag: "En movimiento", title: "Cada detalle cuenta" },
   { kind: "image", src: galeriaGabriela, alt: "Gabriela en discoteca", tag: null, title: null },
 ];
+
+const total = String(CARDS.length).padStart(2, "0");
 ---
 
-<section id="galeria" class="relative py-24 md:py-16 bg-[#07030b] overflow-hidden">
+<!-- overflow-x-clip y no overflow-hidden: `hidden` en un ancestro anula el `position: sticky`
+     de las cartas; `clip` en un solo eje deja el eje Y visible y el mazo sigue funcionando. -->
+<section id="galeria" class="relative py-24 md:py-28 bg-[#07030b] overflow-x-clip">
   <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#ff006a]/25 to-transparent"></div>
   <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-56 bg-[#ff006a]/10 blur-[120px] pointer-events-none"></div>
 
-  <div class="container px-4 md:px-8 relative z-10 mb-10 md:mb-0">
-    <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-16">
+  <div class="container px-4 md:px-8 relative z-10">
+    <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 md:mb-20">
       <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
         MOMENTOS<br /><span class="text-felina-morado">QUE HABLAN POR SÍ SOLOS.</span>
       </h2>
@@ -57,59 +58,40 @@ const BENTO: Tile[] = [
     </div>
   </div>
 
-  <!-- Filmstrip horizontal pinneado: el scroll vertical mueve la galería en X, centrado en pantalla -->
-  <div data-horizontal-scroll class="relative h-screen w-full overflow-hidden">
-    <!--
-      Sin esto la sección se lee como un carrusel roto: el usuario ve fotos cortadas
-      a la derecha y no tiene forma de saber que se avanza scrolleando hacia abajo.
-      Mismo cursor de "seguí scrolleando" que TeamSection/ShowHero (píldora vertical +
-      punto que rebota), no una flecha lateral: una flecha apuntando al costado sugiere
-      arrastrar/swipe horizontal, y el gesto real acá es scroll vertical normal.
-    -->
-    <div
-      class="absolute top-6 md:top-10 right-4 md:right-10 z-30 flex flex-col items-center gap-2 pointer-events-none"
-      aria-hidden="true"
-    >
-      <span class="text-white/55 text-[10px] font-semibold uppercase tracking-[0.3em]" style="writing-mode: vertical-rl;">
-        Scroll
-      </span>
-      <div class="w-6 h-9 rounded-full border border-white/25 flex justify-center pt-1.5" data-ambient="bounce">
-        <span class="w-1 h-1.5 rounded-full bg-[#ff006a]"></span>
-      </div>
-    </div>
+  <!--
+    Mazo de cartas apiladas: cada tarjeta queda sticky bajo el borde superior y la
+    siguiente se monta encima. El scroll es vertical normal (no hay pin ni scroll
+    secuestrado), así que en móvil se comporta como cualquier otra sección.
 
-    <!-- Progreso del recorrido horizontal: cuánto queda de galería. -->
-    <div class="absolute bottom-8 md:bottom-12 left-4 md:left-8 right-4 md:right-8 z-30 h-px bg-white/12" aria-hidden="true">
-      <span data-horizontal-progress class="block h-full origin-left scale-x-0 bg-[#ff006a]"></span>
-    </div>
-
-    <div data-horizontal-track class="flex h-full items-center gap-4 md:gap-6 pl-4 md:pl-8 pr-[10vw] will-change-transform">
-      {BENTO.map((item, i) => (
+    El apilado es CSS puro (`position: sticky`, offset creciente por índice y orden
+    natural de pintado). GSAP solo agrega el retroceso de la carta que queda atrás
+    —escala, giro leve y oscurecido— para que se lea profundidad y no un corte seco.
+  -->
+  <div data-stack class="relative container px-4 md:px-8 pb-[16vh]">
+    {CARDS.map((item, i) => (
+      <article
+        data-stack-card
+        class="sticky flex justify-center"
+        style={`top: calc(7vh + ${i * 10}px)`}
+      >
         <div
-          data-scroll-active
+          data-stack-inner
           {...(item.kind === "video" ? { "data-reel-loop": true, "data-playing": "false" } : {})}
           class:list={[
-            "group relative shrink-0 h-[48%] md:h-[58%] rounded-3xl overflow-hidden bg-[#11081a] cursor-pointer",
-            // Los clips llevan el ratio nativo del archivo (9:16 vertical) y dejan que
-            // el ancho salga de la altura. Con las medidas de las fotos, que son más
-            // anchas, el object-cover recortaba cabezas y pies y ampliaba la imagen
-            // ~35%, que es lo que se leía como video comprimido.
-            item.kind === "video"
-              ? "aspect-[9/16] w-auto"
-              : i % 3 === 0 || item.wide
-                ? "w-[78vw] sm:w-[52vw] md:w-[38vw]"
-                : "w-[62vw] sm:w-[38vw] md:w-[24vw]",
+            "group relative w-full h-[62vh] md:h-[74vh] rounded-[2rem] overflow-hidden bg-[#11081a]",
+            "ring-1 ring-white/10 shadow-2xl shadow-black/70 will-change-transform",
+            // Los clips llevan su ratio nativo (9:16) y sacan el ancho de la altura:
+            // con el ancho de las fotos, el object-cover les recortaba cabezas y pies.
+            item.kind === "video" ? "max-w-[min(100%,42vh)]" : "max-w-5xl",
           ]}
         >
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent z-20 transition-opacity duration-500 group-hover:opacity-60 group-data-[active=true]:opacity-60"></div>
-          <div class="absolute inset-0 bg-gradient-to-tr from-[#ff006a]/60 via-transparent to-felina-morado/50 mix-blend-color z-10 opacity-100 group-hover:opacity-0 group-data-[active=true]:opacity-0 transition-opacity duration-700"></div>
           <Image
             src={item.src}
             alt={item.alt}
-            widths={[400, 700, 1000]}
-            sizes="(max-width: 640px) 78vw, 38vw"
+            widths={[500, 900, 1400]}
+            sizes="(max-width: 768px) 92vw, 60vw"
             loading={i < 2 ? "eager" : "lazy"}
-            class="w-full h-full object-cover grayscale-[60%] scale-105 transition-all duration-700 ease-out group-hover:grayscale-0 group-data-[active=true]:grayscale-0 group-hover:scale-125 group-data-[active=true]:scale-125 group-hover:rotate-1 group-data-[active=true]:rotate-1 group-data-[playing=true]:opacity-0"
+            class="w-full h-full object-cover scale-[1.02] transition-transform duration-[1200ms] ease-out group-hover:scale-105 group-data-[playing=true]:opacity-0"
           />
           {item.kind === "video" && (
             <video
@@ -118,21 +100,30 @@ const BENTO: Tile[] = [
               loop
               playsinline
               preload="none"
-              class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-data-[playing=true]:opacity-100 grayscale-[60%] group-hover:grayscale-0 group-data-[active=true]:grayscale-0"
+              class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-data-[playing=true]:opacity-100"
             />
           )}
+
+          <!-- Legibilidad del rótulo y del contador, sin lavar la imagen entera. -->
+          <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/85 to-transparent z-20 pointer-events-none"></div>
+          <div class="absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-[#ff006a]/25 z-20 pointer-events-none"></div>
+
+          <p class="absolute top-5 right-6 z-30 font-display text-xs tracking-[0.3em] text-white/45 pointer-events-none">
+            {String(i + 1).padStart(2, "0")} <span class="text-white/20">/ {total}</span>
+          </p>
+
           {/*
             En desktop los clips arrancan solos al entrar en pantalla. En móvil el
-            navegador ahoga ese autoplay dentro del filmstrip pinneado (Low Power
-            Mode, decoders en pausa) y el clip "apenas se ve", así que ahí se ofrece
-            un botón de play/pausa. Oculto en >=md porque ahí no hace falta.
+            navegador ahoga ese autoplay (Low Power Mode, decoders en pausa) y el clip
+            "apenas se ve", así que ahí se ofrece un botón de play/pausa. Oculto en
+            >=md porque ahí no hace falta.
           */}
           {item.kind === "video" && (
             <button
               type="button"
               data-reel-loop-toggle
               aria-label="Reproducir o pausar el video"
-              class="md:hidden absolute inset-0 z-30 grid place-items-center"
+              class="md:hidden group-data-[manual=true]:!grid absolute inset-0 z-30 grid place-items-center"
             >
               <span class="grid place-items-center w-16 h-16 rounded-full bg-black/50 backdrop-blur-sm border border-white/25 text-white shadow-lg shadow-black/40 transition-all duration-300 group-data-[playing=true]:opacity-0 group-data-[playing=true]:scale-75">
                 <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 translate-x-0.5" aria-hidden="true">
@@ -141,15 +132,18 @@ const BENTO: Tile[] = [
               </span>
             </button>
           )}
-          <div class="absolute inset-0 border-2 border-[#ff006a]/0 group-hover:border-[#ff006a]/60 group-data-[active=true]:border-[#ff006a]/60 rounded-3xl transition-colors duration-500 z-20 pointer-events-none"></div>
+
           {item.tag && (
-            <div class="absolute bottom-5 left-5 z-30 overflow-hidden">
-              <p class="text-[10px] uppercase tracking-[0.25em] text-purple-300 font-bold mb-1 transition-transform duration-500 group-hover:-translate-y-1 group-data-[active=true]:-translate-y-1">{item.tag}</p>
-              <p class="text-lg md:text-2xl font-display font-bold text-white transition-transform duration-500 group-hover:translate-x-2 group-data-[active=true]:translate-x-2">{item.title}</p>
+            <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8 z-30 pointer-events-none">
+              <p class="text-[10px] uppercase tracking-[0.25em] text-purple-300 font-bold mb-1">{item.tag}</p>
+              <p class="text-xl md:text-3xl font-display font-bold text-white">{item.title}</p>
             </div>
           )}
+
+          <!-- Oscurecido de la carta que queda debajo del mazo (lo anima initStackCards). -->
+          <div data-stack-dim class="absolute inset-0 z-40 bg-[#07030b] opacity-0 pointer-events-none"></div>
         </div>
-      ))}
-    </div>
+      </article>
+    ))}
   </div>
 </section>

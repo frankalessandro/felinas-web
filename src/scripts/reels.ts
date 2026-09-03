@@ -39,15 +39,17 @@ function initLoops(root: ParentNode): Teardown {
   const loops = Array.from(root.querySelectorAll<HTMLElement>("[data-reel-loop]"));
   if (!loops.length) return () => {};
 
-  // Con prefers-reduced-motion no se autoreproduce nada: queda el poster fijo.
-  if (reduceMotion()) return () => {};
-
-  // En móvil el autoplay dentro del filmstrip pinneado no es fiable (el navegador
-  // pausa los decoders fuera de vista, Low Power Mode lo bloquea del todo) y el
-  // clip se ve congelado. Ahí la reproducción pasa a ser manual con un botón; el
-  // observer de abajo solo se usa para pausar al salir de pantalla. Se resuelve
-  // una vez al montar: rotar el teléfono no cruza el breakpoint.
+  // En móvil el autoplay no es fiable (el navegador pausa los decoders fuera de
+  // vista, Low Power Mode lo bloquea del todo) y el clip se ve congelado. Ahí la
+  // reproducción pasa a ser manual con un botón; el observer de abajo solo se usa
+  // para pausar al salir de pantalla.
   const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+  // prefers-reduced-motion apaga el autoplay, NO el botón: un tap es una acción
+  // explícita del usuario y siempre tiene que responder. Antes se salía de la
+  // función entera acá y el botón quedaba visible pero muerto en cualquier
+  // teléfono con "reducir movimiento" activado.
+  const autoplay = !isMobile && !reduceMotion();
 
   const preloader = new IntersectionObserver(
     (entries) => {
@@ -70,8 +72,8 @@ function initLoops(root: ParentNode): Teardown {
 
         if (entry.isIntersecting) {
           hydrateVideo(video);
-          // En móvil manda el botón: acá no se autoreproduce nada.
-          if (isMobile) continue;
+          // Sin autoplay manda el botón: acá no se reproduce nada solo.
+          if (!autoplay) continue;
           // play() rechaza si el navegador bloquea el autoplay; el poster se queda y ya.
           void video.play().then(
             () => tile.setAttribute("data-playing", "true"),
@@ -83,42 +85,51 @@ function initLoops(root: ParentNode): Teardown {
         }
       }
     },
-    // En móvil el umbral es mínimo: el observer solo tiene que detectar que el
+    // Sin autoplay el umbral es mínimo: el observer solo tiene que detectar que el
     // tile salió del todo para pausar lo que el usuario haya puesto a correr.
-    { threshold: isMobile ? 0.01 : 0.35 },
+    { threshold: autoplay ? 0.35 : 0.01 },
   );
 
   loops.forEach((tile) => {
     preloader.observe(tile);
     player.observe(tile);
+    // Marca "esto no arranca solo": el CSS usa el flag para mostrar el botón de
+    // play también donde normalmente está oculto (desktop con reducir movimiento),
+    // que si no se queda con un poster fijo y ninguna forma de reproducirlo.
+    if (!autoplay) tile.dataset.manual = "true";
   });
 
-  // Botón de play/pausa manual. Existe en el DOM siempre pero solo es visible en
-  // móvil (clase `md:hidden`), así que fuera de móvil ni se cablea.
-  const toggles: Array<{ btn: HTMLElement; onClick: () => void }> = [];
-  if (isMobile) {
-    loops.forEach((tile) => {
-      const btn = tile.querySelector<HTMLElement>("[data-reel-loop-toggle]");
-      const video = tile.querySelector<HTMLVideoElement>("video");
-      if (!btn || !video) return;
+  // Botón de play/pausa manual, cableado SIEMPRE. Quién lo ve lo decide el CSS
+  // (`md:hidden`), no este script: atarlo al breakpoint medido al montar dejaba
+  // el botón muerto si la ventana cruzaba a ancho de móvil después de cargar
+  // —responsive en devtools, rotar una tablet, abrir el navegador angosto—.
+  // En desktop el botón está en display:none, así que escucharlo no cuesta nada.
+  const toggles: Array<{ btn: HTMLElement; onClick: (e: Event) => void }> = [];
+  loops.forEach((tile) => {
+    const btn = tile.querySelector<HTMLElement>("[data-reel-loop-toggle]");
+    const video = tile.querySelector<HTMLVideoElement>("video");
+    if (!btn || !video) return;
 
-      const onClick = () => {
-        hydrateVideo(video);
-        if (video.paused) {
-          void video.play().then(
-            () => tile.setAttribute("data-playing", "true"),
-            () => {},
-          );
-        } else {
-          video.pause();
-          tile.setAttribute("data-playing", "false");
-        }
-      };
+    const onClick = (e: Event) => {
+      // El botón ocupa la tarjeta entera; si la tarjeta vive dentro de algo
+      // clickeable, el tap es para el video y no para lo de abajo.
+      e.preventDefault();
+      e.stopPropagation();
+      hydrateVideo(video);
+      if (video.paused) {
+        void video.play().then(
+          () => tile.setAttribute("data-playing", "true"),
+          () => {},
+        );
+      } else {
+        video.pause();
+        tile.setAttribute("data-playing", "false");
+      }
+    };
 
-      btn.addEventListener("click", onClick);
-      toggles.push({ btn, onClick });
-    });
-  }
+    btn.addEventListener("click", onClick);
+    toggles.push({ btn, onClick });
+  });
 
   return () => {
     preloader.disconnect();
