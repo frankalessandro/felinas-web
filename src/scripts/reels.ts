@@ -99,6 +99,24 @@ function initLoops(root: ParentNode): Teardown {
     if (!autoplay) tile.dataset.manual = "true";
   });
 
+  /**
+   * Un solo clip corriendo a la vez cuando la reproducción es manual (móvil).
+   *
+   * En la galería las tarjetas son `position: sticky`: las que ya pasaron siguen
+   * dentro del viewport apiladas debajo, así que el observer de arriba nunca las
+   * pausa y se acumulaban los tres decoders andando al mismo tiempo. En un
+   * teléfono eso arrastra el scroll entero.
+   */
+  const pauseOthers = (keep: HTMLElement) => {
+    loops.forEach((tile) => {
+      if (tile === keep) return;
+      const other = tile.querySelector<HTMLVideoElement>("video");
+      if (!other || other.paused) return;
+      other.pause();
+      tile.setAttribute("data-playing", "false");
+    });
+  };
+
   // Botón de play/pausa manual, cableado SIEMPRE. Quién lo ve lo decide el CSS
   // (`md:hidden`), no este script: atarlo al breakpoint medido al montar dejaba
   // el botón muerto si la ventana cruzaba a ancho de móvil después de cargar
@@ -117,6 +135,7 @@ function initLoops(root: ParentNode): Teardown {
       e.stopPropagation();
       hydrateVideo(video);
       if (video.paused) {
+        pauseOthers(tile);
         void video.play().then(
           () => tile.setAttribute("data-playing", "true"),
           () => {},
