@@ -47,6 +47,8 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
     initAmbient,
     initScrollActive,
     initScrollSpotlight,
+    initRevolverSection,
+    ScrollTrigger,
   } from "../scripts/animations";
   import { initReels } from "../scripts/reels";
   import { revealPage } from "../scripts/loader";
@@ -71,10 +73,22 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
   requestAnimationFrame(() => {
     wireReveals();
     initParallaxX();
-    initHorizontalScrollSections();
     initAmbient();
     initScrollActive();
     initScrollSpotlight("#services-list");
+
+    // Los pines (Reels, Equipo, Galería) van en el mismo orden en que aparecen en
+    // el documento. Cada uno mide "dónde empieza" con getBoundingClientRect, y esa
+    // medida incluye el pin-spacer de todo lo que esté ANTES en el DOM: si Galería
+    // se creara antes que Reels/Equipo, mediría la página sin los ~3000px que esos
+    // pines todavía no agregaron, y terminaría pinneándose de más — encimada con
+    // la sección anterior, que sigue pinneada cuando Galería ya debería activarse.
     initReels();
+    initRevolverSection();
+    initHorizontalScrollSections();
+
+    // Red de seguridad: por si algo (fuentes, imágenes) todavía mueve el layout
+    // después de crear los pines de arriba, se vuelve a medir todo una vez más.
+    ScrollTrigger.refresh();
   });
 </script>
