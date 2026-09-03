@@ -56,6 +56,43 @@
   }
 }
 
+@layer base {
+  /* Estado inicial oculto de los elementos que animan de entrada. Lo hacía solo
+     el JS (gsap.set autoAlpha:0); si ese módulo tarda —Safari compila los módulos
+     más lento y el loader ahora se va antes— el usuario veía el contenido en su
+     posición final y saltar a oculto (layout shift real). Con esto nace oculto ya.
+     `.js` lo activa un script inline del <head>; `.anim-fallback` (a los 5 s) es la
+     salida de emergencia si GSAP nunca corre, para no dejar la página en blanco. */
+  html.js:not(.anim-fallback) [data-reveal],
+  html.js:not(.anim-fallback) [data-reveal-x],
+  html.js:not(.anim-fallback) [data-hero-fade] {
+    opacity: 0;
+  }
+}
+
+/* --- Solo Safari/WebKit --------------------------------------------------------
+   `@supports (-webkit-hyphens: none)` sólo matchea en Safari. Chrome y Firefox
+   quedan EXACTAMENTE igual que antes.
+
+   /show tiene 3 secciones pinneadas con scrub (Reels, Equipo, Galería) y encima
+   ~15 blobs con `filter: blur(110–180px)` y varios `mix-blend-mode`. WebKit no
+   cachea esos blur ni acelera los blend: los repinta en cada frame de scroll, y
+   ahí es donde se cae el rendimiento y los efectos "llegan tarde".
+
+   - Blur: se topea el radio. Un glow difuso a 60px se ve casi idéntico a 140px
+     pero cuesta una fracción.
+   - mix-blend: se pasa a `normal`. El blob sigue tiñendo, sin el coste del blend
+     compuesto sobre el stacking context entero. */
+@supports (-webkit-hyphens: none) {
+  [class*="blur-["] {
+    filter: blur(60px);
+  }
+  .mix-blend-screen,
+  .mix-blend-color {
+    mix-blend-mode: normal;
+  }
+}
+
 @layer utilities {
   .font-display { font-family: 'Montserrat', sans-serif; }
 

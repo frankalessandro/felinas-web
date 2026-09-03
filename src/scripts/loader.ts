@@ -13,19 +13,34 @@ export const LOADER_DONE = "felinas:loader-done";
  * el loader se quedaba puesto de más. Acá basta con las fuentes y las imágenes del primer
  * viewport; el resto entra después sin bloquear nada.
  */
-export function revealPage({ id = "loading-screen", duration = 0.6, timeout = 2500 } = {}) {
+export function revealPage({ id = "loading-screen", duration = 0.6, timeout = 1200 } = {}) {
   const start = performance.now();
   const MIN_VISIBLE = 350; // sin esto el loader parpadea en cargas instantáneas
 
-  const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
+  const after = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
+  // WebKit/Safari: `document.fonts.ready` y sobre todo `img.decode()` sobre un SVG
+  // pueden no resolver NUNCA (ni resolve ni reject), y ahí `.catch()` no ayuda: la
+  // promesa nunca se settlea y `Promise.all` cuelga hasta el timeout global. Por eso
+  // cada señal corre contra su propio tope corto en vez de encadenarse a ciegas.
+  const cap = (p: unknown, ms: number) => Promise.race([Promise.resolve(p).catch(() => {}), after(ms)]);
+
+  const fonts = document.fonts ? cap(document.fonts.ready, 800) : Promise.resolve();
+
   const above = Array.from(
     document.querySelectorAll<HTMLImageElement>('img[fetchpriority="high"], img[loading="eager"]')
-  ).map((img) => (img.complete ? Promise.resolve() : img.decode().catch(() => {})));
+  ).map((img) => (img.complete ? Promise.resolve() : cap(img.decode(), 600)));
 
-  const ready = Promise.all([fonts, ...above]);
-  const fallback = new Promise((resolve) => window.setTimeout(resolve, timeout));
+  const domReady =
+    document.readyState !== "loading"
+      ? Promise.resolve()
+      : new Promise<void>((resolve) =>
+          document.addEventListener("DOMContentLoaded", () => resolve(), { once: true })
+        );
 
-  Promise.race([ready, fallback]).then(() => {
+  const ready = Promise.all([domReady, fonts, ...above]);
+
+  Promise.race([ready, after(timeout)]).then(() => {
     const waited = performance.now() - start;
     window.setTimeout(() => hideLoader(id, duration), Math.max(0, MIN_VISIBLE - waited));
   });

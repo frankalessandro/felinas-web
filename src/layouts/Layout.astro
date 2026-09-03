@@ -27,6 +27,21 @@ const ogImageURL = new URL(ogImage, Astro.site);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Marca JS activo antes del primer paint: el CSS usa `.js` para ocultar los
+         elementos que animan de entrada ([data-reveal], [data-hero-fade]…) y evitar
+         el flash de contenido sin animar en Safari, donde el módulo de GSAP puede
+         ejecutarse después de que el loader ya se fue. `anim-fallback` es la red de
+         seguridad: si algún script falla, a los 5 s se muestra todo igual. -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        setTimeout(function () {
+          d.classList.add("anim-fallback");
+        }, 5000);
+      })();
+    </script>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#050505" />
 
