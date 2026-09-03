@@ -42,6 +42,13 @@ function initLoops(root: ParentNode): Teardown {
   // Con prefers-reduced-motion no se autoreproduce nada: queda el poster fijo.
   if (reduceMotion()) return () => {};
 
+  // En móvil el autoplay dentro del filmstrip pinneado no es fiable (el navegador
+  // pausa los decoders fuera de vista, Low Power Mode lo bloquea del todo) y el
+  // clip se ve congelado. Ahí la reproducción pasa a ser manual con un botón; el
+  // observer de abajo solo se usa para pausar al salir de pantalla. Se resuelve
+  // una vez al montar: rotar el teléfono no cruza el breakpoint.
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
   const preloader = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -63,6 +70,8 @@ function initLoops(root: ParentNode): Teardown {
 
         if (entry.isIntersecting) {
           hydrateVideo(video);
+          // En móvil manda el botón: acá no se autoreproduce nada.
+          if (isMobile) continue;
           // play() rechaza si el navegador bloquea el autoplay; el poster se queda y ya.
           void video.play().then(
             () => tile.setAttribute("data-playing", "true"),
@@ -74,7 +83,9 @@ function initLoops(root: ParentNode): Teardown {
         }
       }
     },
-    { threshold: 0.35 },
+    // En móvil el umbral es mínimo: el observer solo tiene que detectar que el
+    // tile salió del todo para pausar lo que el usuario haya puesto a correr.
+    { threshold: isMobile ? 0.01 : 0.35 },
   );
 
   loops.forEach((tile) => {
@@ -82,9 +93,37 @@ function initLoops(root: ParentNode): Teardown {
     player.observe(tile);
   });
 
+  // Botón de play/pausa manual. Existe en el DOM siempre pero solo es visible en
+  // móvil (clase `md:hidden`), así que fuera de móvil ni se cablea.
+  const toggles: Array<{ btn: HTMLElement; onClick: () => void }> = [];
+  if (isMobile) {
+    loops.forEach((tile) => {
+      const btn = tile.querySelector<HTMLElement>("[data-reel-loop-toggle]");
+      const video = tile.querySelector<HTMLVideoElement>("video");
+      if (!btn || !video) return;
+
+      const onClick = () => {
+        hydrateVideo(video);
+        if (video.paused) {
+          void video.play().then(
+            () => tile.setAttribute("data-playing", "true"),
+            () => {},
+          );
+        } else {
+          video.pause();
+          tile.setAttribute("data-playing", "false");
+        }
+      };
+
+      btn.addEventListener("click", onClick);
+      toggles.push({ btn, onClick });
+    });
+  }
+
   return () => {
     preloader.disconnect();
     player.disconnect();
+    toggles.forEach(({ btn, onClick }) => btn.removeEventListener("click", onClick));
     loops.forEach((tile) => tile.querySelector("video")?.pause());
   };
 }

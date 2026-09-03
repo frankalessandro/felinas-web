@@ -121,6 +121,26 @@ const BENTO: Tile[] = [
               class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-data-[playing=true]:opacity-100 grayscale-[60%] group-hover:grayscale-0 group-data-[active=true]:grayscale-0"
             />
           )}
+          {/*
+            En desktop los clips arrancan solos al entrar en pantalla. En móvil el
+            navegador ahoga ese autoplay dentro del filmstrip pinneado (Low Power
+            Mode, decoders en pausa) y el clip "apenas se ve", así que ahí se ofrece
+            un botón de play/pausa. Oculto en >=md porque ahí no hace falta.
+          */}
+          {item.kind === "video" && (
+            <button
+              type="button"
+              data-reel-loop-toggle
+              aria-label="Reproducir o pausar el video"
+              class="md:hidden absolute inset-0 z-30 grid place-items-center"
+            >
+              <span class="grid place-items-center w-16 h-16 rounded-full bg-black/50 backdrop-blur-sm border border-white/25 text-white shadow-lg shadow-black/40 transition-all duration-300 group-data-[playing=true]:opacity-0 group-data-[playing=true]:scale-75">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 translate-x-0.5" aria-hidden="true">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </span>
+            </button>
+          )}
           <div class="absolute inset-0 border-2 border-[#ff006a]/0 group-hover:border-[#ff006a]/60 group-data-[active=true]:border-[#ff006a]/60 rounded-3xl transition-colors duration-500 z-20 pointer-events-none"></div>
           {item.tag && (
             <div class="absolute bottom-5 left-5 z-30 overflow-hidden">
