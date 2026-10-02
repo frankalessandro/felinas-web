@@ -18,6 +18,9 @@ type ClassInfo = {
   level: string;
   gradient: string;
   trailerUrl?: string;
+  // Clip corto en loop (sin audio) que se reproduce al pasar el cursor / al centrarse en móvil.
+  // Ruta bajo /public, p. ej. "/videos/academia/twerk-recreativo.mp4". Opcional.
+  previewVideo?: string;
   portada: ImageMetadata;
   teacher: { name: string; role: string; social: string; image: string };
 };
@@ -100,6 +103,11 @@ const modalData = classes.map((c) => ({
       <h2 class="text-foreground">
         <span class="title-main">NUESTRAS <span class="title-accent">CLASES</span></span>
       </h2>
+      <a href="#twerk-personalizado" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-foreground/70 hover:text-primary transition-colors">
+        <span class="w-2 h-2 rounded-full bg-primary" aria-hidden="true"></span>
+        También tenemos clases personalizadas de Twerk desde cero
+        <span aria-hidden="true">↓</span>
+      </a>
     </div>
 
     <div class="flex flex-col gap-24 md:gap-32">
@@ -146,8 +154,9 @@ const modalData = classes.map((c) => ({
                 type="button"
                 data-class-open={i}
                 data-scroll-active
+                data-class-card
                 aria-label={`Ver clase de ${c.title}`}
-                class:list={["absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-[4/5] bg-secondary rounded-3xl border border-border shadow-2xl overflow-hidden hover:rotate-0 data-[active=true]:rotate-0 hover:scale-[1.03] data-[active=true]:scale-[1.03] transition-all duration-500 cursor-pointer text-left", isEven ? "rotate-6" : "-rotate-6"]}
+                class:list={["class-card absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-[4/5] bg-secondary rounded-3xl border border-border shadow-2xl overflow-hidden hover:rotate-0 data-[active=true]:rotate-0 hover:scale-[1.03] data-[active=true]:scale-[1.03] transition-all duration-500 cursor-pointer text-left", isEven ? "rotate-6" : "-rotate-6"]}
               >
                 <Image
                   src={c.portada}
@@ -157,7 +166,20 @@ const modalData = classes.map((c) => ({
                   loading="lazy"
                   class="absolute inset-0 w-full h-full object-cover"
                 />
+                {c.previewVideo && (
+                  <video
+                    data-class-video
+                    src={c.previewVideo}
+                    muted
+                    loop
+                    playsinline
+                    preload="none"
+                    aria-hidden="true"
+                    class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500"
+                  ></video>
+                )}
                 <div class:list={["absolute inset-0 bg-gradient-to-br opacity-20 mix-blend-overlay", c.gradient]}></div>
+                <div class="class-glow absolute inset-0 pointer-events-none"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent"></div>
               </button>
               <div class:list={["absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] aspect-[4/5] border border-primary/20 rounded-3xl pointer-events-none scale-[1.05]", isEven ? "-rotate-3" : "rotate-3"]}></div>
@@ -167,27 +189,55 @@ const modalData = classes.map((c) => ({
       })}
     </div>
 
-    <!-- Mención sutil: twerk personalizado desde cero (no es una clase más) -->
-    <div data-reveal class="mt-16 md:mt-52 max-w-3xl mx-auto">
-      <div class="relative flex flex-col sm:flex-row items-center gap-5 sm:gap-6 rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.07] to-transparent px-6 py-6 sm:px-8 sm:py-7 text-center sm:text-left">
-        <div class="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /></svg>
+    <!-- Twerk personalizado: bloque propio (no es una clase grupal más, pero tiene que verse) -->
+    <div id="twerk-personalizado" data-reveal class="mt-24 md:mt-44 scroll-mt-24">
+      <div class="relative overflow-hidden rounded-[2rem] md:rounded-[3rem] border border-primary/20 bg-gradient-to-br from-primary/[0.08] via-background to-background p-6 sm:p-10 md:p-14">
+        <div class="absolute -top-24 -left-20 w-[380px] h-[380px] rounded-full bg-primary/10 blur-[100px] pointer-events-none"></div>
+
+        <div class="relative z-10 grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <!-- Mensaje: etiqueta → título → texto → acción -->
+          <div class="lg:col-span-7 min-w-0" style="container-type: inline-size;">
+            <p class="inline-block border border-primary/30 text-primary text-xs font-bold tracking-widest uppercase px-4 py-1 rounded-full mb-6 bg-background/60">Clases 1 a 1 · Desde cero</p>
+            <h3 class="text-foreground">
+              <span class="title-eyebrow">Twerk</span>
+              <span class="title-main" style="font-size: clamp(1.4rem, 9cqw, 6rem);"><span class="title-accent">PERSONALIZADO</span></span>
+            </h3>
+            <p class="mt-6 text-muted-foreground text-lg md:text-xl leading-relaxed font-light max-w-xl">
+              ¿Prefieres aprender a tu ritmo? Una clase hecha a tu medida: sin grupo, sin presión y con un plan que se adapta a tu cuerpo, tus objetivos y tu horario.
+            </p>
+            <a
+              href={classBookingUrl("Twerk personalizado desde cero")}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-8 inline-flex font-display font-bold text-sm uppercase tracking-widest text-white items-center gap-3 group bg-primary hover:bg-felina-rosa-glow pl-6 pr-2 py-2 rounded-full shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all duration-300"
+            >
+              Quiero mi clase personalizada
+              <span class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+              </span>
+            </a>
+          </div>
+
+          <!-- Ancla visual + beneficios -->
+          <div class="lg:col-span-5">
+            <div class="rounded-3xl bg-background border border-border shadow-xl shadow-primary/10 p-6 md:p-8">
+              <div class="flex items-end gap-4 pb-6 mb-6 border-b border-border">
+                <span class="title-accent font-display font-black leading-[0.8] tracking-tighter" style="font-size: clamp(4rem, 9vw, 6.5rem);">1:1</span>
+                <span class="pb-1 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground leading-snug">Tú y tu<br />instructora</span>
+              </div>
+              <ul class="flex flex-col gap-4">
+                {["Empiezas desde cero, sin experiencia", "Atención 100% enfocada en ti", "Horario y ritmo a tu medida"].map((item) => (
+                  <li class="flex items-center gap-4 text-foreground font-medium">
+                    <span class="w-7 h-7 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-primary" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="flex-1">
-          <p class="font-display font-bold text-lg md:text-xl text-foreground">¿Prefieres aprender a tu ritmo?</p>
-          <p class="text-muted-foreground text-sm md:text-base mt-1">
-            También ofrecemos clases <span class="text-foreground font-semibold">personalizadas de Twerk desde cero</span>, 1 a 1 y adaptadas por completo a ti.
-          </p>
-        </div>
-        <a
-          href={classBookingUrl("Twerk personalizado desde cero")}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="shrink-0 font-display font-bold text-sm uppercase tracking-widest text-primary flex items-center gap-2 group border border-primary/40 hover:bg-primary hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:-translate-y-0.5"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:scale-110 transition-transform"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
-          Consultar
-        </a>
       </div>
     </div>
   </div>
@@ -285,6 +335,54 @@ const modalData = classes.map((c) => ({
     </div>
   </div>
 </div>
+
+<style>
+  /* Brillo que sigue al cursor: solo cambia el fondo de una capa, no dispara layout */
+  .class-glow {
+    opacity: 0;
+    background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.28), transparent 60%);
+    mix-blend-mode: soft-light;
+    transition: opacity 0.4s;
+  }
+  .class-card:hover .class-glow {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  // Tarjetas "vivas": brillo con el cursor + preview en video si la clase tiene uno.
+  const cards = document.querySelectorAll<HTMLElement>("[data-class-card]");
+  const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+  cards.forEach((card) => {
+    const video = card.querySelector<HTMLVideoElement>("[data-class-video]");
+
+    const setPlaying = (on: boolean) => {
+      if (!video) return;
+      if (on) {
+        video.play().then(() => (video.style.opacity = "1")).catch(() => {});
+      } else {
+        video.style.opacity = "0";
+        video.pause();
+      }
+    };
+
+    card.addEventListener("pointermove", (e) => {
+      if (!fine.matches) return;
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+      card.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+    });
+    card.addEventListener("pointerenter", () => fine.matches && setPlaying(true));
+    card.addEventListener("pointerleave", () => fine.matches && setPlaying(false));
+
+    // Móvil: initScrollActive marca data-active cuando la tarjeta entra en la banda central
+    new MutationObserver(() => !fine.matches && setPlaying(card.dataset.active === "true")).observe(card, {
+      attributes: true,
+      attributeFilter: ["data-active"],
+    });
+  });
+</script>
 
 <script type="application/json" id="class-modal-data" set:html={JSON.stringify(modalData)}></script>
 

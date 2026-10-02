@@ -4,6 +4,7 @@ import SiteNav from "../components/shared/SiteNav.astro";
 import AboutSection from "../components/academia/AboutSection.astro";
 import StatsSection from "../components/academia/StatsSection.astro";
 import ClassesSection from "../components/academia/ClassesSection.astro";
+import InstructorsSection from "../components/academia/InstructorsSection.astro";
 import MembershipSection from "../components/academia/MembershipSection.astro";
 import FAQSection from "../components/academia/FAQSection.astro";
 import CTASection from "../components/academia/CTASection.astro";
@@ -17,15 +18,19 @@ import maePantherImg from "../assets/academia/mae-panther-hero.webp";
 
 <Layout title="Felinas Academia — Clases de danza urbana, twerk y hip hop">
   <LoadingScreen />
-  <div class="min-h-screen bg-black">
+  <div class="academia-page min-h-screen bg-black">
     <SiteNav side="academia" />
     <main>
       <HeroSpotlight bg1={maeHeroImg.src} bg2={maePantherImg.src} />
       <AboutSection />
       <StatsSection />
       <ClassesSection />
-      <MembershipSection />
-      <FAQSection />
+      <InstructorsSection />
+      <!-- Membresías y FAQ comparten un solo fondo (y sus luces cruzan la unión): sin costura entre secciones -->
+      <div class="relative bg-muted overflow-clip">
+        <MembershipSection />
+        <FAQSection />
+      </div>
       <CTASection />
     </main>
     <SiteFooter side="academia" />
@@ -35,7 +40,7 @@ import maePantherImg from "../assets/academia/mae-panther-hero.webp";
 
 <script>
   // Orquestador único de la página: todas las timelines se registran acá.
-  import { initReveals, initSlideReveals, initCounters, initAmbient, initScrollActive } from "../scripts/animations";
+  import { initReveals, initSlideReveals, initCounters, initAmbient, initScrollActive, initParallaxY } from "../scripts/animations";
   import { revealPage } from "../scripts/loader";
 
   // initReveals()/initSlideReveals() ocultan sus elementos YA (gsap.set, sin medir
@@ -56,5 +61,6 @@ import maePantherImg from "../assets/academia/mae-panther-hero.webp";
     initCounters();
     initAmbient();
     initScrollActive();
+    initParallaxY();
   });
 </script>

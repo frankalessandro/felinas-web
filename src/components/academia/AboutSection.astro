@@ -11,7 +11,11 @@ const values = [
   { label: "Comunidad auténtica", icon: "users" },
 ];
 
-const communityImages = [comunidad1, comunidad2, comunidad3];
+const collage = [
+  { img: comunidad1, alt: "Comunidad Felinas en clase", box: "top-0 left-0 w-[60%] aspect-[3/4] z-10", tilt: -3, speed: 30 },
+  { img: comunidad2, alt: "Alumnas de Felinas bailando", box: "top-[20%] right-0 w-[50%] aspect-[4/5] z-20", tilt: 4, speed: 55 },
+  { img: comunidad3, alt: "Felinas, comunidad de danza", box: "bottom-0 left-[12%] w-[44%] aspect-square z-30", tilt: -2, speed: 15 },
+];
 ---
 
 <section id="comunidad-section" class="py-24 md:py-32 bg-background relative overflow-hidden">
@@ -25,54 +29,25 @@ const communityImages = [comunidad1, comunidad2, comunidad3];
 
       <div data-reveal-x="left" class="w-full lg:w-1/2 relative min-h-[420px] sm:min-h-[500px] md:min-h-[600px] flex items-center justify-center pt-6 pb-4">
         <div class="absolute inset-0 bg-secondary/5 rounded-full blur-3xl"></div>
-        <div id="comunidad-carousel" class="w-[92%] sm:w-[85%] aspect-[4/5] md:aspect-square relative z-20">
-          <div class="absolute inset-0 bg-secondary rounded-[2rem] sm:rounded-[3rem] md:rounded-[5rem] rounded-tr-[4rem] sm:rounded-tr-[6rem] md:rounded-tr-[15rem] overflow-hidden border border-border/50 shadow-2xl">
-            <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay pointer-events-none z-10"></div>
-
-            <div class="relative w-full h-full">
-              {communityImages.map((img, i) => (
-                <div
-                  data-slide
-                  class:list={["absolute inset-0", i === 0 ? "opacity-100" : "opacity-0"]}
-                >
-                  <Image
-                    src={img}
-                    alt={`Comunidad Felinas ${i + 1}`}
-                    class="w-full h-full object-cover"
-                    widths={[400, 800]}
-                    sizes="(max-width: 768px) 85vw, 40vw"
-                    loading="lazy"
-                  />
-                </div>
-              ))}
+        <!-- Collage de comunidad: tres fotos solapadas que se desplazan a distinta velocidad
+             con el scroll (data-parallax-y). El giro va en el hijo y el parallax en el
+             contenedor, para que GSAP no pise el rotate. Para sumar fotos: agregar a `collage`. -->
+        <div class="w-[92%] sm:w-[85%] aspect-[4/5] md:aspect-square relative z-20">
+          {collage.map((c) => (
+            <div data-parallax-y={c.speed} class={`absolute ${c.box}`}>
+              <div class="community-frame relative w-full h-full overflow-hidden rounded-2xl md:rounded-3xl border border-border/60 shadow-2xl bg-secondary" style={`--tilt: ${c.tilt}deg`}>
+                <Image
+                  src={c.img}
+                  alt={c.alt}
+                  class="absolute inset-0 w-full h-full object-cover"
+                  widths={[360, 600, 800]}
+                  sizes="(max-width: 768px) 55vw, 24vw"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay pointer-events-none"></div>
+              </div>
             </div>
-
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-              {communityImages.map((_, i) => (
-                <span
-                  data-dot
-                  class:list={["w-1.5 h-1.5 rounded-full transition-all duration-300", i === 0 ? "bg-primary w-4" : "bg-background/70"]}
-                ></span>
-              ))}
-            </div>
-          </div>
-
-          <button
-            type="button"
-            data-carousel-prev
-            aria-label="Imagen anterior"
-            class="absolute left-0 -translate-x-1/2 top-1/2 -translate-y-1/2 z-30 w-7 h-7 rounded-full bg-background/70 backdrop-blur-sm border border-border/40 flex items-center justify-center text-foreground/50 opacity-70 hover:opacity-100 hover:text-primary hover:bg-background/95 transition-all duration-300"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-          </button>
-          <button
-            type="button"
-            data-carousel-next
-            aria-label="Siguiente imagen"
-            class="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 z-30 w-7 h-7 rounded-full bg-background/70 backdrop-blur-sm border border-border/40 flex items-center justify-center text-foreground/50 opacity-70 hover:opacity-100 hover:text-primary hover:bg-background/95 transition-all duration-300"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          </button>
+          ))}
         </div>
         <div class="absolute bottom-0 left-0 sm:-bottom-2 sm:-left-4 md:bottom-4 md:left-4 bg-background border border-border p-3 sm:p-4 md:p-6 rounded-2xl shadow-xl z-30" data-ambient="bounce">
           <p class="font-display font-black text-2xl sm:text-4xl md:text-5xl text-foreground">
@@ -133,58 +108,12 @@ const communityImages = [comunidad1, comunidad2, comunidad3];
   </div>
 </section>
 
-<script>
-  // El reveal de la sección lo maneja initReveals() (GSAP ScrollTrigger) a nivel de página.
-  import { gsap } from "../../scripts/gsap";
-
-  const carousel = document.querySelector("#comunidad-carousel");
-  if (carousel) {
-    const slides = Array.from(carousel.querySelectorAll<HTMLElement>("[data-slide]"));
-    const dots = Array.from(carousel.querySelectorAll<HTMLElement>("[data-dot]"));
-    let current = 0;
-    let timer: ReturnType<typeof setInterval>;
-
-    const goTo = (index: number) => {
-      gsap.to(slides[current], { autoAlpha: 0, duration: 0.7, ease: "power1.inOut", overwrite: "auto" });
-      dots[current].classList.replace("bg-primary", "bg-background/70");
-      dots[current].classList.replace("w-4", "w-1.5");
-
-      current = (index + slides.length) % slides.length;
-
-      gsap.to(slides[current], { autoAlpha: 1, duration: 0.7, ease: "power1.inOut", overwrite: "auto" });
-      dots[current].classList.replace("bg-background/70", "bg-primary");
-      dots[current].classList.replace("w-1.5", "w-4");
-    };
-
-    const next = () => goTo(current + 1);
-    const prev = () => goTo(current - 1);
-
-    const startAutoplay = () => {
-      timer = setInterval(next, 5000);
-    };
-    const stopAutoplay = () => clearInterval(timer);
-
-    carousel.querySelector("[data-carousel-next]")?.addEventListener("click", () => {
-      next();
-      stopAutoplay();
-      startAutoplay();
-    });
-    carousel.querySelector("[data-carousel-prev]")?.addEventListener("click", () => {
-      prev();
-      stopAutoplay();
-      startAutoplay();
-    });
-    dots.forEach((dot, i) => {
-      dot.addEventListener("click", () => {
-        goTo(i);
-        stopAutoplay();
-        startAutoplay();
-      });
-    });
-
-    carousel.addEventListener("mouseenter", stopAutoplay);
-    carousel.addEventListener("mouseleave", startAutoplay);
-
-    if (slides.length > 1) startAutoplay();
+<style>
+  .community-frame {
+    transform: rotate(var(--tilt));
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
-</script>
+  .community-frame:hover {
+    transform: rotate(0deg) scale(1.03);
+  }
+</style>

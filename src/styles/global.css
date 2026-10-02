@@ -46,6 +46,16 @@ html::-webkit-scrollbar-thumb {
 }
 html::-webkit-scrollbar-thumb:hover { background: #ff006a; }
 
+/* Academia es clara: track blanco rosado en vez del negro de F Productions */
+html:has(.academia-page) {
+  scrollbar-color: #ff006a #fdf2f7;
+}
+html:has(.academia-page)::-webkit-scrollbar-track { background: #fdf2f7; }
+html:has(.academia-page)::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff006a, #9b1fd1);
+  border-color: #fdf2f7;
+}
+
 @layer base {
   * { @apply border-border; }
   html {

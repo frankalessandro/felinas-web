@@ -4,7 +4,7 @@ const planWhatsappURL = (planName: string, price: string) => {
   return "https://wa.me/573203426558?text=" + encodeURIComponent(msg);
 };
 
-type AccentId = "combo" | "twerk" | "urbano";
+type TabId = "combo" | "twerk" | "urbano";
 
 interface Plan {
   name: string;
@@ -15,20 +15,19 @@ interface Plan {
   popular?: boolean;
 }
 
-const tabs: { id: AccentId; label: string }[] = [
-  { id: "combo", label: "TWERK + URBANO" },
-  { id: "twerk", label: "TWERK" },
-  { id: "urbano", label: "URBANO" },
+const tabs: { id: TabId; label: string }[] = [
+  { id: "combo", label: "Twerk + Urbano" },
+  { id: "twerk", label: "Twerk" },
+  { id: "urbano", label: "Urbano" },
 ];
 
-/** Estilos por categoría — mantienen la paleta de marca (rosa / morado / gradiente) pero diferencian cada pestaña. */
-const accentStyles: Record<AccentId, { tabActive: string; check: string; topBar: string }> = {
-  combo: { tabActive: "bg-gradient-felinas text-white", check: "text-primary", topBar: "bg-gradient-felinas" },
-  twerk: { tabActive: "bg-primary text-white", check: "text-primary", topBar: "bg-primary" },
-  urbano: { tabActive: "bg-felina-morado text-white", check: "text-felina-morado", topBar: "bg-felina-morado" },
+/** "4 clases al mes" sale de la lista y se muestra como dato grande: es lo que más se compara entre planes. */
+const classCount = (p: Plan) => {
+  const m = p.features[0]?.match(/^(\d+) clases al mes$/);
+  return m ? { n: m[1], rest: p.features.slice(1) } : { n: null, rest: p.features };
 };
 
-const plans: Record<AccentId, { cards: Plan[]; note?: string; cols: string }> = {
+const plans: Record<TabId, { cards: Plan[]; note?: string; cols: string }> = {
   combo: {
     cols: "grid sm:grid-cols-2 lg:grid-cols-4 gap-6",
     cards: [
@@ -59,31 +58,32 @@ const plans: Record<AccentId, { cards: Plan[]; note?: string; cols: string }> = 
 };
 ---
 
-<section id="membresias" class="py-20 md:py-28 bg-muted relative overflow-hidden">
+<section id="membresias" class="py-24 md:py-36 relative">
   <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[110px] -translate-y-1/2 pointer-events-none"></div>
-  <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-felina-dorado/10 rounded-full blur-[100px] translate-y-1/3 pointer-events-none"></div>
+  <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-felina-morado/10 rounded-full blur-[100px] translate-y-1/3 pointer-events-none"></div>
 
   <div class="container px-4 relative z-10">
-    <div data-reveal class="text-center mb-14">
-      <p class="font-display font-semibold text-primary text-sm tracking-[0.2em] uppercase mb-3">Membresías</p>
-      <h2 class="font-display font-black text-3xl md:text-4xl lg:text-5xl text-secondary mb-4">
-        ELIGE TU PLAN Y <span class="text-gradient-pink">EMPIEZA A RUGIR</span>
+    <div data-reveal class="text-center mb-12 md:mb-16">
+      <h2 class="text-foreground">
+        <span class="title-eyebrow">Elige tu plan y</span>
+        <span class="title-main" style="font-size: clamp(2rem, 8vw, 5.5rem);"><span class="title-accent">EMPIEZA A RUGIR</span></span>
       </h2>
-      <p class="text-muted-foreground max-w-lg mx-auto">
-        Clases grupales con capacidad máxima de 6 felinas. Todos los planes incluyen invitaciones a eventos y compartir de la comunidad
+      <p class="mt-6 text-muted-foreground max-w-xl mx-auto text-base md:text-lg font-light">
+        Clases grupales de máximo 6 felinas. Todos los planes incluyen invitaciones a eventos y espacios de comunidad.
       </p>
     </div>
 
-    <div class="max-w-5xl mx-auto" id="membership-tabs">
-      <div class="flex mb-10 bg-secondary/10 rounded-full p-1">
+    <div class="max-w-6xl mx-auto" id="membership-tabs">
+      <div role="tablist" aria-label="Tipo de plan" class="flex max-w-xl mx-auto mb-14 md:mb-16 bg-background border border-border rounded-full p-1.5 shadow-sm">
         {tabs.map((tab, i) => (
           <button
             type="button"
+            role="tab"
+            aria-selected={i === 0 ? "true" : "false"}
             data-tab={tab.id}
-            data-active-classes={accentStyles[tab.id].tabActive}
             class:list={[
-              "flex-1 rounded-full font-display font-semibold text-xs sm:text-sm py-2.5 transition-colors",
-              i === 0 ? accentStyles[tab.id].tabActive : "text-secondary/70 hover:text-secondary",
+              "flex-1 rounded-full font-display font-bold uppercase tracking-[0.15em] text-[11px] sm:text-xs py-3 transition-colors",
+              i === 0 ? "bg-primary text-white shadow-md shadow-primary/30" : "text-foreground/60 hover:text-primary",
             ]}
           >
             {tab.label}
@@ -92,75 +92,105 @@ const plans: Record<AccentId, { cards: Plan[]; note?: string; cols: string }> = 
       </div>
 
       {Object.entries(plans).map(([id, group], gi) => (
-        <div data-tab-panel={id} class:list={[gi !== 0 && "hidden"]}>
-          <div class={group.cols}>
-            {group.cards.map((p) => (
-              <div
-                data-reveal
-                class:list={[
-                  "relative rounded-2xl p-6 md:p-8 transition-all duration-300 hover:-translate-y-1",
-                  p.popular
-                    ? "bg-gradient-felinas text-white shadow-2xl scale-[1.02] md:-translate-y-3 border-2 border-felina-dorado"
-                    : "bg-card border border-border hover:shadow-xl overflow-hidden",
-                ]}
-              >
-                {!p.popular && (
-                  <span class:list={["absolute top-0 left-6 right-6 h-1 rounded-full", accentStyles[id as AccentId].topBar]}></span>
-                )}
-                {p.popular && (
-                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white text-secondary font-display font-bold px-4 py-1 rounded-full text-xs shadow-md">
-                    MÁS POPULAR
-                  </span>
-                )}
-                <h3 class:list={["font-display font-bold text-lg mb-1", p.popular ? "text-white" : "text-secondary"]}>{p.name}</h3>
-                <div class="mb-5">
-                  <span class:list={["font-display font-black text-3xl md:text-4xl", p.popular ? "text-white" : "text-secondary"]}>{p.price}</span>
-                  <span class:list={["text-sm", p.popular ? "text-white/70" : "text-muted-foreground"]}>{p.period ?? "/mes"}</span>
-                </div>
-                {p.breakdown && (
-                  <div class="flex flex-wrap gap-2 mb-5">
-                    <span class:list={["inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full", p.popular ? "bg-white/15 text-white" : "bg-primary/10 text-secondary"]}>
-                      <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
-                      {p.breakdown.twerk} Twerk
-                    </span>
-                    <span class:list={["inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full", p.popular ? "bg-white/15 text-white" : "bg-felina-morado/10 text-secondary"]}>
-                      <span class="w-1.5 h-1.5 rounded-full bg-felina-morado shrink-0"></span>
-                      {p.breakdown.urbano} Urbano
-                    </span>
-                  </div>
-                )}
-                <ul class="space-y-3 mb-8">
-                  {p.features.map((f) => (
-                    <li class="flex items-start gap-2 text-sm">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class:list={["mt-0.5 shrink-0", p.popular ? "text-felina-dorado" : accentStyles[id as AccentId].check]}>
-                        <path d="M20 6 9 17l-5-5" />
-                      </svg>
-                      <span class={p.popular ? "text-white/90" : "text-muted-foreground"}>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={planWhatsappURL(p.name, p.price)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+        <div data-tab-panel={id} role="tabpanel" class:list={[gi !== 0 && "hidden"]}>
+          <div class={group.cols + " items-stretch"}>
+            {group.cards.map((p) => {
+              const { n, rest } = classCount(p);
+              const cur = p.price.charAt(0);
+              const amount = p.price.slice(1);
+              return (
+                <div
+                  data-reveal
                   class:list={[
-                    "block w-full text-center rounded-full font-display font-bold py-3 text-sm transition-colors",
-                    p.popular ? "bg-white text-secondary hover:bg-white/90" : "bg-primary text-white hover:bg-felina-rosa-glow",
+                    "relative flex flex-col rounded-3xl p-6 xl:p-8 transition-shadow duration-300",
+                    p.popular
+                      ? "plan-featured border-2 border-primary shadow-2xl shadow-primary/20 lg:-my-4 lg:py-10"
+                      : "bg-card border border-border hover:shadow-xl hover:shadow-primary/10",
                   ]}
                 >
-                  Elegir este plan
-                </a>
-              </div>
-            ))}
+                  {p.popular && (
+                    <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap bg-primary text-white font-display font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full text-[10px] shadow-lg shadow-primary/40">
+                      Más popular
+                    </span>
+                  )}
+
+                  <h3 class:list={["font-display font-bold uppercase tracking-[0.22em] text-xs", p.popular ? "text-primary" : "text-foreground/60"]}>{p.name}</h3>
+
+                  <div class="mt-4" style="container-type: inline-size;">
+                    <p class="flex items-start gap-1 text-foreground">
+                      <span class="font-display font-bold text-base mt-1.5 text-foreground/50">{cur}</span>
+                      <span class="font-display font-black tracking-tighter leading-none" style="font-size: clamp(1.6rem, 15cqw, 3rem);">{amount}</span>
+                    </p>
+                    <p class="mt-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-foreground/50">{(p.period ?? "al mes").trim().replace("(P1)", "· 1 persona")}</p>
+                  </div>
+
+                  {n && (
+                    <div class:list={["mt-6 rounded-2xl px-5 py-4 flex items-center gap-4", p.popular ? "bg-white/60" : "plan-count"]}>
+                      <span class="font-display font-black leading-none tracking-tighter text-foreground" style="font-size: 2.6rem;">{n}</span>
+                      <span class="text-xs font-bold uppercase tracking-[0.18em] leading-snug text-foreground/60">clases<br />al mes</span>
+                    </div>
+                  )}
+
+                  {p.breakdown && (
+                    <div class="flex flex-wrap gap-2 mt-4">
+                      <span class:list={["inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full", "bg-primary/10 text-foreground"]}>
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+                        {p.breakdown.twerk} Twerk
+                      </span>
+                      <span class:list={["inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full", "bg-felina-morado/10 text-foreground"]}>
+                        <span class="w-1.5 h-1.5 rounded-full bg-felina-morado shrink-0"></span>
+                        {p.breakdown.urbano} Urbano
+                      </span>
+                    </div>
+                  )}
+
+                  <ul class:list={["space-y-3 mt-6 mb-8 pt-6 border-t flex-1", p.popular ? "border-foreground/10" : "border-border"]}>
+                    {rest.map((f) => (
+                      <li class="flex items-start gap-3 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0 text-primary" aria-hidden="true">
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                        <span class="text-foreground/80">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a
+                    href={planWhatsappURL(p.name, p.price)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class:list={[
+                      "group flex items-center justify-center gap-2 w-full rounded-full font-display font-bold uppercase tracking-widest py-3.5 text-xs transition-colors",
+                      p.popular ? "bg-primary text-white shadow-lg shadow-primary/30 hover:bg-felina-rosa-glow" : "border border-primary/40 text-primary hover:bg-primary hover:text-white hover:border-primary",
+                    ]}
+                  >
+                    Elegir este plan
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                  </a>
+                </div>
+              );
+            })}
           </div>
           {group.note && (
-            <p class="text-center text-muted-foreground text-sm mt-6">{group.note}</p>
+            <p class="text-center text-muted-foreground text-sm mt-10 max-w-xl mx-auto">{group.note}</p>
           )}
         </div>
       ))}
     </div>
   </div>
 </section>
+
+<style>
+  /* Plan destacado: champagne metálico (misma familia que las cifras) + borde y sello rosa.
+     Destaca por calidez y color de marca, no por ser el único bloque oscuro. */
+  .plan-featured {
+    background: linear-gradient(160deg, #fbf5ea 0%, #ecdfc8 45%, #f8efde 100%);
+    color: #231b12;
+  }
+  .plan-count {
+    background: #f6f1e8;
+  }
+</style>
 
 <script>
   import { gsap } from "../../scripts/gsap";
@@ -179,11 +209,9 @@ const plans: Record<AccentId, { cards: Plan[]; note?: string; cols: string }> = 
 
         buttons.forEach((b) => {
           const on = b.dataset.tab === id;
-          const activeClasses = (b.dataset.activeClasses ?? "").split(" ").filter(Boolean);
-          b.classList.remove(...activeClasses);
-          b.classList.toggle("text-secondary/70", !on);
-          b.classList.toggle("hover:text-secondary", !on);
-          if (on) b.classList.add(...activeClasses);
+          b.setAttribute("aria-selected", String(on));
+          for (const c of ["bg-primary", "text-white", "shadow-md", "shadow-primary/30"]) b.classList.toggle(c, on);
+          for (const c of ["text-foreground/60", "hover:text-primary"]) b.classList.toggle(c, !on);
         });
 
         panels.forEach((panel) => {

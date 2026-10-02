@@ -208,6 +208,28 @@ export function initParallaxX(selector = "[data-parallax-x]") {
   });
 }
 
+/** Parallax vertical: desplaza el elemento en Y (±valor px) mientras su contenedor cruza el viewport. Uso: data-parallax-y="valor px". */
+export function initParallaxY(selector = "[data-parallax-y]") {
+  if (reduceMotion()) return;
+  gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
+    const distance = Number(el.dataset.parallaxY ?? 40);
+    gsap.fromTo(
+      el,
+      { y: -distance },
+      {
+        y: distance,
+        ease: "none",
+        scrollTrigger: {
+          trigger: el.parentElement ?? el,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      },
+    );
+  });
+}
+
 /**
  * Mazo de cartas apiladas: cada [data-stack-card] queda sticky bajo el borde superior
  * y la siguiente se monta encima. El apilado en sí es CSS puro; esto solo anima el
