@@ -9,6 +9,7 @@ import TeamSection from "../components/fproductions/TeamSection.astro";
 import ServicesSection from "../components/fproductions/ServicesSection.astro";
 import GallerySection from "../components/fproductions/GallerySection.astro";
 import WhyUsSection from "../components/fproductions/WhyUsSection.astro";
+import CinematicSection from "../components/fproductions/CinematicSection.astro";
 import ProcessSection from "../components/fproductions/ProcessSection.astro";
 import BookingCTA from "../components/fproductions/BookingCTA.astro";
 import SiteFooter from "../components/shared/SiteFooter.astro";
@@ -27,6 +28,7 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
       <ManifestoSection />
       <ReelsSection />
       <TeamSection />
+      <CinematicSection />
       <ServicesSection />
       <GallerySection />
       <WhyUsSection />
@@ -47,10 +49,10 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
     initAmbient,
     initScrollActive,
     initScrollSpotlight,
-    initRevolverSection,
     ScrollTrigger,
   } from "../scripts/animations";
   import { initReels } from "../scripts/reels";
+  import { initTeamStrips } from "../scripts/team";
   import { revealPage } from "../scripts/loader";
 
   // initReveals() oculta los [data-reveal] YA (gsap.set, sin medir layout): tiene
@@ -79,8 +81,10 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
     initAmbient();
     initScrollActive();
     initScrollSpotlight("#services-list");
+    // Equipo: sin ScrollTrigger ni pin, solo fija su layout (no mide la página)
+    initTeamStrips();
 
-    // Segundo frame: lo caro de medir. Los pines (Reels, Equipo) van en el mismo
+    // Segundo frame: lo caro de medir. Los pines (Reels) van en el mismo
     // orden en que aparecen en el documento: cada uno mide "dónde empieza" con
     // getBoundingClientRect, y esa medida incluye el pin-spacer de todo lo que esté
     // ANTES en el DOM, así que crearlos fuera de orden los desplaza. Galería va
@@ -89,7 +93,6 @@ import LoadingScreen from "../components/shared/LoadingScreen.astro";
     // Se difiere un frame más para no bloquear el primer paint.
     requestAnimationFrame(() => {
       initReels();
-      initRevolverSection();
       initStackCards();
       ScrollTrigger.refresh();
     });

@@ -12,6 +12,7 @@ const classBookingUrl = (title: string) =>
 
 type ClassInfo = {
   title: string;
+  styles?: string;
   description: string;
   modalDescription: string;
   level: string;
@@ -33,14 +34,15 @@ const classes: ClassInfo[] = [
     teacher: { name: "Mae", role: "Instructora de Twerk Recreativo", social: "https://www.instagram.com/mae.aleja", image: twerkRecreativoPortada.src },
   },
   {
-    title: "Hip Hop",
+    title: "Urbano",
+    styles: "Popping · House · Hip Hop",
     description: "En estas clases descubre tu identidad, desarrolla tu estilo y prueba nuevas formas de expresarte a través de una de las danzas urbanas más influyentes del mundo.",
     modalDescription: "Un espacio para conectar con la esencia del hip hop: groove, musicalidad y actitud. Aprenderás pasos base, footwork y combinaciones que te ayudarán a construir tu propio estilo dentro de esta cultura urbana.",
     level: "Grupal · Sin experiencia",
     gradient: "from-amber-500 to-yellow-500",
     trailerUrl: "https://www.youtube.com/embed/HiPuniltcn4",
     portada: hipHopPortada,
-    teacher: { name: "Angélica", role: "Instructora de Hip Hop", social: "https://www.instagram.com/angee.ortizg", image: hipHopPortada.src },
+    teacher: { name: "Angélica", role: "Instructora de Urbano", social: "https://www.instagram.com/angee.ortizg", image: hipHopPortada.src },
   },
   {
     title: "Breaking",
@@ -95,8 +97,8 @@ const modalData = classes.map((c) => ({
   <div class="container px-4 relative z-10">
     <div class="mb-20 md:mb-32">
       <p class="font-display font-semibold text-primary text-sm tracking-[0.4em] uppercase mb-4 border-l-2 border-primary pl-4">Nuestros estilos</p>
-      <h2 class="font-display font-black text-5xl md:text-7xl text-foreground">
-        NUESTRAS <span class="text-transparent text-stroke-secondary text-stroke-2">CLASES</span>
+      <h2 class="text-foreground">
+        <span class="title-main">NUESTRAS <span class="title-accent">CLASES</span></span>
       </h2>
     </div>
 
@@ -109,7 +111,8 @@ const modalData = classes.map((c) => ({
               <div class="inline-block border border-primary/30 text-primary text-xs font-bold tracking-widest px-4 py-1 rounded-full mb-6 bg-background/50 backdrop-blur-sm">
                 {c.level}
               </div>
-              <h3 class="font-display font-black text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 uppercase relative z-10 drop-shadow-md">{c.title}</h3>
+              <h3 class:list={["font-display font-black text-4xl md:text-5xl lg:text-6xl text-foreground uppercase relative z-10 drop-shadow-md", c.styles ? "mb-2" : "mb-6"]}>{c.title}</h3>
+              {c.styles && <p class="font-display font-bold text-primary text-xs md:text-sm tracking-[0.25em] uppercase mb-6 relative z-10">{c.styles}</p>}
               <p class="text-muted-foreground text-lg leading-relaxed max-w-md relative z-10 bg-background/50 backdrop-blur-sm rounded-lg py-2">{c.description}</p>
               <div class:list={["mt-8 flex flex-wrap items-center gap-3 relative z-10", isEven ? "md:justify-end" : "md:justify-start"]}>
                 <button

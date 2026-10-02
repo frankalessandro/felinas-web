@@ -48,6 +48,7 @@ const CONFIG = {
       { label: "Nosotras", href: "#nosotras" },
       { label: "Reels", href: "#reels" },
       { label: "Equipo", href: "#equipo" },
+      { label: "Producción", href: "#produccion" },
       { label: "Servicios", href: "#servicios" },
       { label: "Galería", href: "#galeria" },
       { label: "Proceso", href: "#proceso" },
@@ -532,7 +533,7 @@ const theme = side === "academia" ? "light" : "dark";
 
     // --- Sección activa: resalta el link cuyo bloque ocupa el centro del viewport ---
     // Se mide con getBoundingClientRect en vivo (no con un rango start/end precalculado):
-    // una sección pineada (ver initRevolverSection) mantiene su altura de caja original
+    // una sección pineada (ej. Reels) mantiene su altura de caja original
     // aunque su scroll dure varias pantallas, así que un ScrollTrigger con "bottom 55%"
     // la daba por terminada mucho antes de que el pin realmente soltara, activando el
     // siguiente link de golpe. Leyendo la posición real en cada frame, el link se queda

@@ -38,8 +38,9 @@ const REELS: Reel[] = [
 
   <div class="container px-4 md:px-8 relative z-10">
     <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-20">
-      <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
-        NO TE LO<br /><span class="text-felina-morado">CONTAMOS. MIRALO.</span>
+      <h2 class="text-white">
+        <span class="title-eyebrow">No te lo contamos</span>
+        <span class="title-main"><span class="title-accent">MÍRALO</span></span>
       </h2>
       <p class="text-white/60 max-w-sm text-sm md:text-base leading-relaxed">
         Shows, ensayos y producciones <span class="text-white font-medium">con sonido</span>. Elegí
@@ -164,6 +165,7 @@ const REELS: Reel[] = [
               <button
                 data-reel-row
                 data-reel-hero
+                data-reel-group="reels"
                 data-index={i}
                 data-src={`/videos/${reel.file}.mp4`}
                 data-caption={reel.title}
@@ -247,7 +249,7 @@ const REELS: Reel[] = [
     </svg>
   </button>
 
-  <div data-reel-lightbox-panel class="relative w-full max-w-[min(420px,88vw)]">
+  <div data-reel-lightbox-panel class="relative w-full max-w-[min(420px,88vw)] transition-[max-width] duration-200">
     <video
       controls
       playsinline

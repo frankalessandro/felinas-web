@@ -8,155 +8,13 @@ import { ScrollTrigger } from "./animations";
  * ScrollTrigger: es control de reproducción + un lightbox, y la sección se monta
  * en páginas que ya cargan ScrollTrigger por otras razones.
  *
- * Dos tipos de tile:
- *  - [data-reel-loop]  → clip mudo, arranca solo al entrar en viewport y se pausa al salir.
- *  - [data-reel-hero]  → clip con audio, se abre en lightbox al click.
- *
- * El <video> de los loops nace con preload="none" y sin src: el src real vive en
- * data-src y solo se asigna cuando el tile se acerca al viewport. Así la sección
- * no descarga un solo byte de video hasta que hace falta.
+ * Un solo tipo de tile: [data-reel-hero] → clip con audio, se abre en lightbox al
+ * click. Lo usan tanto ReelsSection como GallerySection, compartiendo el mismo
+ * overlay (ver initLightbox).
  */
 
 type Teardown = () => void;
 const teardowns: Teardown[] = [];
-
-/** Asigna el src diferido una única vez. */
-function hydrateVideo(video: HTMLVideoElement) {
-  if (video.dataset.hydrated === "true") return;
-  const src = video.dataset.src;
-  if (!src) return;
-  video.src = src;
-  video.dataset.hydrated = "true";
-}
-
-/**
- * Autoplay de los loops mudos según visibilidad.
- * Se precargan con un margen generoso (300px) para que el clip ya esté listo
- * cuando el tile entra de verdad en pantalla, y se pausan al salir para no
- * gastar CPU/batería decodificando fuera de vista.
- */
-function initLoops(root: ParentNode): Teardown {
-  const loops = Array.from(root.querySelectorAll<HTMLElement>("[data-reel-loop]"));
-  if (!loops.length) return () => {};
-
-  // En móvil el autoplay no es fiable (el navegador pausa los decoders fuera de
-  // vista, Low Power Mode lo bloquea del todo) y el clip se ve congelado. Ahí la
-  // reproducción pasa a ser manual con un botón; el observer de abajo solo se usa
-  // para pausar al salir de pantalla.
-  const isMobile = window.matchMedia("(max-width: 767px)").matches;
-
-  // prefers-reduced-motion apaga el autoplay, NO el botón: un tap es una acción
-  // explícita del usuario y siempre tiene que responder. Antes se salía de la
-  // función entera acá y el botón quedaba visible pero muerto en cualquier
-  // teléfono con "reducir movimiento" activado.
-  const autoplay = !isMobile && !reduceMotion();
-
-  const preloader = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        const video = entry.target.querySelector<HTMLVideoElement>("video");
-        if (video) hydrateVideo(video);
-        preloader.unobserve(entry.target);
-      }
-    },
-    { rootMargin: "300px 0px" },
-  );
-
-  const player = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        const tile = entry.target as HTMLElement;
-        const video = tile.querySelector<HTMLVideoElement>("video");
-        if (!video) continue;
-
-        if (entry.isIntersecting) {
-          hydrateVideo(video);
-          // Sin autoplay manda el botón: acá no se reproduce nada solo.
-          if (!autoplay) continue;
-          // play() rechaza si el navegador bloquea el autoplay; el poster se queda y ya.
-          void video.play().then(
-            () => tile.setAttribute("data-playing", "true"),
-            () => {},
-          );
-        } else {
-          video.pause();
-          tile.setAttribute("data-playing", "false");
-        }
-      }
-    },
-    // Sin autoplay el umbral es mínimo: el observer solo tiene que detectar que el
-    // tile salió del todo para pausar lo que el usuario haya puesto a correr.
-    { threshold: autoplay ? 0.35 : 0.01 },
-  );
-
-  loops.forEach((tile) => {
-    preloader.observe(tile);
-    player.observe(tile);
-    // Marca "esto no arranca solo": el CSS usa el flag para mostrar el botón de
-    // play también donde normalmente está oculto (desktop con reducir movimiento),
-    // que si no se queda con un poster fijo y ninguna forma de reproducirlo.
-    if (!autoplay) tile.dataset.manual = "true";
-  });
-
-  /**
-   * Un solo clip corriendo a la vez cuando la reproducción es manual (móvil).
-   *
-   * En la galería las tarjetas son `position: sticky`: las que ya pasaron siguen
-   * dentro del viewport apiladas debajo, así que el observer de arriba nunca las
-   * pausa y se acumulaban los tres decoders andando al mismo tiempo. En un
-   * teléfono eso arrastra el scroll entero.
-   */
-  const pauseOthers = (keep: HTMLElement) => {
-    loops.forEach((tile) => {
-      if (tile === keep) return;
-      const other = tile.querySelector<HTMLVideoElement>("video");
-      if (!other || other.paused) return;
-      other.pause();
-      tile.setAttribute("data-playing", "false");
-    });
-  };
-
-  // Botón de play/pausa manual, cableado SIEMPRE. Quién lo ve lo decide el CSS
-  // (`md:hidden`), no este script: atarlo al breakpoint medido al montar dejaba
-  // el botón muerto si la ventana cruzaba a ancho de móvil después de cargar
-  // —responsive en devtools, rotar una tablet, abrir el navegador angosto—.
-  // En desktop el botón está en display:none, así que escucharlo no cuesta nada.
-  const toggles: Array<{ btn: HTMLElement; onClick: (e: Event) => void }> = [];
-  loops.forEach((tile) => {
-    const btn = tile.querySelector<HTMLElement>("[data-reel-loop-toggle]");
-    const video = tile.querySelector<HTMLVideoElement>("video");
-    if (!btn || !video) return;
-
-    const onClick = (e: Event) => {
-      // El botón ocupa la tarjeta entera; si la tarjeta vive dentro de algo
-      // clickeable, el tap es para el video y no para lo de abajo.
-      e.preventDefault();
-      e.stopPropagation();
-      hydrateVideo(video);
-      if (video.paused) {
-        pauseOthers(tile);
-        void video.play().then(
-          () => tile.setAttribute("data-playing", "true"),
-          () => {},
-        );
-      } else {
-        video.pause();
-        tile.setAttribute("data-playing", "false");
-      }
-    };
-
-    btn.addEventListener("click", onClick);
-    toggles.push({ btn, onClick });
-  });
-
-  return () => {
-    preloader.disconnect();
-    player.disconnect();
-    toggles.forEach(({ btn, onClick }) => btn.removeEventListener("click", onClick));
-    loops.forEach((tile) => tile.querySelector("video")?.pause());
-  };
-}
 
 /**
  * Escenario: el índice de la izquierda manda sobre la vista previa de la derecha.
@@ -322,12 +180,31 @@ function initLightbox(root: ParentNode): Teardown {
   const nextBtn = overlay.querySelector<HTMLElement>("[data-reel-next]");
   if (!video || !panel) return () => {};
 
-  // La cinta duplica las tarjetas para poder hacer el bucle; la lista de reproducción
-  // se arma solo con los originales, para que prev/next no recorra cada reel dos veces.
-  const playlist = heroes.filter((t) => t.getAttribute("aria-hidden") !== "true");
+  // La cinta duplica las tarjetas para poder hacer el bucle; los candidatos a
+  // playlist se arman solo con los originales, para que prev/next no recorra
+  // cada reel dos veces.
+  const candidates = heroes.filter((t) => t.getAttribute("aria-hidden") !== "true");
 
+  // prev/next navega solo dentro de la sección donde se abrió el clip (Reels,
+  // Galería o Producción), no entre las tres mezcladas: cada [data-reel-hero]
+  // lleva su data-reel-group y la playlist se recalcula por grupo al abrir.
+  let playlist: HTMLElement[] = [];
   let lastFocused: HTMLElement | null = null;
   let current = 0;
+
+  /**
+   * Los reels de ReelsSection son todos 9:16, pero GallerySection mete clips
+   * horizontales de verdad (grabados en 16:9): forzarlos al marco vertical los
+   * recorta por los costados. El lightbox es uno solo para toda la página, así
+   * que se adapta por tile en vez de tener dos lightbox distintos.
+   */
+  const applyOrientation = (tile: HTMLElement) => {
+    const landscape = tile.dataset.orientation === "landscape";
+    video.classList.toggle("aspect-[9/16]", !landscape);
+    video.classList.toggle("aspect-video", landscape);
+    panel.classList.toggle("max-w-[min(420px,88vw)]", !landscape);
+    panel.classList.toggle("max-w-[min(860px,92vw)]", landscape);
+  };
 
   /** Carga el reel `i` en el reproductor ya abierto. */
   const load = (i: number) => {
@@ -337,6 +214,7 @@ function initLightbox(root: ParentNode): Teardown {
     current = i;
     video.src = tile.dataset.src;
     video.currentTime = 0;
+    applyOrientation(tile);
     if (caption) caption.textContent = tile.dataset.caption ?? "";
     if (counter) counter.textContent = `${i + 1} / ${playlist.length}`;
     void video.play().catch(() => {});
@@ -349,6 +227,9 @@ function initLightbox(root: ParentNode): Teardown {
 
   const show = (tile: HTMLElement) => {
     if (!tile.dataset.src) return;
+
+    const group = tile.dataset.reelGroup ?? "default";
+    playlist = candidates.filter((t) => (t.dataset.reelGroup ?? "default") === group);
 
     // Si el click vino de un clon de la cinta, no está en la lista: se resuelve
     // por su data-index, que apunta al reel original.
@@ -442,7 +323,7 @@ function initLightbox(root: ParentNode): Teardown {
 
 /** Punto de entrada único de la sección de reels. */
 export function initReels(root: ParentNode = document) {
-  teardowns.push(initLoops(root), initStage(root), initLightbox(root));
+  teardowns.push(initStage(root), initLightbox(root));
 }
 
 /** Limpieza para View Transitions: evita listeners y videos huérfanos entre navegaciones. */

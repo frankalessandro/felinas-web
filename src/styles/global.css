@@ -31,6 +31,21 @@
   }
 }
 
+/* Scrollbar de marca. Fuera de @layer para que no la purgue ni la pise Tailwind.
+   Firefox/Chrome 121+ usan las propiedades estándar; WebKit viejo, el pseudo-elemento. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #ff006a #07030b;
+}
+html::-webkit-scrollbar { width: 10px; height: 10px; }
+html::-webkit-scrollbar-track { background: #07030b; }
+html::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff006a, #8a0087);
+  border-radius: 10px;
+  border: 2px solid #07030b;
+}
+html::-webkit-scrollbar-thumb:hover { background: #ff006a; }
+
 @layer base {
   * { @apply border-border; }
   html {
@@ -126,6 +141,36 @@
     scrollbar-width: none;
   }
   .hidden-scroll::-webkit-scrollbar { display: none; }
+
+  /* Sistema de títulos: una sola fuente (Montserrat Black, siempre rellena).
+     La jerarquía sale del tamaño; el color de marca solo va en la palabra clave. */
+  .title-eyebrow {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    line-height: 1.2;
+    font-size: clamp(0.95rem, 2.4vw, 1.5rem);
+    margin-bottom: 0.6rem;
+  }
+  .title-main {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+  }
+  .title-accent {
+    display: inline-block;
+    padding-right: 0.06em; /* evita que bg-clip recorte el último glifo */
+    background-image: linear-gradient(135deg, #ff006a, #9b1fd1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 
   .mask-image-fade {
     mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);

@@ -1,40 +1,30 @@
 ---
 import { Image } from "astro:assets";
-import galeriaMae from "../../assets/fproductions/galeria-mae.webp";
-import galeriaSalo from "../../assets/fproductions/galeria-salo.webp";
-import galeriaAndrea from "../../assets/fproductions/galeria-andrea.webp";
-import galeriaGabriela from "../../assets/fproductions/galeria-gabriela.webp";
-import posterLoop3144 from "../../assets/fproductions/posters/loop-3144.webp";
-import posterLoop3199 from "../../assets/fproductions/posters/loop-3199.webp";
-import posterLoop3414 from "../../assets/fproductions/posters/loop-3414.webp";
+import posterClip3144 from "../../assets/fproductions/posters/clip-3144.webp";
+import posterClip3803 from "../../assets/fproductions/posters/clip-3803.webp";
+import posterClip3199 from "../../assets/fproductions/posters/clip-3199.webp";
+import posterClip9941 from "../../assets/fproductions/posters/clip-9941.webp";
+import posterClip3414 from "../../assets/fproductions/posters/clip-3414.webp";
 
 type Tile = {
-  /** Los `video` son clips mudos que corren solos mientras el tile está en pantalla. */
-  kind: "image" | "video";
-  src: ImageMetadata;
-  /** Solo para kind === "video": nombre del mp4 en /videos. */
-  file?: string;
+  file: string;
+  poster: ImageMetadata;
   alt: string;
-  tag: string | null;
-  title: string | null;
+  title: string;
 };
 
 /**
- * Los clips van intercalados entre las fotos, no agrupados: el movimiento
- * aparece de a poco a lo largo del mazo en vez de golpear todo junto.
- *
- * Las fotos van sin rótulo a propósito: hablan solas y el texto competía con
- * ellas. Los clips sí lo llevan, porque ahí el rótulo cumple otra función —
- * avisa que eso se mueve.
+ * Todos los tiles son clips 9:16 con audio: se abren en el mismo lightbox que
+ * ReelsSection (ver [data-reel-hero] en scripts/reels.ts), no hay autoplay ni
+ * versión muda acá. Los dos clips horizontales (videoclip producido) viven aparte
+ * en CinematicSection, que usa el mismo mecanismo pero en formato 16:9.
  */
 const CARDS: Tile[] = [
-  { kind: "image", src: galeriaMae, alt: "Mae en escena", tag: null, title: null },
-  { kind: "video", src: posterLoop3144, file: "loop-3144", alt: "Coreografía de F Productions en movimiento", tag: "En movimiento", title: "Así se ve en vivo" },
-  { kind: "image", src: galeriaSalo, alt: "Salo — F Productions", tag: null, title: null },
-  { kind: "video", src: posterLoop3199, file: "loop-3199", alt: "Presentación de F Productions en movimiento", tag: "En movimiento", title: "Puesta en escena" },
-  { kind: "image", src: galeriaAndrea, alt: "Andrea — F Productions", tag: null, title: null },
-  { kind: "video", src: posterLoop3414, file: "loop-3414", alt: "Show de F Productions en movimiento", tag: "En movimiento", title: "Cada detalle cuenta" },
-  { kind: "image", src: galeriaGabriela, alt: "Gabriela en discoteca", tag: null, title: null },
+  { file: "clip-3144", poster: posterClip3144, alt: "Coreografía de F Productions", title: "Así se ve en vivo" },
+  { file: "clip-3803", poster: posterClip3803, alt: "F Productions antes de salir a escena", title: "Antes de salir a escena" },
+  { file: "clip-3199", poster: posterClip3199, alt: "Presentación de F Productions", title: "Puesta en escena" },
+  { file: "clip-9941", poster: posterClip9941, alt: "F Productions en vivo", title: "Así suena en vivo" },
+  { file: "clip-3414", poster: posterClip3414, alt: "Show de F Productions", title: "Cada detalle cuenta" },
 ];
 
 const total = String(CARDS.length).padStart(2, "0");
@@ -48,11 +38,12 @@ const total = String(CARDS.length).padStart(2, "0");
 
   <div class="container px-4 md:px-8 relative z-10">
     <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 md:mb-20">
-      <h2 class="font-display font-black text-4xl md:text-6xl text-white tracking-tighter leading-none">
-        MOMENTOS<br /><span class="text-felina-morado">QUE HABLAN POR SÍ SOLOS.</span>
+      <h2 class="text-white">
+        <span class="title-eyebrow">Momentos que hablan</span>
+        <span class="title-main"><span class="title-accent">POR SÍ SOLOS</span></span>
       </h2>
       <p class="text-white/60 max-w-sm text-sm md:text-base leading-relaxed">
-        Cada imagen cuenta una historia. Así vivimos cada escenario, cada producción y cada experiencia
+        Clips reales, con sonido, de cómo vivimos cada escenario, cada producción y cada experiencia
         que creamos junto a nuestros clientes.
       </p>
     </div>
@@ -66,6 +57,9 @@ const total = String(CARDS.length).padStart(2, "0");
     El apilado es CSS puro (`position: sticky`, offset creciente por índice y orden
     natural de pintado). GSAP solo agrega el retroceso de la carta que queda atrás
     —escala, giro leve y oscurecido— para que se lea profundidad y no un corte seco.
+
+    El click abre el lightbox compartido con ReelsSection (mismo overlay, mismo
+    [data-reel-hero] en scripts/reels.ts): no hay reproducción inline acá.
   -->
   <div data-stack class="relative container px-4 md:px-8 pb-[16vh]">
     {CARDS.map((item, i) => (
@@ -76,33 +70,16 @@ const total = String(CARDS.length).padStart(2, "0");
       >
         <div
           data-stack-inner
-          {...(item.kind === "video" ? { "data-reel-loop": true, "data-playing": "false" } : {})}
-          class:list={[
-            "group relative w-full h-[62vh] md:h-[74vh] rounded-[2rem] overflow-hidden bg-[#11081a]",
-            "ring-1 ring-white/10 shadow-2xl shadow-black/70 will-change-transform",
-            // Los clips llevan su ratio nativo (9:16) y sacan el ancho de la altura:
-            // con el ancho de las fotos, el object-cover les recortaba cabezas y pies.
-            item.kind === "video" ? "max-w-[min(100%,42vh)]" : "max-w-5xl",
-          ]}
+          class="group relative w-full h-[62vh] md:h-[74vh] max-w-[min(100%,42vh)] rounded-[2rem] overflow-hidden bg-[#11081a] ring-1 ring-white/10 shadow-2xl shadow-black/70 will-change-transform"
         >
           <Image
-            src={item.src}
+            src={item.poster}
             alt={item.alt}
             widths={[500, 900, 1400]}
-            sizes="(max-width: 768px) 92vw, 60vw"
+            sizes="(max-width: 768px) 92vw, 40vh"
             loading={i < 2 ? "eager" : "lazy"}
-            class="w-full h-full object-cover scale-[1.02] transition-transform duration-[1200ms] ease-out group-hover:scale-105 group-data-[playing=true]:opacity-0"
+            class="w-full h-full object-cover scale-[1.02] transition-transform duration-[1200ms] ease-out group-hover:scale-105"
           />
-          {item.kind === "video" && (
-            <video
-              data-src={`/videos/${item.file}.mp4`}
-              muted
-              loop
-              playsinline
-              preload="none"
-              class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-data-[playing=true]:opacity-100"
-            />
-          )}
 
           <!-- Legibilidad del rótulo y del contador, sin lavar la imagen entera. -->
           <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/85 to-transparent z-20 pointer-events-none"></div>
@@ -112,33 +89,35 @@ const total = String(CARDS.length).padStart(2, "0");
             {String(i + 1).padStart(2, "0")} <span class="text-white/20">/ {total}</span>
           </p>
 
-          {/*
-            En desktop los clips arrancan solos al entrar en pantalla. En móvil el
-            navegador ahoga ese autoplay (Low Power Mode, decoders en pausa) y el clip
-            "apenas se ve", así que ahí se ofrece un botón de play/pausa. Oculto en
-            >=md porque ahí no hace falta.
-          */}
-          {item.kind === "video" && (
-            <button
-              type="button"
-              data-reel-loop-toggle
-              aria-label="Reproducir o pausar el video"
-              class="md:hidden group-data-[manual=true]:!grid absolute inset-0 z-30 grid place-items-center"
-            >
-              <span class="grid place-items-center w-16 h-16 rounded-full bg-black/50 backdrop-blur-sm border border-white/25 text-white shadow-lg shadow-black/40 transition-all duration-300 group-data-[playing=true]:opacity-0 group-data-[playing=true]:scale-75">
-                <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 translate-x-0.5" aria-hidden="true">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </span>
-            </button>
-          )}
+          <button
+            type="button"
+            data-reel-hero
+            data-reel-group="galeria"
+            data-index={i}
+            data-src={`/videos/${item.file}.mp4`}
+            data-caption={item.title}
+            data-orientation="portrait"
+            aria-label={`Reproducir con sonido: ${item.title}`}
+            class="absolute inset-0 z-30 grid place-items-center cursor-pointer"
+          >
+            <span class="grid place-items-center w-16 h-16 rounded-full bg-black/50 backdrop-blur-sm border border-white/25 text-white shadow-lg shadow-black/40 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#ff006a] group-hover:border-[#ff006a]">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 translate-x-0.5" aria-hidden="true">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </span>
+          </button>
 
-          {item.tag && (
-            <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8 z-30 pointer-events-none">
-              <p class="text-[10px] uppercase tracking-[0.25em] text-purple-300 font-bold mb-1">{item.tag}</p>
-              <p class="text-xl md:text-3xl font-display font-bold text-white">{item.title}</p>
-            </div>
-          )}
+          <span class="absolute top-5 left-6 z-30 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 pointer-events-none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#ff006a]">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+            <span class="text-[9px] font-bold uppercase tracking-[0.25em] text-white">Con sonido</span>
+          </span>
+
+          <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8 z-30 pointer-events-none">
+            <p class="text-xl md:text-3xl font-display font-bold text-white">{item.title}</p>
+          </div>
 
           <!-- Oscurecido de la carta que queda debajo del mazo (lo anima initStackCards). -->
           <div data-stack-dim class="absolute inset-0 z-40 bg-[#07030b] opacity-0 pointer-events-none"></div>
